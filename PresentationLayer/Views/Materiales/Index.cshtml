@@ -7,11 +7,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
     a#archivoCargado:hover {
-        color: #FFAA16 !important;
+        color: #AE0025 !important;
     }
 
     a.form-control:hover {
-        color: #FFAA16 !important;
+        color: #AE0025 !important;
     }
 
 </style>
@@ -20,35 +20,35 @@
 <div class="row text-center">
     <div class="col-6 col-md-3 col-lg-1 my-2 me-3">
         <div class="p-3 d-flex flex-column justify-content-center align-items-center rounded"
-             style="background:#E1636E; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
+             style="background:#D9534F; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
             <h2 data-bind="text:revision" style="margin: 0; word-wrap: break-word; max-width: 100%; font-size: 1.5em;"></h2>
             <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; margin: 0;">Revisión</p>
         </div>
     </div>
     <div class="col-6 col-md-3 col-lg-1 my-2 me-3">
         <div class="p-3 d-flex flex-column justify-content-center align-items-center rounded"
-             style="background:#DC67A0; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
+             style="background:#BA5C8F; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
             <h2 data-bind="text:faltaInfo" style="margin: 0; word-wrap: break-word; max-width: 100%; font-size: 1.5em;"></h2>
             <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; margin: 0;">Falta Información</p>
         </div>
     </div>
     <div class="col-6 col-md-3 col-lg-1 my-2 me-3">
         <div class="p-3 d-flex flex-column justify-content-center align-items-center rounded"
-             style="background:#DA6AC3; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
+             style="background:#9B59B6; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
             <h2 data-bind="text:aprobado" style="margin: 0; word-wrap: break-word; max-width: 100%; font-size: 1.5em;"></h2>
             <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; margin: 0;">Aprobado</p>
         </div>
     </div>
     <div class="col-6 col-md-3 col-lg-1 my-2 me-3">
         <div class="p-3 d-flex flex-column justify-content-center align-items-center rounded"
-             style="background:#E291AD; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
+             style="background:#C897A5; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
             <h2 data-bind="text:programado" style="margin: 0; word-wrap: break-word; max-width: 100%; font-size: 1.5em;"></h2>
             <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; margin: 0;">Programado</p>
         </div>
     </div>
     <div class="col-6 col-md-3 col-lg-1 my-2 me-3">
         <div class="p-3 d-flex flex-column justify-content-center align-items-center rounded"
-             style="background:#ECB693; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
+             style="background:#B8A49D; width: 100px; height: 100px; border-radius: 10px; overflow: hidden; text-align: center;">
             <h2 data-bind="text:entregado" style="margin: 0; word-wrap: break-word; max-width: 100%; font-size: 1.5em;"></h2>
             <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; margin: 0;">Entregado</p>
         </div>
@@ -188,7 +188,7 @@
                         <div class="col-md-6">
                             <label for="archivoCargado">Archivo Cargado</label>
                             <a id="archivoCargado" class="text-truncate"
-                               data-bind="attr: { href: '/Brief/DownloadFile/' + idBrief() }, text: rutaArchivo" target="_blank">Descargar archivo</a>
+                               data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo" target="_blank">Descargar archivo</a>
                         </div>
                     </div>
                     
