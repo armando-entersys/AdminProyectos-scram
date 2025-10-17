@@ -58,7 +58,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("IdTipoAlerta");
 
-                    b.ToTable("Alertas");
+                    b.ToTable("Alertas", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Audiencia", b =>
@@ -78,33 +78,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Audiencia");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "Público General"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Consultoras"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Colaboradores"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Medios"
-                        });
+                    b.ToTable("Audiencia", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Brief", b =>
@@ -117,12 +91,6 @@ namespace DataAccessLayer.Migrations
 
                     b.Property<string>("Comentario")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Como")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cuando")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Descripcion")
@@ -165,9 +133,6 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("PlanComunicacion")
                         .HasColumnType("bit");
 
-                    b.Property<string>("PorQue")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("RutaArchivo")
                         .HasColumnType("nvarchar(max)");
 
@@ -185,7 +150,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Briefs");
+                    b.ToTable("Briefs", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.EstatusBrief", b =>
@@ -205,57 +170,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EstatusBriefs");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "En Revisión"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Aprobado"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Rechazado"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Programado"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Activo = true,
-                            Descripcion = "Entregado"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Activo = true,
-                            Descripcion = "Finalizado"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Activo = true,
-                            Descripcion = "En Pausa"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Activo = true,
-                            Descripcion = "Cancelado"
-                        });
+                    b.ToTable("EstatusBriefs", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.EstatusMaterial", b =>
@@ -275,45 +190,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("EstatusMateriales");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "En Revisión"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Falta Información"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Aprobado"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Programado"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Activo = true,
-                            Descripcion = "Entregado"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Activo = true,
-                            Descripcion = "Inicio de Ciclo"
-                        });
+                    b.ToTable("EstatusMateriales", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Formato", b =>
@@ -333,39 +210,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Formato");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "Digital"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Impreso"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Video"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Audio"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Activo = true,
-                            Descripcion = "Redes Sociales"
-                        });
+                    b.ToTable("Formato", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.HistorialMaterial", b =>
@@ -401,7 +246,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("HistorialMateriales");
+                    b.ToTable("HistorialMateriales", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Material", b =>
@@ -473,7 +318,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("PrioridadId");
 
-                    b.ToTable("Materiales");
+                    b.ToTable("Materiales", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Menu", b =>
@@ -506,7 +351,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Menus");
+                    b.ToTable("Menus", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Participante", b =>
@@ -529,7 +374,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("UsuarioId");
 
-                    b.ToTable("Participantes");
+                    b.ToTable("Participantes", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.PCN", b =>
@@ -549,33 +394,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PCN");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "Lanzamiento"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Continuidad"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Promoción"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Institucional"
-                        });
+                    b.ToTable("PCN", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Prioridad", b =>
@@ -595,33 +414,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Prioridad");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "Baja"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Media"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Alta"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Urgente"
-                        });
+                    b.ToTable("Prioridad", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Proyecto", b =>
@@ -660,7 +453,7 @@ namespace DataAccessLayer.Migrations
                     b.HasIndex("BriefId")
                         .IsUnique();
 
-                    b.ToTable("Proyectos");
+                    b.ToTable("Proyectos", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.RetrasoMaterial", b =>
@@ -685,7 +478,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("MaterialId");
 
-                    b.ToTable("RetrasoMateriales");
+                    b.ToTable("RetrasoMateriales", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Rol", b =>
@@ -702,24 +495,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Descripcion = "Administrador"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Descripcion = "Solicitante"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Descripcion = "Productor"
-                        });
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.TipoAlerta", b =>
@@ -739,39 +515,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TipoAlerta");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "Nuevo Proyecto"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Cambio de Estado"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Actualización"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Nuevo Material"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Activo = true,
-                            Descripcion = "Material Entregado"
-                        });
+                    b.ToTable("TipoAlerta", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.TipoBrief", b =>
@@ -791,33 +535,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TiposBrief");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Activo = true,
-                            Descripcion = "Plan de Comunicación"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Activo = true,
-                            Descripcion = "Materiales"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Activo = true,
-                            Descripcion = "Campaña"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Activo = true,
-                            Descripcion = "Evento"
-                        });
+                    b.ToTable("TiposBrief", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Usuario", b =>
@@ -873,7 +591,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasIndex("RolId");
 
-                    b.ToTable("Usuarios");
+                    b.ToTable("Usuarios", (string)null);
                 });
 
             modelBuilder.Entity("EntityLayer.Concrete.Alerta", b =>
@@ -1006,7 +724,7 @@ namespace DataAccessLayer.Migrations
                     b.HasOne("EntityLayer.Concrete.Usuario", "Usuario")
                         .WithMany("Participantes")
                         .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.NoAction)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Brief");
