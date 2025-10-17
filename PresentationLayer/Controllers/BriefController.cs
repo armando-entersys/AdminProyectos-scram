@@ -471,7 +471,7 @@ namespace PresentationLayer.Controllers
                 EstatusBriefId = Addbrief.EstatusBriefId,
                 FechaModificacion = DateTime.Now,
                 LinksReferencias = Addbrief.LinksReferencias
-                
+
                 // Puedes asignar más propiedades de `Addbrief` si es necesario
             };
 

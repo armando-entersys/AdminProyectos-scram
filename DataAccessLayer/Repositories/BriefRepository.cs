@@ -112,11 +112,18 @@ namespace DataAccessLayer.Repositories
             var isAdmin = _context.Usuarios
                 .Any(u => u.Id == usuarioId && (u.RolId == 1 || u.RolId == 3));
 
-            var query = _context.Briefs.Where(b => b.UsuarioId == usuarioId).AsQueryable(); ;
+            var query = _context.Briefs.Where(b => b.UsuarioId == usuarioId).AsQueryable();
 
+            // Si onlybrief es TRUE y el usuario es admin, mostrar TODOS los proyectos
+            // Si onlybrief es FALSE, mostrar solo los del usuario (sin importar el rol)
             if (onlybrief && isAdmin)
             {
                 query = _context.Briefs.AsQueryable();
+            }
+            else if (!onlybrief)
+            {
+                // Forzar que solo muestre los proyectos del usuario actual
+                query = _context.Briefs.Where(b => b.UsuarioId == usuarioId).AsQueryable();
             }
 
             return query.OrderByDescending(b => b.FechaRegistro).ToList();

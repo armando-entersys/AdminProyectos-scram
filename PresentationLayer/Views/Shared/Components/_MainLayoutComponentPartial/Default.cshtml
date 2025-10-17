@@ -28,13 +28,16 @@
             <i class="lni lni-calendar"></i>
             <span>Calendario</span>
         </a>
-        <a class="custom-btn position-relative" href="~/Alertas">
+        <a class="custom-btn position-relative @(ViewBag.ConteoAlertas > 0 ? "alerta-activa" : "")" href="~/Alertas">
             <i class="lni lni-alarm"></i>
             <span>Alertas</span>
-            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                @ViewBag.ConteoAlertas
-                <span class="visually-hidden">unread messages</span>
-            </span>
+            @if (ViewBag.ConteoAlertas > 0)
+            {
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger alerta-badge-animado">
+                    @ViewBag.ConteoAlertas
+                    <span class="visually-hidden">unread messages</span>
+                </span>
+            }
         </a>
     </div>
 

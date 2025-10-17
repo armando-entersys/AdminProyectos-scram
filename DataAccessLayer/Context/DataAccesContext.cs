@@ -167,6 +167,89 @@ namespace DataAccessLayer.Context
                 .HasForeignKey(h => h.UsuarioId) // Clave foránea en HistorialMaterial
                 .OnDelete(DeleteBehavior.Restrict); // Evitar eliminación en cascada
 
+            // ========================================
+            // SEED DATA - Datos iniciales del servidor dev
+            // ========================================
+
+            // Roles
+            modelBuilder.Entity<Rol>().HasData(
+                new Rol { Id = 1, Descripcion = "Administrador" },
+                new Rol { Id = 2, Descripcion = "Solicitante" },
+                new Rol { Id = 3, Descripcion = "Productor" }
+            );
+
+            // Estatus de Brief
+            modelBuilder.Entity<EstatusBrief>().HasData(
+                new EstatusBrief { Id = 1, Descripcion = "En Revisión", Activo = true },
+                new EstatusBrief { Id = 2, Descripcion = "Aprobado", Activo = true },
+                new EstatusBrief { Id = 3, Descripcion = "Rechazado", Activo = true },
+                new EstatusBrief { Id = 4, Descripcion = "Programado", Activo = true },
+                new EstatusBrief { Id = 5, Descripcion = "Entregado", Activo = true },
+                new EstatusBrief { Id = 6, Descripcion = "Finalizado", Activo = true },
+                new EstatusBrief { Id = 7, Descripcion = "En Pausa", Activo = true },
+                new EstatusBrief { Id = 8, Descripcion = "Cancelado", Activo = true }
+            );
+
+            // Tipo de Brief
+            modelBuilder.Entity<TipoBrief>().HasData(
+                new TipoBrief { Id = 1, Descripcion = "Plan de Comunicación", Activo = true },
+                new TipoBrief { Id = 2, Descripcion = "Materiales", Activo = true },
+                new TipoBrief { Id = 3, Descripcion = "Campaña", Activo = true },
+                new TipoBrief { Id = 4, Descripcion = "Evento", Activo = true }
+            );
+
+            // Prioridades
+            modelBuilder.Entity<Prioridad>().HasData(
+                new Prioridad { Id = 1, Descripcion = "Baja", Activo = true },
+                new Prioridad { Id = 2, Descripcion = "Media", Activo = true },
+                new Prioridad { Id = 3, Descripcion = "Alta", Activo = true },
+                new Prioridad { Id = 4, Descripcion = "Urgente", Activo = true }
+            );
+
+            // PCN (Plan de Comunicación de Negocios)
+            modelBuilder.Entity<PCN>().HasData(
+                new PCN { Id = 1, Descripcion = "Lanzamiento", Activo = true },
+                new PCN { Id = 2, Descripcion = "Continuidad", Activo = true },
+                new PCN { Id = 3, Descripcion = "Promoción", Activo = true },
+                new PCN { Id = 4, Descripcion = "Institucional", Activo = true }
+            );
+
+            // Audiencias
+            modelBuilder.Entity<Audiencia>().HasData(
+                new Audiencia { Id = 1, Descripcion = "Público General", Activo = true },
+                new Audiencia { Id = 2, Descripcion = "Consultoras", Activo = true },
+                new Audiencia { Id = 3, Descripcion = "Colaboradores", Activo = true },
+                new Audiencia { Id = 4, Descripcion = "Medios", Activo = true }
+            );
+
+            // Formatos
+            modelBuilder.Entity<Formato>().HasData(
+                new Formato { Id = 1, Descripcion = "Digital", Activo = true },
+                new Formato { Id = 2, Descripcion = "Impreso", Activo = true },
+                new Formato { Id = 3, Descripcion = "Video", Activo = true },
+                new Formato { Id = 4, Descripcion = "Audio", Activo = true },
+                new Formato { Id = 5, Descripcion = "Redes Sociales", Activo = true }
+            );
+
+            // Estatus de Materiales
+            modelBuilder.Entity<EstatusMaterial>().HasData(
+                new EstatusMaterial { Id = 1, Descripcion = "En Revisión", Activo = true },
+                new EstatusMaterial { Id = 2, Descripcion = "Falta Información", Activo = true },
+                new EstatusMaterial { Id = 3, Descripcion = "Aprobado", Activo = true },
+                new EstatusMaterial { Id = 4, Descripcion = "Programado", Activo = true },
+                new EstatusMaterial { Id = 5, Descripcion = "Entregado", Activo = true },
+                new EstatusMaterial { Id = 6, Descripcion = "Inicio de Ciclo", Activo = true }
+            );
+
+            // Tipos de Alerta
+            modelBuilder.Entity<TipoAlerta>().HasData(
+                new TipoAlerta { Id = 1, Descripcion = "Nuevo Proyecto", Activo = true },
+                new TipoAlerta { Id = 2, Descripcion = "Cambio de Estado", Activo = true },
+                new TipoAlerta { Id = 3, Descripcion = "Actualización", Activo = true },
+                new TipoAlerta { Id = 4, Descripcion = "Nuevo Material", Activo = true },
+                new TipoAlerta { Id = 5, Descripcion = "Material Entregado", Activo = true }
+            );
+
         }
 
     }

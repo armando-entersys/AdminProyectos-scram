@@ -148,6 +148,25 @@ namespace PresentationLayer.Controllers
                 var usuarioLogueado =_usuarioService.TGetById(id);  
                _briefService.ActualizaHistorialMaterial(historialMaterialRequest.HistorialMaterial);
 
+                // Si el material pasa a estado "Entregado" (5), crear alerta al usuario del brief
+                if (historialMaterialRequest.HistorialMaterial.EstatusMaterialId == 5)
+                {
+                    var material = _briefService.GetMaterial(historialMaterialRequest.HistorialMaterial.MaterialId);
+                    if (material != null && material.Brief != null)
+                    {
+                        var urlBase = $"{Request.Scheme}://{Request.Host}";
+                        var alertaUsuario = new Alerta
+                        {
+                            IdUsuario = material.Brief.UsuarioId,
+                            Nombre = "Material Entregado",
+                            Descripcion = $"El material '{material.Nombre}' ha sido entregado",
+                            IdTipoAlerta = 5,
+                            Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                        };
+                        _toolsService.CrearAlerta(alertaUsuario);
+                    }
+                }
+
                 if (historialMaterialRequest.EnvioCorreo)
                 {
                     var EstatusMaterial = _briefService.GetAllEstatusMateriales().Where(q => q.Id == historialMaterialRequest.HistorialMaterial.EstatusMaterialId).FirstOrDefault();
