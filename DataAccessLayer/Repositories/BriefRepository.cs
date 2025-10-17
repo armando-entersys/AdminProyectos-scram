@@ -307,6 +307,7 @@ namespace DataAccessLayer.Repositories
                     b.Id,
                     b.EstatusBriefId,
                     b.FechaPublicacion,
+                    b.FechaEntrega,
                     b.UsuarioId
                 }).ToList();
 
@@ -326,27 +327,18 @@ namespace DataAccessLayer.Repositories
 
             var briefIds = briefs.Select(b => b.Id).ToList();
 
-            var materiales = _context.Materiales
-                .Where(m => briefIds.Contains(m.BriefId) && (m.EstatusMaterialId == 4 || m.EstatusMaterialId == 5))
-                .Select(m => new
-                {
-                    m.FechaEntrega,
-                    BriefId = m.BriefId,
-                    EstatusBriefId = m.Brief.EstatusBriefId
-                })
+            // Obtener proyectos finalizados (EstatusBriefId == 6)
+            var proyectosFinalizados = briefs
+                .Where(b => b.EstatusBriefId == 6)
                 .ToList();
 
-            conteoProyectos.ProyectoTiempo = materiales
-                .Where(m => m.FechaEntrega >= DateTime.Now && (m.EstatusBriefId == 4 || m.EstatusBriefId == 5))
-                .Select(m => m.BriefId)
-                .Distinct()
-                .Count();
+            // ProyectoTiempo: Proyectos finalizados que se entregaron en tiempo (FechaPublicacion <= FechaEntrega)
+            conteoProyectos.ProyectoTiempo = proyectosFinalizados
+                .Count(p => p.FechaPublicacion <= p.FechaEntrega);
 
-            conteoProyectos.ProyectoExtra = materiales
-                .Where(m => m.FechaEntrega <= DateTime.Now && (m.EstatusBriefId == 4 || m.EstatusBriefId == 5))
-                .Select(m => m.BriefId)
-                .Distinct()
-                .Count();
+            // ProyectoExtra: Proyectos finalizados que se entregaron fuera de tiempo (FechaPublicacion > FechaEntrega)
+            conteoProyectos.ProyectoExtra = proyectosFinalizados
+                .Count(p => p.FechaPublicacion > p.FechaEntrega);
 
             return conteoProyectos;
         }
