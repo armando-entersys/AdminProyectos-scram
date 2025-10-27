@@ -176,7 +176,8 @@ function AppViewModel() {
         });
         self.EstatusMateriales(EstatusMateriales);
 
-        $.get("Materiales/ObtenerHistorial/" + material.id)
+        // Usar Promise.resolve para asegurar que siempre devuelve una promesa
+        Promise.resolve($.get("Materiales/ObtenerHistorial/" + material.id))
             .then(function (d) {
                 self.registrosHistorico(d.datos);
                 $("#divEdicion").modal("show");
@@ -202,6 +203,7 @@ function AppViewModel() {
             })
             .catch(function (error) {
                 console.error("Error al obtener el historial:", error);
+                alert("Error al cargar el historial del material.");
             });
     };
 
