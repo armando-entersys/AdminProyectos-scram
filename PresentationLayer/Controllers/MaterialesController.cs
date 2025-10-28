@@ -4,6 +4,7 @@ using DataAccessLayer.EntityFramework;
 using EntityLayer.Concrete;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PresentationLayer.Models;
 using System.Security.Claims;
 
@@ -18,7 +19,9 @@ namespace PresentationLayer.Controllers
         private readonly IBriefService _briefService;
         private readonly IUsuarioService _usuarioService;
         private readonly IToolsService _toolsService;
-        public MaterialesController(IEmailSender emailSender, IAuthService authService, IWebHostEnvironment hostingEnvironment, IBriefService briefService, IUsuarioService usuarioService, IToolsService toolsService)
+        private readonly ILogger<MaterialesController> _logger;
+
+        public MaterialesController(IEmailSender emailSender, IAuthService authService, IWebHostEnvironment hostingEnvironment, IBriefService briefService, IUsuarioService usuarioService, IToolsService toolsService, ILogger<MaterialesController> logger)
         {
             _emailSender = emailSender;
             _authService = authService;
@@ -26,6 +29,7 @@ namespace PresentationLayer.Controllers
             _briefService = briefService;
             _usuarioService = usuarioService;
             _toolsService = toolsService;
+            _logger = logger;
         }
         public IActionResult Index(string filtroNombre = null)
         {
@@ -232,36 +236,45 @@ namespace PresentationLayer.Controllers
         [HttpPost]
         public async Task<IActionResult> upload(IFormFile file)
         {
-            if (file != null && file.Length > 0)
+            try
             {
-                try
+                if (file == null || file.Length == 0)
                 {
-                    var uploadsFolder = Path.Combine("wwwroot", "uploads");
-
-                    // Asegurar que el directorio existe
-                    if (!Directory.Exists(uploadsFolder))
-                    {
-                        Directory.CreateDirectory(uploadsFolder);
-                    }
-
-                    var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(stream);
-                    }
-
-                    var fileUrl = Url.Content($"~/uploads/{fileName}");
-                    return Json(new { location = fileUrl });
+                    _logger.LogWarning("Upload: No file provided");
+                    return BadRequest(new { error = "No se proporcionó ningún archivo." });
                 }
-                catch (Exception ex)
+
+                _logger.LogInformation($"Upload: Receiving file {file.FileName}, size: {file.Length} bytes");
+
+                var uploadsFolder = Path.Combine("wwwroot", "uploads");
+
+                // Asegurar que el directorio existe
+                if (!Directory.Exists(uploadsFolder))
                 {
-                    return BadRequest(new { error = $"Error al cargar la imagen: {ex.Message}" });
+                    _logger.LogInformation($"Upload: Creating directory {uploadsFolder}");
+                    Directory.CreateDirectory(uploadsFolder);
                 }
+
+                var fileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                _logger.LogInformation($"Upload: Saving file to {filePath}");
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var fileUrl = Url.Content($"~/uploads/{fileName}");
+                _logger.LogInformation($"Upload: File saved successfully, URL: {fileUrl}");
+
+                return Json(new { location = fileUrl });
             }
-
-            return BadRequest(new { error = "No se proporcionó ningún archivo." });
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Upload: Error uploading image");
+                return BadRequest(new { error = $"Error al cargar la imagen: {ex.Message}" });
+            }
         }
     }
 }
