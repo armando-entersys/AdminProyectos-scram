@@ -31,16 +31,16 @@
                                    placeholder="Contraseña nueva"
                                    required
                                    asp-for="Contrasena"
-                                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
-                                   title="La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial." />
+                                   minlength="6"
+                                   title="La contraseña debe tener al menos 6 caracteres." />
 
                             <input class="form-control mb-3"
                                    type="password"
                                    id="confirmPassword"
                                    placeholder="Repetir Contraseña"
                                    required
-                                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$"
-                                   title="La contraseña debe tener al menos 8 caracteres, una letra mayúscula, una letra minúscula, un número y un carácter especial." />
+                                   minlength="6"
+                                   title="La contraseña debe tener al menos 6 caracteres." />
 
                             <button class="w-100 btn btn-lg btn-primary" type="submit" onclick="return validatePasswords()">Cambiar Contraseña</button>
 

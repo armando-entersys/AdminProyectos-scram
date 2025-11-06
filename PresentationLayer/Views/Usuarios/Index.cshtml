@@ -74,7 +74,7 @@
                     </div>
                     <div class="mb-3" data-bind="validationElement: contrasena">
                         <label for="recipient-name" class="col-form-label">Contraseña:</label>
-                        <input type="text" class="form-control" id="contrasena" maxlength="128" data-bind="value: contrasena" pattern="@( "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$" )">
+                        <input type="text" class="form-control" id="contrasena" maxlength="128" data-bind="value: contrasena" minlength="6" title="La contraseña debe tener al menos 6 caracteres.">
                     </div>
                     <div class="mb-3" data-bind="validationElement: correo">
                         <label for="recipient-name" class="col-form-label">Correo:</label>

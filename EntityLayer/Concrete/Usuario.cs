@@ -17,9 +17,7 @@ namespace EntityLayer.Concrete
         public string Correo { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
-        [MinLength(8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres.")]
-        [RegularExpression("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-         ErrorMessage = "La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial.")]
+        [MinLength(6, ErrorMessage = "La contraseña debe tener al menos 6 caracteres.")]
         public string Contrasena { get; set; }
 
         [NotMapped]
