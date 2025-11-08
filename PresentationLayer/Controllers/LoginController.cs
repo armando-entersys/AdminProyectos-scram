@@ -126,7 +126,7 @@ namespace PresentationLayer.Controllers
             var resp =  _authService.CambioPasswordEmail(Correo);
             if (resp.Exito == true)
             {
-               
+
 
                 // Diccionario con los valores dinámicos a reemplazar
                 var valoresDinamicos = new Dictionary<string, string>()
@@ -138,8 +138,14 @@ namespace PresentationLayer.Controllers
                 Destinatarios.Add(Correo);
 
                 _emailSender.SendEmail(Destinatarios, "CambioPassword", valoresDinamicos);
+
+                TempData["MensajeExito"] = "Se ha enviado un correo con las instrucciones para cambiar tu contraseña.";
             }
-            return RedirectToAction("Index", "Home");
+            else
+            {
+                TempData["MensajeError"] = resp.Mensaje ?? "No se encontró una cuenta con este correo electrónico.";
+            }
+            return RedirectToAction("CambioPassword", "Login");
 
 
         }

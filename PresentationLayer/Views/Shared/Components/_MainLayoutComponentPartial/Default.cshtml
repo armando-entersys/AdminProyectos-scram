@@ -3,7 +3,30 @@
 <div class="top-bar mb-3">
     <!-- Información del usuario -->
     <div class="user-info">
-        <h6>Usuario:</h6>
+        <h6>
+            @{
+                string rolNombre = "Usuario";
+                if (ViewBag.RolId != null)
+                {
+                    switch ((int)ViewBag.RolId)
+                    {
+                        case 1:
+                            rolNombre = "Administrador";
+                            break;
+                        case 2:
+                            rolNombre = "Usuario";
+                            break;
+                        case 3:
+                            rolNombre = "Producción";
+                            break;
+                        default:
+                            rolNombre = "Usuario";
+                            break;
+                    }
+                }
+            }
+            @rolNombre:
+        </h6>
         <h1>@ViewBag.Name</h1>
     </div>
 
