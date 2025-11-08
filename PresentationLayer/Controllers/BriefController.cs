@@ -732,15 +732,36 @@ namespace PresentationLayer.Controllers
 
             try
             {
-                var UsuarioId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                Console.WriteLine("=== INICIO ObtenerConteoMateriales ===");
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                Console.WriteLine($"UserIdClaim: {userIdClaim}");
 
-                res.Datos = _briefService.ObtenerConteoMateriales(UsuarioId);
+                var UsuarioId = Int32.Parse(userIdClaim);
+                Console.WriteLine($"UsuarioId parsed: {UsuarioId}");
+
+                var resultado = _briefService.ObtenerConteoMateriales(UsuarioId);
+                Console.WriteLine($"Resultado obtenido: Hoy={resultado.Hoy}, EstaSemana={resultado.EstaSemana}, ProximaSemana={resultado.ProximaSemana}, Total={resultado.TotalProyectos}");
+
+                res.Datos = resultado;
                 res.Mensaje = "Solicitud Exitosa";
                 res.Exito = true;
+
+                Console.WriteLine($"Respuesta: Exito={res.Exito}, Mensaje={res.Mensaje}");
+                Console.WriteLine("=== FIN ObtenerConteoMateriales EXITOSO ===");
             }
             catch (Exception ex)
             {
-                res.Mensaje = $"Petición fallida: {ex.Message} - StackTrace: {ex.StackTrace}";
+                Console.WriteLine($"=== ERROR en ObtenerConteoMateriales ===");
+                Console.WriteLine($"Exception Type: {ex.GetType().Name}");
+                Console.WriteLine($"Message: {ex.Message}");
+                Console.WriteLine($"StackTrace: {ex.StackTrace}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"InnerException: {ex.InnerException.Message}");
+                }
+                Console.WriteLine("=== FIN ERROR ===");
+
+                res.Mensaje = $"Petición fallida: {ex.Message}";
                 res.Exito = false;
             }
             return Ok(res);
