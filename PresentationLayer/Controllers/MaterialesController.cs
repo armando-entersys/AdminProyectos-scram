@@ -147,18 +147,63 @@ namespace PresentationLayer.Controllers
             try
             {
                 var UsuarioId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                var rolId = Int32.Parse(User.FindFirst(ClaimTypes.Role)?.Value);
+
+                // Validar permisos: Usuario (RolId=2) no puede cambiar estatus
+                var material = _briefService.GetMaterial(historialMaterialRequest.HistorialMaterial.MaterialId);
+                if (rolId == 2 && material.EstatusMaterialId != historialMaterialRequest.HistorialMaterial.EstatusMaterialId)
+                {
+                    res.Mensaje = "No tiene permisos para cambiar el estatus del material.";
+                    res.Exito = false;
+                    return Ok(res);
+                }
+
                 historialMaterialRequest.HistorialMaterial.UsuarioId = UsuarioId;
                 var id = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-                var usuarioLogueado =_usuarioService.TGetById(id);  
+                var usuarioLogueado =_usuarioService.TGetById(id);
                _briefService.ActualizaHistorialMaterial(historialMaterialRequest.HistorialMaterial);
 
-                // Si el material pasa a estado "Entregado" (5), crear alerta al usuario del brief
+                var urlBase = $"{Request.Scheme}://{Request.Host}";
+
+                // Siempre crear alerta al usuario del brief cuando hay un nuevo comentario
+                if (material != null && material.Brief != null)
+                {
+                    var alertaComentario = new Alerta
+                    {
+                        IdUsuario = material.Brief.UsuarioId,
+                        Nombre = "Nuevo Comentario en Material",
+                        Descripcion = $"{usuarioLogueado.Nombre} agregó un comentario en el material '{material.Nombre}'",
+                        IdTipoAlerta = 3,
+                        Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                    };
+                    _toolsService.CrearAlerta(alertaComentario);
+                }
+
+                // Si cambió el estatus, notificar también
+                if (material.EstatusMaterialId != historialMaterialRequest.HistorialMaterial.EstatusMaterialId)
+                {
+                    var estatusNuevo = _briefService.GetAllEstatusMateriales()
+                        .FirstOrDefault(e => e.Id == historialMaterialRequest.HistorialMaterial.EstatusMaterialId);
+
+                    if (material.Brief != null && estatusNuevo != null)
+                    {
+                        var alertaEstatus = new Alerta
+                        {
+                            IdUsuario = material.Brief.UsuarioId,
+                            Nombre = "Cambio de Estatus en Material",
+                            Descripcion = $"El material '{material.Nombre}' cambió a estatus '{estatusNuevo.Descripcion}'",
+                            IdTipoAlerta = 4,
+                            Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                        };
+                        _toolsService.CrearAlerta(alertaEstatus);
+                    }
+                }
+
+                // Si el material pasa a estado "Entregado" (5), crear alerta adicional
                 if (historialMaterialRequest.HistorialMaterial.EstatusMaterialId == 5)
                 {
-                    var material = _briefService.GetMaterial(historialMaterialRequest.HistorialMaterial.MaterialId);
                     if (material != null && material.Brief != null)
                     {
-                        var urlBase = $"{Request.Scheme}://{Request.Host}";
                         var alertaUsuario = new Alerta
                         {
                             IdUsuario = material.Brief.UsuarioId,
@@ -174,7 +219,6 @@ namespace PresentationLayer.Controllers
                 if (historialMaterialRequest.EnvioCorreo)
                 {
                     var EstatusMaterial = _briefService.GetAllEstatusMateriales().Where(q => q.Id == historialMaterialRequest.HistorialMaterial.EstatusMaterialId).FirstOrDefault();
-                    var material = _briefService.GetMaterial(historialMaterialRequest.HistorialMaterial.MaterialId);
                     var Destinatarios = new List<string>();
                     foreach(var item in historialMaterialRequest.Usuarios)
                     {
@@ -183,8 +227,6 @@ namespace PresentationLayer.Controllers
                     }
                     Destinatarios.AddRange(_toolsService.GetUsuarioByRol(3).Select(q => q.Correo).ToList());
 
-
-                    var urlBase = $"{Request.Scheme}://{Request.Host}";
                     // Diccionario con los valores dinámicos a reemplazar
                     var valoresDinamicos = new Dictionary<string, string>()
                 {
