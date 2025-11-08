@@ -380,11 +380,20 @@ namespace DataAccessLayer.Repositories
             var isAdmin = _context.Usuarios
                 .Any(u => u.Id == UsuarioId && (u.RolId == 1 || u.RolId == 3));
 
-            var materialesQuery = _context.Materiales.Where(m => m.Brief.UsuarioId == UsuarioId).AsQueryable();
+            IQueryable<Material> materialesQuery;
 
             if (isAdmin)
             {
-                materialesQuery = _context.Materiales.AsQueryable();  
+                materialesQuery = _context.Materiales
+                    .Include(m => m.Brief)
+                    .AsQueryable();
+            }
+            else
+            {
+                materialesQuery = _context.Materiales
+                    .Include(m => m.Brief)
+                    .Where(m => m.Brief.UsuarioId == UsuarioId)
+                    .AsQueryable();
             }
 
             var materiales = materialesQuery.ToList();
