@@ -276,6 +276,49 @@ namespace PresentationLayer.Controllers
         }
 
         [HttpPost]
+        public ActionResult NotificarParticipante([FromBody] NotificarParticipanteRequest request)
+        {
+            respuestaServicio res = new respuestaServicio();
+            try
+            {
+                var usuarioActualId = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+                var usuarioActual = _usuarioService.TGetById(usuarioActualId);
+                var material = _briefService.GetMaterial(request.MaterialId);
+                var participante = _usuarioService.TGetById(request.ParticipanteId);
+
+                if (material == null || participante == null)
+                {
+                    res.Mensaje = "Material o participante no encontrado.";
+                    res.Exito = false;
+                    return Ok(res);
+                }
+
+                var urlBase = $"{Request.Scheme}://{Request.Host}";
+
+                // Crear alerta para el participante agregado
+                var alerta = new Alerta
+                {
+                    IdUsuario = participante.Id,
+                    Nombre = "Agregado como Participante",
+                    Descripcion = $"{usuarioActual.Nombre} te agregó como participante en el material '{material.Nombre}'",
+                    IdTipoAlerta = 3,
+                    Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                };
+                _toolsService.CrearAlerta(alerta);
+
+                res.Mensaje = "Notificación enviada exitosamente.";
+                res.Exito = true;
+            }
+            catch (Exception ex)
+            {
+                res.Mensaje = $"Error al enviar notificación: {ex.Message}";
+                res.Exito = false;
+            }
+
+            return Ok(res);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> upload(IFormFile file)
         {
             try

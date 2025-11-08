@@ -362,6 +362,29 @@ function AppViewModel() {
         self.registrosUsuariosCorreo.push(usuario);
         self.buscarUsuario("");
         self.resultadosBusqueda([]);
+
+        // Enviar notificación al participante agregado
+        if (self.id()) {
+            var notificacionRequest = {
+                MaterialId: self.id(),
+                ParticipanteId: usuario.id
+            };
+
+            $.ajax({
+                url: "Materiales/NotificarParticipante",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(notificacionRequest),
+                success: function (response) {
+                    if (response.exito) {
+                        console.log("Notificación enviada al participante:", usuario.nombre);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error al enviar notificación:", xhr.responseText || error);
+                }
+            });
+        }
     };
 
     // Método para setear filtros desde el QueryString
