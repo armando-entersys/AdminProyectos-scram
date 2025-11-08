@@ -20,7 +20,7 @@ BEGIN
             ON DELETE CASCADE,
         CONSTRAINT [FK_MaterialPCN_PCN] FOREIGN KEY([PCNId])
             REFERENCES [dbo].[PCN] ([Id])
-            ON DELETE CASCADE
+            ON DELETE NO ACTION
     )
     PRINT 'Tabla MaterialPCN creada exitosamente.'
 END
