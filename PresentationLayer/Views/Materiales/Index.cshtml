@@ -139,8 +139,11 @@
                         <td data-bind="text: audiencia.descripcion"></td>
                         <td data-bind="text: responsable"></td>
                         <td data-bind="text: area"></td>
-                        <td data-bind="text: fechaEntrega"></td>
+                        <td data-bind="text: new Date(fechaEntrega).toLocaleDateString('es-MX')"></td>
                         <td>
+                            <button type="button" class="btn btn-sm btn-info me-1" data-bind="click:$root.VerMaterial" title="Ver detalles del material">
+                                <i class="lni lni-eye"></i> Ver
+                            </button>
                             <button type="button" class="btn btn-sm btn-primary" data-bind="click:$root.Editar" title="Editar material">
                                 <i class="lni lni-pencil"></i> Editar
                             </button>
@@ -170,24 +173,41 @@
             </div>
             <div class="modal-body" style="background-color: rgba(0, 0, 0, .03);">
                 <div class="row">
-                    <h1>Historico</h1>
+                    <!-- Información del Brief -->
+                    <div class="col-12 mb-3">
+                        <div class="card">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0"><i class="lni lni-folder"></i> Información del Proyecto (Brief)</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>Nombre del Proyecto:</strong> <span data-bind="text: nombreBrief"></span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Link de Referencia:</strong>
+                                            <a data-bind="attr: { href: linksReferencias }, text: linksReferencias || 'No disponible'" target="_blank"></a>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>Archivo del Brief:</strong>
+                                            <a id="archivoCargado" data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo || 'No hay archivo'" target="_blank"></a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3>Historial de Comentarios</h3>
                     <div class="col-4" style="background-color:#FFFFFF;max-height: 400px; overflow-y: auto;">
-                        
+
                         <div data-bind="foreach: registrosHistorico">
                             <hr class="border border-3 border-primary w-100 mx-auto my-4">
                             <p data-bind="html: comentarios"> </p>
                             <p data-bind="html: fechaRegistro"> </p>
                             <p data-bind="html: usuario.nombre + ' ' + usuario.apellidoPaterno"> </p>
                             <hr class="border border-3 border-primary w-100 mx-auto my-4">
-                        </div>
-                        <div class="col-md-6">
-                            <label>Link de Referencia</label>
-                            <a  data-bind="attr: { href: linksReferencias }, text: linksReferencias" target="_blank">Abrir Link</a>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="archivoCargado">Archivo Cargado</label>
-                            <a id="archivoCargado" class="text-truncate"
-                               data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo" target="_blank">Descargar archivo</a>
                         </div>
                     </div>
                     

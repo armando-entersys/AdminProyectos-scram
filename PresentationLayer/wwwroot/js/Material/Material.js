@@ -29,6 +29,7 @@ function AppViewModel() {
     self.linksReferencias = ko.observable("");
     self.idBrief = ko.observable(0);
     self.rutaArchivo = ko.observable("");
+    self.nombreBrief = ko.observable("");
 
     // Observables para filtros
     self.filtroNombre = ko.observable("");
@@ -154,6 +155,50 @@ function AppViewModel() {
             });
     };
 
+    // Ver material (solo lectura)
+    self.VerMaterial = function (material) {
+        self.tituloModal("Ver Material: " + material.nombre);
+        self.Comentario("");
+
+        self.id(material.id);
+        self.fechaEntrega(new Date(material.fechaEntrega).toISOString().split('T')[0]);
+        self.registrosUsuariosCorreo.removeAll();
+        self.idBrief(material.brief.id);
+        self.nombreBrief(material.brief.nombre);
+
+        if (material.brief.linksReferencias == "undefined") {
+            self.linksReferencias("");
+        }
+        else {
+            self.linksReferencias(material.brief.linksReferencias);
+        }
+
+        self.rutaArchivo(material.brief.rutaArchivo);
+        var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
+            return r.id === material.estatusMaterialId;
+        });
+        self.EstatusMateriales(EstatusMateriales);
+
+        // Obtener historial y mostrar el modal
+        Promise.resolve($.get("Materiales/ObtenerHistorial/" + material.id))
+            .then(function (d) {
+                self.registrosHistorico(d.datos);
+                $("#divEdicion").modal("show");
+
+                // Deshabilitar campos para vista de solo lectura
+                setTimeout(function() {
+                    $("#divEdicion").find("input, select, textarea, button:not([data-bs-dismiss])").prop("disabled", true);
+                    if (tinymce.get('myComentario')) {
+                        tinymce.get('myComentario').mode.set('readonly');
+                    }
+                }, 100);
+            })
+            .catch(function (error) {
+                console.error("Error al obtener el historial:", error);
+                alert("Error al cargar el historial del material.");
+            });
+    };
+
     // Editar material
     self.Editar = function (material) {
         self.tituloModal("Editar Material: " + material.nombre);
@@ -163,6 +208,8 @@ function AppViewModel() {
         self.fechaEntrega(new Date(material.fechaEntrega).toISOString().split('T')[0]);
         self.registrosUsuariosCorreo.removeAll();
         self.idBrief(material.brief.id);
+        self.nombreBrief(material.brief.nombre);
+
         if (material.brief.linksReferencias == "undefined") {
             self.linksReferencias("");
         }
