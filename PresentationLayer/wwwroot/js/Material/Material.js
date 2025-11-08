@@ -77,6 +77,18 @@ function AppViewModel() {
         }
     };
 
+    // Función helper para obtener los PCNs como string
+    self.getPCNsString = function(material) {
+        if (material.materialPCNs && material.materialPCNs.length > 0) {
+            return material.materialPCNs.map(function(mp) {
+                return mp.pcn ? mp.pcn.descripcion : '';
+            }).filter(function(desc) {
+                return desc !== '';
+            }).join(', ');
+        }
+        return 'N/A';
+    };
+
     // Computados
     self.registrosFiltrados = ko.computed(function () {
         var filtroNombreProyecto = self.filtroNombreProyecto().toLowerCase();
@@ -401,6 +413,7 @@ function AppViewModel() {
             return {
                 "Nombre de Material": registro.nombre || "",
                 "Mensaje": registro.mensaje || "",
+                "PCN": self.getPCNsString(registro),
                 "Formato": registro.formato?.descripcion || "",
                 "Estatus": registro.estatusMaterial?.descripcion || "",
                 "Nombre del Proyecto": registro.brief?.nombre || "",

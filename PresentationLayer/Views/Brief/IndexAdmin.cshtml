@@ -294,8 +294,15 @@
                                         <select class="form-control" data-bind="options: catPrioridad, value: prioridad, optionsText: 'descripcion', optionsCaption: 'Seleccione'"></select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">PCN</label>
-                                        <select class="form-control" data-bind="options: catPCN, value: pcn, optionsText: 'descripcion', optionsCaption: 'Seleccione'"></select>
+                                        <label class="form-label">PCN (Seleccione uno o más)</label>
+                                        <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ced4da; border-radius: 0.25rem; padding: 0.5rem;">
+                                            <div data-bind="foreach: catPCN">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" data-bind="checkedValue: $data, checked: $root.pcnsSeleccionados, attr: { id: 'pcn_' + id }">
+                                                    <label class="form-check-label" data-bind="text: descripcion, attr: { for: 'pcn_' + id }"></label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Audiencia</label>

@@ -63,7 +63,7 @@ function AppViewModel() {
     self.prioridad = ValidationModule.validations.requiredField();
     self.ciclo = ValidationModule.validations.requiredField();
     self.catPCN = ko.observableArray();
-    self.pcn = ValidationModule.validations.requiredField();
+    self.pcnsSeleccionados = ko.observableArray(); // Array para múltiples PCN
     self.formato = ValidationModule.validations.requiredField();
     self.catFormato = ko.observableArray();
     self.audiencia = ValidationModule.validations.requiredField();
@@ -422,20 +422,26 @@ function AppViewModel() {
         self.responsable("");
         self.area("");
         self.prioridad("");
-        self.pcn("");
+        self.pcnsSeleccionados.removeAll(); // Limpiar PCNs seleccionados
         self.formato("");
         self.audiencia("");
     }
     self.GuardarMaterial = function () {
         
         validarYProcesarFormulario(self.errors, function () {
+            // Validar que se hayan seleccionado PCNs
+            if (self.pcnsSeleccionados().length === 0) {
+                alert('Debe seleccionar al menos un PCN');
+                return;
+            }
+
             var Material = {
                 BriefId: self.id(),
                 Nombre: self.nombreMaterial(),
                 Mensaje: self.mensaje(),
                 PrioridadId: self.prioridad().id,
                 Ciclo: self.ciclo(),
-                PCNId: self.pcn().id,
+                PCNIds: self.pcnsSeleccionados().map(function(pcn) { return pcn.id; }), // Array de IDs
                 AudienciaId: self.audiencia().id,
                 FormatoId: self.formato().id,
                 FechaEntrega: self.fechaEntrega(),

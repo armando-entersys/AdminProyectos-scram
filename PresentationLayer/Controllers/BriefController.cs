@@ -553,18 +553,32 @@ namespace PresentationLayer.Controllers
             return Ok(res);
         }
         [HttpPost]
-        public ActionResult CreateMaterial([FromBody] Material material)
+        public ActionResult CreateMaterial([FromBody] CreateMaterialRequest request)
         {
             respuestaServicio res = new respuestaServicio();
             var urlBase = $"{Request.Scheme}://{Request.Host}";
 
-            material.FechaModificacion = DateTime.Now;
-            material.EstatusMaterialId = 1;
+            // Crear el material desde el request
+            var material = new Material
+            {
+                BriefId = request.BriefId,
+                Nombre = request.Nombre,
+                Mensaje = request.Mensaje,
+                PrioridadId = request.PrioridadId,
+                Ciclo = request.Ciclo,
+                AudienciaId = request.AudienciaId,
+                FormatoId = request.FormatoId,
+                FechaEntrega = request.FechaEntrega,
+                Responsable = request.Responsable,
+                Area = request.Area,
+                FechaModificacion = DateTime.Now,
+                EstatusMaterialId = 1
+            };
+
             try
             {
-                
-                
-                _briefService.InsertMaterial(material);
+                // Insertar material con sus PCNs
+                _briefService.InsertMaterialConPCNs(material, request.PCNIds);
                 var brief = _briefService.GetById(material.BriefId);
                 Alerta alertaUsuario = new Alerta
                 {

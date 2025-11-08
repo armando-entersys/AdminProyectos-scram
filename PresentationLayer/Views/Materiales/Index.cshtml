@@ -118,6 +118,7 @@
                     <tr>
                         <th scope="col">Nombre de Material</th>
                         <th scope="col">Mensaje</th>
+                        <th scope="col">PCN</th>
                         <th scope="col">Formato</th>
                         <th scope="col">Estatus</th>
                         <th scope="col">Nombre del proyecto</th>
@@ -133,6 +134,7 @@
                     <tr>
                         <td data-bind="text: nombre"></td>
                         <td data-bind="text: mensaje"></td>
+                        <td data-bind="text: $root.getPCNsString($data)"></td>
                         <td data-bind="text: formato.descripcion"></td>
                         <td data-bind="text: estatusMaterial.descripcion"></td>
                         <td data-bind="text: brief.nombre"></td>
