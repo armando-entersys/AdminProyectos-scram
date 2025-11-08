@@ -740,7 +740,7 @@ namespace PresentationLayer.Controllers
             }
             catch (Exception ex)
             {
-                res.Mensaje = "Petición fallida";
+                res.Mensaje = $"Petición fallida: {ex.Message} - StackTrace: {ex.StackTrace}";
                 res.Exito = false;
             }
             return Ok(res);
