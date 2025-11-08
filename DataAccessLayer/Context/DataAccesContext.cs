@@ -51,6 +51,7 @@ namespace DataAccessLayer.Context
         public DbSet<PCN> PCN { get; set; }
         public DbSet<Audiencia> Audiencia { get; set; }
         public DbSet<Formato> Formato { get; set; }
+        public DbSet<MaterialPCN> MaterialPCN { get; set; }
 
 
 
@@ -142,11 +143,21 @@ namespace DataAccessLayer.Context
                 .WithMany(p => p.Materiales)
                 .HasForeignKey(m => m.PrioridadId);
 
-            // Relación de Material con PCN
-            modelBuilder.Entity<Material>()
-                .HasOne(m => m.PCN)
-                .WithMany(p => p.Materiales)
-                .HasForeignKey(m => m.PCNId);
+            // Relación muchos a muchos Material-PCN
+            modelBuilder.Entity<MaterialPCN>()
+                .HasKey(mp => new { mp.MaterialId, mp.PCNId });
+
+            modelBuilder.Entity<MaterialPCN>()
+                .HasOne(mp => mp.Material)
+                .WithMany(m => m.MaterialPCNs)
+                .HasForeignKey(mp => mp.MaterialId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<MaterialPCN>()
+                .HasOne(mp => mp.PCN)
+                .WithMany(p => p.MaterialPCNs)
+                .HasForeignKey(mp => mp.PCNId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Relación de Material con Audiencia
             modelBuilder.Entity<Material>()

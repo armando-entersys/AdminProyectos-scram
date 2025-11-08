@@ -16,8 +16,8 @@ namespace EntityLayer.Concrete
 
         public string Ciclo { get; set; }
 
-        public int PCNId { get; set; }
-        public PCN PCN { get; set; } // Propiedad de navegación
+        // Relación muchos a muchos con PCN a través de MaterialPCN
+        public ICollection<MaterialPCN> MaterialPCNs { get; set; } = new List<MaterialPCN>();
 
         public int AudienciaId { get; set; }
         public Audiencia Audiencia { get; set; } // Propiedad de navegación

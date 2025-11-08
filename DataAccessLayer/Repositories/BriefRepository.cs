@@ -225,6 +225,32 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
+        /// Inserta un Material con múltiples PCNs.
+        /// </summary>
+        /// <param name="entity">El Material a insertar.</param>
+        /// <param name="pcnIds">Lista de IDs de PCN a asociar.</param>
+        public void InsertMaterialConPCNs(Material entity, List<int> pcnIds)
+        {
+            // Agregar el material primero
+            _context.Materiales.Add(entity);
+            _context.SaveChanges();
+
+            // Luego agregar las relaciones MaterialPCN
+            if (pcnIds != null && pcnIds.Any())
+            {
+                foreach (var pcnId in pcnIds)
+                {
+                    _context.MaterialPCN.Add(new MaterialPCN
+                    {
+                        MaterialId = entity.Id,
+                        PCNId = pcnId
+                    });
+                }
+                _context.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// Obtiene un Proyecto asociado al Brief especificado por su ID.
         /// </summary>
         /// <param name="id">ID del Brief.</param>
@@ -245,7 +271,8 @@ namespace DataAccessLayer.Repositories
             return _context.Materiales
                 .Where(m => m.BriefId == id)
                 .Include(m => m.Prioridad)
-                .Include(m => m.PCN)
+                .Include(m => m.MaterialPCNs)
+                    .ThenInclude(mp => mp.PCN)
                 .Include(m => m.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
@@ -399,49 +426,21 @@ namespace DataAccessLayer.Repositories
         public List<Material> GetMaterialesByUser(int id)
         {
             var usuarioAdmin = _context.Usuarios.Where(q => q.Id == id && (q.RolId == 1 || q.RolId == 3)).FirstOrDefault();
-            var materiales = _context.Materiales.Where(q => q.Brief.UsuarioId == id)
-                             .Select(p => new Material
-                             {
-                                 Id = p.Id,
-                                 Nombre = p.Nombre,
-                                 Mensaje = p.Mensaje,
-                                 Prioridad = _context.Prioridad.Where(u => u.Id == p.PrioridadId).FirstOrDefault(),
-                                 Ciclo = p.Ciclo,
-                                 PCN = _context.PCN.Where(u => u.Id == p.PCNId).FirstOrDefault(),
-                                 Audiencia = _context.Audiencia.Where(u => u.Id == p.AudienciaId).FirstOrDefault(),
-                                 Formato = _context.Formato.Where(u => u.Id == p.FormatoId).FirstOrDefault(),
-                                 FechaEntrega = p.FechaEntrega,
-                                 Responsable = p.Responsable,
-                                 Area = p.Area,
-                                 FechaRegistro = p.FechaRegistro,
-                                 FechaModificacion = p.FechaModificacion,
-                                 Brief = _context.Briefs.Where(q => q.Id == p.BriefId).FirstOrDefault(),
-                                 EstatusMaterial = _context.EstatusMateriales.Where(u => u.Id == p.EstatusMaterialId).FirstOrDefault(),
-                                 EstatusMaterialId = p.EstatusMaterialId
-                             }).ToList();
 
-            if (usuarioAdmin != null)
-            {
-                materiales = _context.Materiales.Select(p => new Material
-                {
-                    Id = p.Id,
-                    Nombre = p.Nombre,
-                    Mensaje = p.Mensaje,
-                    Prioridad = _context.Prioridad.Where(u => u.Id == p.PrioridadId).FirstOrDefault(),
-                    Ciclo = p.Ciclo,
-                    PCN = _context.PCN.Where(u => u.Id == p.PCNId).FirstOrDefault(),
-                    Audiencia = _context.Audiencia.Where(u => u.Id == p.AudienciaId).FirstOrDefault(),
-                    Formato = _context.Formato.Where(u => u.Id == p.FormatoId).FirstOrDefault(),
-                    FechaEntrega = p.FechaEntrega,
-                    Responsable = p.Responsable,
-                    Area = p.Area,
-                    FechaRegistro = p.FechaRegistro,
-                    FechaModificacion = p.FechaModificacion,
-                    Brief = _context.Briefs.Where(q => q.Id == p.BriefId).FirstOrDefault(),
-                    EstatusMaterialId = p.EstatusMaterialId,
-                    EstatusMaterial = _context.EstatusMateriales.Where(u => u.Id == p.EstatusMaterialId).FirstOrDefault()
-                }).ToList();
-            }
+            var query = usuarioAdmin != null
+                ? _context.Materiales // Si es admin, obtener todos
+                : _context.Materiales.Where(q => q.Brief.UsuarioId == id); // Si no, solo los del usuario
+
+            var materiales = query
+                .Include(m => m.Prioridad)
+                .Include(m => m.MaterialPCNs)
+                    .ThenInclude(mp => mp.PCN)
+                .Include(m => m.Audiencia)
+                .Include(m => m.Formato)
+                .Include(m => m.Brief)
+                .Include(m => m.EstatusMaterial)
+                .ToList();
+
             return materiales;
         }
 
@@ -455,7 +454,8 @@ namespace DataAccessLayer.Repositories
             return _context.Materiales
                 .Where(m => m.Id == id)
                 .Include(m => m.Prioridad)
-                .Include(m => m.PCN)
+                .Include(m => m.MaterialPCNs)
+                    .ThenInclude(mp => mp.PCN)
                 .Include(m => m.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
@@ -485,7 +485,8 @@ namespace DataAccessLayer.Repositories
                     m.Nombre == material.Nombre &&
                     m.FechaRegistro == material.FechaRegistro)
                 .Include(m => m.Prioridad)
-                .Include(m => m.PCN)
+                .Include(m => m.MaterialPCNs)
+                    .ThenInclude(mp => mp.PCN)
                 .Include(m => m.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)

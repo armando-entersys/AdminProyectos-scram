@@ -21,6 +21,7 @@ namespace DataAccessLayer.Abstract
         IEnumerable<TipoBrief> GetAllTipoBrief();
         void InsertProyecto(Proyecto entity);
         void InsertMaterial(Material entity);
+        void InsertMaterialConPCNs(Material entity, List<int> pcnIds);
         Proyecto GetProyectoByBriefId(int id);
         List<Material> GetMaterialesByBriefId(int id);
         void EliminarMaterial(int id);
