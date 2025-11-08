@@ -130,7 +130,23 @@
 
     }
     self.Guardar = function () {
-        
+        // Validar todos los campos obligatorios
+        if (self.errors().length > 0) {
+            self.errors.showAllMessages();
+            alert('Por favor complete todos los campos obligatorios');
+            return;
+        }
+
+        // Validar que la fecha de entrega no sea anterior a hoy
+        var fechaSeleccionada = new Date(self.fechaEntrega());
+        var hoy = new Date();
+        hoy.setHours(0, 0, 0, 0); // Resetear horas para comparar solo la fecha
+
+        if (fechaSeleccionada < hoy) {
+            alert('La fecha de entrega no puede ser anterior a la fecha actual');
+            return;
+        }
+
         if (self.id() === 0) {
             self.GuardarNuevo();
         }

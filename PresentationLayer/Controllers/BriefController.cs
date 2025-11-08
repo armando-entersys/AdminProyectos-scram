@@ -199,6 +199,16 @@ namespace PresentationLayer.Controllers
         public ActionResult EditStatus([FromBody] Brief brief)
         {
             var res = new respuestaServicio();
+
+            // Verificar que solo el Administrador (RolId=1) pueda cambiar el estatus
+            int rolId = Int32.Parse(User.FindFirst(ClaimTypes.Role)?.Value);
+            if (rolId != 1)
+            {
+                res.Mensaje = "No tiene permisos para cambiar el estatus del proyecto.";
+                res.Exito = false;
+                return Ok(res);
+            }
+
             var BriefOrg = _briefService.GetById(brief.Id);
 
             if (brief.EstatusBriefId == BriefOrg.EstatusBriefId)
