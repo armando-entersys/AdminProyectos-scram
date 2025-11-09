@@ -15,7 +15,7 @@ function AppViewModel() {
 
     self.inicializar = function () {
         $.ajax({
-            url: "Alertas/ObtenerAlertas", // URL del método GetAll en tu API
+            url: "/Alertas/ObtenerAlertas", // URL del método GetAll en tu API
             type: "GET",
             contentType: "application/json",
             success: function (d) {
@@ -27,7 +27,7 @@ function AppViewModel() {
                 alert("Error al obtener los datos: " + xhr.responseText);
             }
         });
-           
+
     }
     self.inicializar();
 
@@ -35,7 +35,7 @@ function AppViewModel() {
 
     self.Editar = function (alerta) {
         $.ajax({
-            url: "Alertas/ActualizarAlerta/" + alerta.id, // URL del método GetAll en tu API
+            url: "/Alertas/ActualizarAlerta/" + alerta.id, // URL del método GetAll en tu API
             type: "GET",
             contentType: "application/json",
             success: function (d) {

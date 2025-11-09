@@ -22,7 +22,7 @@ function AppViewModel() {
 
     self.inicializar = function () {
         $.ajax({
-            url: "Usuarios/GetAll", // URL del método GetAll en tu API
+            url: "/Usuarios/GetAll", // URL del método GetAll en tu API
             type: "GET",
             contentType: "application/json",
             success: function (d) {
@@ -33,7 +33,7 @@ function AppViewModel() {
                 $("#divEdicion").modal("hide");
                 //self.Limpiar();
                 $.ajax({
-                    url: "Usuarios/GetAllRoles", // URL del método GetAll en tu API
+                    url: "/Usuarios/GetAllRoles", // URL del método GetAll en tu API
                     type: "GET",
                     contentType: "application/json",
                     success: function (d) {
@@ -53,7 +53,7 @@ function AppViewModel() {
                 alert("Error al obtener los datos: " + xhr.responseText);
             }
         });
-           
+
     }
     self.inicializar();
 
@@ -102,7 +102,7 @@ function AppViewModel() {
             Contrasena: self.contrasena()
         }
         $.ajax({
-            url: "Usuarios/Edit", // URL del método GetAll en tu API
+            url: "/Usuarios/Edit", // URL del método GetAll en tu API
             type: "PUT",
             contentType: "application/json",
             data: JSON.stringify(usuario),
@@ -138,7 +138,7 @@ function AppViewModel() {
             Contrasena: self.contrasena()
         }
         $.ajax({
-            url: "Usuarios/Create", // URL del método GetAll en tu API
+            url: "/Usuarios/Create", // URL del método GetAll en tu API
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(usuario),

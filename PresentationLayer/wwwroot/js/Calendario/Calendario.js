@@ -50,7 +50,7 @@
     // Fetch project data and load into the calendar
     self.inicializar = function () {
         $.ajax({
-            url: "Materiales/ObtenerMateriales",
+            url: "/Materiales/ObtenerMateriales",
             type: "GET",
             contentType: "application/json",
             success: function (d) {
@@ -61,7 +61,7 @@
                     return {
                         title: item.nombre,
                         start: fechaFormateada,
-                        end: fechaFin, 
+                        end: fechaFin,
                         allDay: true,
                         extendedProps: {
                             fechaEntrega: fechaFormateada,
