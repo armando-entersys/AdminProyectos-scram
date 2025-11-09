@@ -100,7 +100,6 @@ namespace PresentationLayer.Controllers
                     m.EstatusMaterialId,
                     MaterialPCNs = m.MaterialPCNs.Select(mp => new
                     {
-                        mp.Id,
                         mp.MaterialId,
                         mp.PCNId,
                         PCN = new
