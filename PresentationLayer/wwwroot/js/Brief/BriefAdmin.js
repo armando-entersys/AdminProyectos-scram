@@ -569,56 +569,72 @@ function AppViewModel() {
 
     // Método de búsqueda de usuarios con Autocompletar
     self.buscarUsuarios = function () {
+        console.log("buscarUsuarios llamado, longitud:", self.buscarUsuario().length);
+
         if (self.buscarUsuario().length < 3) {
             self.resultadosBusqueda([]); // Limpia resultados si menos de 3 caracteres
+            console.log("Menos de 3 caracteres, limpiando resultados");
             return;
         }
+
         var usuario = {
             Nombre: self.buscarUsuario(),
         }
 
+        console.log("Buscando usuario:", usuario);
+
         $.ajax({
-            url: "Usuarios/BuscarUsuario", // Ruta de tu API para buscar usuarios
+            url: "/Usuarios/BuscarUsuario", // Ruta absoluta para evitar problemas de path
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(usuario),
             success: function (d) {
-               self.resultadosBusqueda(d.datos); // Asigna resultados al array
+                console.log("Respuesta del servidor:", d);
+                console.log("Número de resultados:", d.datos ? d.datos.length : 0);
+                self.resultadosBusqueda(d.datos); // Asigna resultados al array
             },
             error: function (xhr, status, error) {
-                console.error("Error al buscar usuarios: ", error);
+                console.error("Error al buscar usuarios:", error);
+                console.error("Status:", status);
+                console.error("Response:", xhr.responseText);
             }
         });
     };
 
     // Seleccionar usuario y agregar a Participante
     self.seleccionarUsuario = function (usuario) {
-  
+        console.log("Usuario seleccionado:", usuario);
+
         var participante = {
             BriefId: self.id(),
             UsuarioId : usuario.id
         }
+
+        console.log("Agregando participante:", participante);
+
         $.ajax({
-            url: "Usuarios/AgregarParticipante", // Ruta de tu API para buscar usuarios
+            url: "/Usuarios/AgregarParticipante", // Ruta absoluta
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(participante),
             success: function (d) {
-                
+                console.log("Participante agregado exitosamente");
+
                 self.buscarUsuario(""); // Limpia el campo de búsqueda
                 self.resultadosBusqueda([]); // Limpia resultados de autocompletado
                 $.ajax({
-                    url: "Usuarios/ObtenerParticipantes/" + self.id(), // URL del método GetAll en tu API
+                    url: "/Usuarios/ObtenerParticipantes/" + self.id(), // Ruta absoluta
                     type: "GET",
                     contentType: "application/json",
                     success: function (d) {
+                        console.log("Participantes obtenidos:", d.datos);
                         self.registrosParticipantes.removeAll();
                         self.registrosParticipantes.push.apply(self.registrosParticipantes, d.datos);
                         $("#divEdicion").modal("show");
 
                     },
                     error: function (xhr, status, error) {
-                        console.error("Error al obtener los datos: ", error);
+                        console.error("Error al obtener participantes:", error);
                         alert("Error al obtener los datos: " + xhr.responseText);
                     }
                 });
