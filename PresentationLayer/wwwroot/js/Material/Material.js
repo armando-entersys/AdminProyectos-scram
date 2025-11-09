@@ -31,6 +31,18 @@ function AppViewModel() {
     self.rutaArchivo = ko.observable("");
     self.nombreBrief = ko.observable("");
 
+    // Computed para normalizar URLs agregando http:// si no tiene protocolo
+    self.linksReferenciasNormalizadas = ko.computed(function() {
+        var links = self.linksReferencias();
+        if (!links) return '';
+
+        // Si el link no empieza con http:// o https://, agregarlo
+        if (links && !links.match(/^https?:\/\//i)) {
+            return 'http://' + links;
+        }
+        return links;
+    });
+
     // Observables para filtros
     self.filtroNombre = ko.observable("");
     self.filtroNombreProyecto = ko.observable("");
