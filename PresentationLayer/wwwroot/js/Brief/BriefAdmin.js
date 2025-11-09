@@ -439,8 +439,18 @@ function AppViewModel() {
         self.audiencia("");
     }
     self.GuardarMaterial = function () {
-        
+
         validarYProcesarFormulario(self.errors, function () {
+            // Validar que la fecha de entrega no sea anterior a hoy
+            var fechaSeleccionada = new Date(self.fechaEntrega());
+            var hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+
+            if (fechaSeleccionada < hoy) {
+                alert('La fecha de entrega no puede ser anterior al día de hoy');
+                return;
+            }
+
             // Validar que se hayan seleccionado PCNs
             if (self.pcnsSeleccionados().length === 0) {
                 alert('Debe seleccionar al menos un PCN');
