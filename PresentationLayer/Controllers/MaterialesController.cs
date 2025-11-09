@@ -60,7 +60,58 @@ namespace PresentationLayer.Controllers
             {
                 var id = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 var materiales = _briefService.GetMaterialesByUser(id);
-                res.Datos = materiales;
+
+                // Proyectar a un objeto anónimo para evitar referencias circulares
+                var materialesDto = materiales.Select(m => new
+                {
+                    m.Id,
+                    m.Nombre,
+                    m.Mensaje,
+                    m.Area,
+                    m.Responsable,
+                    m.FechaEntrega,
+                    Brief = new
+                    {
+                        m.Brief.Id,
+                        m.Brief.Nombre,
+                        m.Brief.LinksReferencias,
+                        m.Brief.RutaArchivo
+                    },
+                    Formato = new
+                    {
+                        m.Formato.Id,
+                        m.Formato.Descripcion
+                    },
+                    Audiencia = new
+                    {
+                        m.Audiencia.Id,
+                        m.Audiencia.Descripcion
+                    },
+                    EstatusMaterial = new
+                    {
+                        m.EstatusMaterial.Id,
+                        m.EstatusMaterial.Descripcion
+                    },
+                    Prioridad = new
+                    {
+                        m.Prioridad.Id,
+                        m.Prioridad.Descripcion
+                    },
+                    m.EstatusMaterialId,
+                    MaterialPCNs = m.MaterialPCNs.Select(mp => new
+                    {
+                        mp.Id,
+                        mp.MaterialId,
+                        mp.PCNId,
+                        PCN = new
+                        {
+                            mp.PCN.Id,
+                            mp.PCN.Descripcion
+                        }
+                    }).ToList()
+                }).ToList();
+
+                res.Datos = materialesDto;
                 res.Exito = true;
             }
             catch (Exception ex) // Capturamos el error exacto
