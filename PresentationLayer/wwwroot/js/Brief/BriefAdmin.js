@@ -596,7 +596,7 @@ function AppViewModel() {
         console.log("Buscando usuario:", usuario);
 
         $.ajax({
-            url: "/Usuarios/BuscarUsuario", // Ruta absoluta para evitar problemas de path
+            url: "/Usuarios/BuscarAllUsuarios", // Buscar todos los usuarios (incluyendo Producción)
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(usuario),
