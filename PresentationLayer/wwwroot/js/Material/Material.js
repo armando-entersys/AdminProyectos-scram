@@ -197,7 +197,12 @@ function AppViewModel() {
             self.linksReferencias(material.brief.linksReferencias);
         }
 
-        self.rutaArchivo(material.brief.rutaArchivo);
+        if (material.brief.rutaArchivo == "undefined" || !material.brief.rutaArchivo) {
+            self.rutaArchivo("");
+        }
+        else {
+            self.rutaArchivo(material.brief.rutaArchivo);
+        }
         var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
             return r.id === material.estatusMaterialId;
         });

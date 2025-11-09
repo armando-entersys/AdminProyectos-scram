@@ -190,7 +190,12 @@
                                     </div>
                                     <div class="col-md-6">
                                         <p><strong>Archivo del Brief:</strong>
-                                            <a id="archivoCargado" data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo || 'No hay archivo'" target="_blank"></a>
+                                            <span data-bind="if: rutaArchivo() && rutaArchivo() !== ''">
+                                                <a id="archivoCargado" data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo()" target="_blank"></a>
+                                            </span>
+                                            <span data-bind="if: !rutaArchivo() || rutaArchivo() === ''">
+                                                No hay archivo
+                                            </span>
                                         </p>
                                     </div>
                                 </div>
