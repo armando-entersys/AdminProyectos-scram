@@ -161,8 +161,8 @@ namespace PresentationLayer.Controllers
                 ApellidoMaterno = ApellidoMaterno,
                 Contrasena = Contrasena,
                 RolId = 2,
-                Estatus = true, // Usuario activo por defecto
-                SolicitudRegistro = true,
+                Estatus = false, // Usuario inactivo hasta aprobación del administrador
+                SolicitudRegistro = true, // Marcar como solicitud pendiente
                 FechaRegistro = DateTime.Now,
                 FechaModificacion = DateTime.Now
             };
