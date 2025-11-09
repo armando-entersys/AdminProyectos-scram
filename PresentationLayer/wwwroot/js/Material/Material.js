@@ -141,12 +141,12 @@ function AppViewModel() {
 
     // Inicializar datos
     self.inicializar = function () {
-        $.get("Materiales/ObtenerMateriales")
+        $.get("/Materiales/ObtenerMateriales")
             .then(function (d) {
                 console.log("Datos de materiales:", d.datos); // Verifica la estructura de datos
                 self.registros(d.datos);
 
-                return $.get("Materiales/ObtenerConteoEstatusMateriales");
+                return $.get("/Materiales/ObtenerConteoEstatusMateriales");
             })
             .then(function (d) {
                 self.revision(d.datos.revision);
@@ -155,13 +155,13 @@ function AppViewModel() {
                 self.aprobado(d.datos.aprobado);
                 self.programado(d.datos.programado);
                 self.entregado(d.datos.entregado);
-                return $.get("Materiales/ObtenerEstatusMateriales");
+                return $.get("/Materiales/ObtenerEstatusMateriales");
             })
             .then(function (d) {
                 self.catEstatusMateriales(d.datos);
                 self.catEstatusMaterialesFiltro(d.datos);
             })
- 
+
             .catch(function (error) {
                 console.error("Error al inicializar los datos:", error);
             });
@@ -192,7 +192,7 @@ function AppViewModel() {
         self.EstatusMateriales(EstatusMateriales);
 
         // Obtener historial y mostrar el modal
-        Promise.resolve($.get("Materiales/ObtenerHistorial/" + material.id))
+        Promise.resolve($.get("/Materiales/ObtenerHistorial/" + material.id))
             .then(function (d) {
                 self.registrosHistorico(d.datos);
                 $("#divEdicion").modal("show");
@@ -236,7 +236,7 @@ function AppViewModel() {
         self.EstatusMateriales(EstatusMateriales);
 
         // Usar Promise.resolve para asegurar que siempre devuelve una promesa
-        Promise.resolve($.get("Materiales/ObtenerHistorial/" + material.id))
+        Promise.resolve($.get("/Materiales/ObtenerHistorial/" + material.id))
             .then(function (d) {
                 self.registrosHistorico(d.datos);
                 $("#divEdicion").modal("show");
@@ -251,7 +251,7 @@ function AppViewModel() {
                             $('.tox-statusbar__branding').hide();
                             editor.setContent('');
                             editor.focus();
-                        }
+                            }
                     }, 50);
 
                     // Timeout de seguridad
@@ -317,14 +317,14 @@ function AppViewModel() {
 
         // Enviar la solicitud
         $.ajax({
-            url: "Materiales/AgregarHistorialMaterial",
+            url: "/Materiales/AgregarHistorialMaterial",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(historialMaterialRequest),
             success: function (response) {
                 // Mostrar mensaje de éxito y refrescar los datos
                 showAlertModal(response.mensaje);
-                
+
                 self.inicializar();
             },
             error: function (xhr, status, error) {
@@ -354,7 +354,7 @@ function AppViewModel() {
 
         // Enviar la solicitud AJAX
         $.ajax({
-            url: "Usuarios/BuscarAllUsuarios",
+            url: "/Usuarios/BuscarAllUsuarios",
             type: "POST",
             contentType: "application/json", // Asegúrate de que el Content-Type sea JSON
             data: JSON.stringify(usuarioRequest), // Convertir el objeto a JSON
@@ -383,7 +383,7 @@ function AppViewModel() {
             };
 
             $.ajax({
-                url: "Materiales/NotificarParticipante",
+                url: "/Materiales/NotificarParticipante",
                 type: "POST",
                 contentType: "application/json",
                 data: JSON.stringify(notificacionRequest),
