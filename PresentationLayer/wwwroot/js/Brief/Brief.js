@@ -9,7 +9,7 @@
     self.descripcion = ValidationModule.validations.requiredField();
     self.objetivo = ValidationModule.validations.requiredField();
     self.dirigidoA = ValidationModule.validations.requiredField();
-    self.comentario = ValidationModule.validations.requiredField();
+    self.comentario = ko.observable(""); // Campo opcional, no existe en el formulario
     self.rutaArchivo = ko.observable(""); // Campo opcional, no obligatorio
     self.fechaEntrega = ValidationModule.validations.requiredField();
 
