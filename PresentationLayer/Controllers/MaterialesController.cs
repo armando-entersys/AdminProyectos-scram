@@ -266,14 +266,18 @@ namespace PresentationLayer.Controllers
                     }
                 }
 
-                if (historialMaterialRequest.EnvioCorreo)
+                if (historialMaterialRequest.EnvioCorreo && historialMaterialRequest.Usuarios != null && historialMaterialRequest.Usuarios.Any())
                 {
                     var EstatusMaterial = _briefService.GetAllEstatusMateriales().Where(q => q.Id == historialMaterialRequest.HistorialMaterial.EstatusMaterialId).FirstOrDefault();
                     var Destinatarios = new List<string>();
+
+                    // Solo extraer los correos de los usuarios, sin hacer consultas adicionales
                     foreach(var item in historialMaterialRequest.Usuarios)
                     {
-                        var usuario = _usuarioService.TGetById(item.Id);
-                        Destinatarios.Add(usuario.Correo);
+                        if (!string.IsNullOrEmpty(item.Correo))
+                        {
+                            Destinatarios.Add(item.Correo);
+                        }
                     }
                     Destinatarios.AddRange(_toolsService.GetUsuarioByRol(3).Select(q => q.Correo).ToList());
 
