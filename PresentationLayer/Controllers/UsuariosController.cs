@@ -105,8 +105,9 @@ namespace PresentationLayer.Controllers
         {
             respuestaServicio res = new respuestaServicio();
 
-          
+
             usuario.UserRol = _rolService.TGetById(usuario.RolId);
+            usuario.Estatus = true; // Usuario activo por defecto
             _usuarioService.TInsert(usuario);
             
             var urlBase = $"{Request.Scheme}://{Request.Host}";
@@ -160,7 +161,7 @@ namespace PresentationLayer.Controllers
                 ApellidoMaterno = ApellidoMaterno,
                 Contrasena = Contrasena,
                 RolId = 2,
-                Estatus = false,
+                Estatus = true, // Usuario activo por defecto
                 SolicitudRegistro = true,
                 FechaRegistro = DateTime.Now,
                 FechaModificacion = DateTime.Now
