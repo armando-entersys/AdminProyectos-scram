@@ -44,6 +44,20 @@
         })
             .then(() => self.cargarDatos("Brief/ObtenerConteoMateriales", function (data) {
                 console.log("📦 Datos de materiales:", data);
+                console.log("📦 Tipo de data:", typeof data);
+                console.log("📦 data.datos:", data.datos);
+                console.log("📦 Tipo de data.datos:", typeof data.datos);
+                console.log("📦 data.exito:", data.exito);
+                console.log("📦 data.mensaje:", data.mensaje);
+                console.log("📦 JSON completo:", JSON.stringify(data, null, 2));
+
+                if (!data.datos) {
+                    console.error("❌ ERROR: data.datos es undefined o null");
+                    console.error("❌ Respuesta completa:", data);
+                    alert("Error: La respuesta del servidor no tiene la estructura esperada. Revisa la consola para más detalles.");
+                    return;
+                }
+
                 self.Hoy_Material(data.datos.hoy);
                 self.EstaSemana_Material(data.datos.estaSemana);
                 self.ProximaSemana_Material(data.datos.proximaSemana);
