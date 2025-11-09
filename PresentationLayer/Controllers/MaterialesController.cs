@@ -218,6 +218,7 @@ namespace PresentationLayer.Controllers
                 // Siempre crear alerta al usuario del brief cuando hay un nuevo comentario
                 if (material != null && material.Brief != null)
                 {
+                    // Notificar al dueño del brief
                     var alertaComentario = new Alerta
                     {
                         IdUsuario = material.Brief.UsuarioId,
@@ -227,6 +228,25 @@ namespace PresentationLayer.Controllers
                         Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
                     };
                     _toolsService.CrearAlerta(alertaComentario);
+
+                    // Notificar a todos los participantes del brief (excepto quien comentó)
+                    var participantes = _toolsService.ObtenerParticipantes(material.BriefId);
+                    foreach (var participante in participantes)
+                    {
+                        // No notificar al usuario que hizo el comentario
+                        if (participante.UsuarioId != UsuarioId)
+                        {
+                            var alertaParticipante = new Alerta
+                            {
+                                IdUsuario = participante.UsuarioId,
+                                Nombre = "Nuevo Comentario en Material",
+                                Descripcion = $"{usuarioLogueado.Nombre} agregó un comentario en el material '{material.Nombre}'",
+                                IdTipoAlerta = 3,
+                                Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                            };
+                            _toolsService.CrearAlerta(alertaParticipante);
+                        }
+                    }
                 }
 
                 // Si cambió el estatus, notificar también
@@ -237,6 +257,7 @@ namespace PresentationLayer.Controllers
 
                     if (material.Brief != null && estatusNuevo != null)
                     {
+                        // Notificar al dueño del brief
                         var alertaEstatus = new Alerta
                         {
                             IdUsuario = material.Brief.UsuarioId,
@@ -246,6 +267,24 @@ namespace PresentationLayer.Controllers
                             Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
                         };
                         _toolsService.CrearAlerta(alertaEstatus);
+
+                        // Notificar a todos los participantes del brief (excepto quien cambió el estatus)
+                        var participantes = _toolsService.ObtenerParticipantes(material.BriefId);
+                        foreach (var participante in participantes)
+                        {
+                            if (participante.UsuarioId != UsuarioId)
+                            {
+                                var alertaEstatusParticipante = new Alerta
+                                {
+                                    IdUsuario = participante.UsuarioId,
+                                    Nombre = "Cambio de Estatus en Material",
+                                    Descripcion = $"El material '{material.Nombre}' cambió a estatus '{estatusNuevo.Descripcion}'",
+                                    IdTipoAlerta = 4,
+                                    Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                                };
+                                _toolsService.CrearAlerta(alertaEstatusParticipante);
+                            }
+                        }
                     }
                 }
 
@@ -254,6 +293,7 @@ namespace PresentationLayer.Controllers
                 {
                     if (material != null && material.Brief != null)
                     {
+                        // Notificar al dueño del brief
                         var alertaUsuario = new Alerta
                         {
                             IdUsuario = material.Brief.UsuarioId,
@@ -263,6 +303,24 @@ namespace PresentationLayer.Controllers
                             Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
                         };
                         _toolsService.CrearAlerta(alertaUsuario);
+
+                        // Notificar a todos los participantes del brief (excepto quien marcó como entregado)
+                        var participantes = _toolsService.ObtenerParticipantes(material.BriefId);
+                        foreach (var participante in participantes)
+                        {
+                            if (participante.UsuarioId != UsuarioId)
+                            {
+                                var alertaEntregadoParticipante = new Alerta
+                                {
+                                    IdUsuario = participante.UsuarioId,
+                                    Nombre = "Material Entregado",
+                                    Descripcion = $"El material '{material.Nombre}' ha sido entregado",
+                                    IdTipoAlerta = 5,
+                                    Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                                };
+                                _toolsService.CrearAlerta(alertaEntregadoParticipante);
+                            }
+                        }
                     }
                 }
 
