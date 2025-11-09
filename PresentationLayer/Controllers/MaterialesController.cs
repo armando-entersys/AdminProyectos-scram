@@ -294,8 +294,8 @@ namespace PresentationLayer.Controllers
             }
             catch (Exception ex)
             {
-
-                res.Mensaje = "Petición fallida";
+                _logger.LogError(ex, "Error en AgregarHistorialMaterial");
+                res.Mensaje = $"Petición fallida: {ex.Message}";
                 res.Exito = false;
             }
 
