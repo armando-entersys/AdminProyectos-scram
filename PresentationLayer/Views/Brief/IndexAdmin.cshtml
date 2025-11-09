@@ -380,6 +380,9 @@
                                             <td data-bind="text: nombre"></td>
                                             <td data-bind="text: responsable"></td>
                                             <td>
+                                                <a class="btn btn-primary btn-sm" data-bind="attr: { href: '/Materiales?filtroNombre=' + nombre }" target="_blank">
+                                                    <i class="lni lni-eye"></i> Ver
+                                                </a>
                                                 <button class="btn btn-danger btn-sm" data-bind="click: $root.EliminarMaterial">
                                                     <i class="lni lni-trash"></i> Eliminar
                                                 </button>
