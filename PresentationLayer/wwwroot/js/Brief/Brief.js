@@ -132,8 +132,18 @@
     self.Guardar = function () {
         // Validar todos los campos obligatorios
         if (self.errors().length > 0) {
+            console.log("Errores de validación:", self.errors());
+            console.log("Campos con error:");
+            console.log("- nombre:", self.nombre(), "válido:", self.nombre.isValid());
+            console.log("- descripcion:", self.descripcion(), "válido:", self.descripcion.isValid());
+            console.log("- objetivo:", self.objetivo(), "válido:", self.objetivo.isValid());
+            console.log("- dirigidoA:", self.dirigidoA(), "válido:", self.dirigidoA.isValid());
+            console.log("- comentario:", self.comentario(), "válido:", self.comentario.isValid());
+            console.log("- fechaEntrega:", self.fechaEntrega(), "válido:", self.fechaEntrega.isValid());
+            console.log("- TipoBrief:", self.TipoBrief(), "válido:", self.TipoBrief.isValid());
+
             self.errors.showAllMessages();
-            alert('Por favor complete todos los campos obligatorios');
+            alert('Por favor complete todos los campos obligatorios. Revisa la consola (F12) para más detalles.');
             return;
         }
 
