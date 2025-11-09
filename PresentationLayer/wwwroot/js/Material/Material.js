@@ -252,16 +252,6 @@ function AppViewModel() {
             return;
         }
 
-        // Validar que la fecha no sea anterior a hoy
-        var fechaSeleccionada = new Date(self.fechaEntrega());
-        var hoy = new Date();
-        hoy.setHours(0, 0, 0, 0);
-
-        if (fechaSeleccionada < hoy) {
-            alert("La fecha de entrega no puede ser anterior a la fecha actual.");
-            return;
-        }
-
         // Validar que se hayan agregado participantes si se va a enviar correo
         if (self.envioCorreo() !== "No" && self.registrosUsuariosCorreo().length === 0) {
             alert("Debe agregar al menos un participante para enviar notificaciones por correo.");
