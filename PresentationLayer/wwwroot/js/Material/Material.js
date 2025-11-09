@@ -355,6 +355,11 @@ function AppViewModel() {
         }
     };
 
+    // Eliminar participante
+    self.EliminarParticipante = function (usuario) {
+        self.registrosUsuariosCorreo.remove(usuario);
+    };
+
     // Método para setear filtros desde el QueryString
     self.setFiltroFromQueryString = function () {
         const params = new URLSearchParams(window.location.search);

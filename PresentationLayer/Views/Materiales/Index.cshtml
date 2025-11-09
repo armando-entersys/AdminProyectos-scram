@@ -267,8 +267,8 @@
                                             <td data-bind="text: id"></td>
                                             <td data-bind="text: nombre"></td>
                                             <td class="small">
-                                                <button type="button" class="btn btn-outline-primary" data-bind="click:$root.EliminarParticipante">
-                                                    <i class="lni lni-pencil"></i>
+                                                <button type="button" class="btn btn-outline-danger btn-sm" data-bind="click:$root.EliminarParticipante">
+                                                    <i class="lni lni-trash-can"></i>
                                                     <span>Eliminar</span>
                                                 </button>
                                             </td>
@@ -311,11 +311,11 @@
 
             tinymce.init({
                 selector: '#myComentario',
+                license_key: 'gpl',
                 plugins: 'lists link image table code',
                 toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
                 height: 300,
                 menubar: false,
-                language: 'es',
                 images_upload_url: '/Materiales/upload',
                 automatic_uploads: true,
                 images_upload_handler: function (blobInfo, progress) {
