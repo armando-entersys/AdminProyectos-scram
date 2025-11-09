@@ -593,19 +593,24 @@ namespace DataAccessLayer.Repositories
         public void ActualizaHistorialMaterial(HistorialMaterial historialMaterial)
         {
             var material = _context.Materiales.FirstOrDefault(m => m.Id == historialMaterial.MaterialId);
-            
+
             if (material != null)
             {
-                if(historialMaterial.FechaEntrega != null)
+                // Si se proporciona una nueva fecha de entrega, actualizar el material
+                if(historialMaterial.FechaEntrega != null && historialMaterial.FechaEntrega.HasValue)
                 {
-                    if (material.FechaEntrega != historialMaterial.FechaEntrega)
+                    if (material.FechaEntrega != historialMaterial.FechaEntrega.Value)
                     {
-                        material.FechaEntrega = (DateTime)historialMaterial.FechaEntrega;
+                        material.FechaEntrega = historialMaterial.FechaEntrega.Value;
                         _context.Materiales.Update(material);
-                        
                     }
                 }
-                
+                else
+                {
+                    // Si no se proporciona fecha, usar la fecha actual del material
+                    historialMaterial.FechaEntrega = material.FechaEntrega;
+                }
+
                 material.EstatusMaterialId = historialMaterial.EstatusMaterialId;
                 _context.HistorialMateriales.Add(historialMaterial);
 
