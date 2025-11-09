@@ -44,7 +44,8 @@ function AppViewModel() {
     });
 
     // Observables para filtros
-    self.filtroNombre = ko.observable("");
+    // Inicializar filtroNombre con el valor de la URL si existe
+    self.filtroNombre = ko.observable(typeof FiltroNombreInicial !== 'undefined' && FiltroNombreInicial ? FiltroNombreInicial : "");
     self.filtroNombreProyecto = ko.observable("");
     self.filtroArea = ko.observable("");
     self.filtroResponsable = ko.observable("");
