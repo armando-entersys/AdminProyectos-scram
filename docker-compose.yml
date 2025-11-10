@@ -9,6 +9,15 @@ services:
     container_name: local-adminproyectos-sqlserver
     restart: unless-stopped
 
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 1536M
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
     environment:
       - ACCEPT_EULA=Y
       - SA_PASSWORD=Operaciones.2025
@@ -37,6 +46,15 @@ services:
       dockerfile: PresentationLayer/Dockerfile
     container_name: local-adminproyectos-web
     restart: unless-stopped
+
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
     depends_on:
       adminproyectos-sqlserver:
