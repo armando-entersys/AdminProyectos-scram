@@ -237,7 +237,11 @@
                             <div class="col-md-6" data-bind="visible: rutaArchivo">
                                 <label for="archivoCargado" class="form-label">Archivo Cargado</label>
                                 <a id="archivoCargado" class="form-control text-truncate"
-                                   data-bind="attr: { href: '/Brief/DownloadFile?id=' + id }, text: rutaArchivo" target="_blank">Descargar archivo</a>
+                                   data-bind="attr: { href: '/Brief/DownloadFile?id=' + id }, text: rutaArchivo" target="_blank">Ver/Descargar archivo</a>
+                                <!-- Vista previa para imágenes -->
+                                <div data-bind="if: rutaArchivo() && (rutaArchivo().toLowerCase().endsWith('.jpg') || rutaArchivo().toLowerCase().endsWith('.jpeg') || rutaArchivo().toLowerCase().endsWith('.png') || rutaArchivo().toLowerCase().endsWith('.gif'))" class="mt-2">
+                                    <img data-bind="attr: { src: '/Brief/DownloadFile?id=' + id, alt: rutaArchivo }" class="img-fluid" style="max-height: 300px; border: 1px solid #ddd; border-radius: 4px; padding: 5px;" />
+                                </div>
                             </div>
                         </div>
                     </div>
