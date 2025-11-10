@@ -138,10 +138,16 @@ namespace PresentationLayer.Controllers
 
             // Obtener el tipo MIME del archivo
             var mimeType = GetMimeType(filePath);
+            var fileName = Path.GetFileName(filePath);
 
-            // Devolver el archivo para descargar
+            // Devolver el archivo forzando la descarga
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
-            return File(fileBytes, mimeType, Path.GetFileName(filePath));
+
+            // Configurar headers explícitamente para forzar descarga
+            Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{fileName}\"");
+            Response.Headers.Add("X-Content-Type-Options", "nosniff");
+
+            return File(fileBytes, mimeType);
         }
 
         // Método auxiliar para determinar el tipo MIME basado en la extensión del archivo

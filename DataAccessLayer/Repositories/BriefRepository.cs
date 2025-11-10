@@ -315,12 +315,30 @@ namespace DataAccessLayer.Repositories
         /// <returns>Objeto ConteoProyectos con los resultados.</returns>
         public ConteoProyectos ObtenerConteoProyectos(int UsuarioId)
         {
-            var isAdmin = _context.Usuarios
-                .Any(u => u.Id == UsuarioId && (u.RolId == 1 || u.RolId == 3));
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == UsuarioId);
 
-            var briefsQuery = isAdmin
-                ? _context.Briefs.AsQueryable()
-                : _context.Briefs.Where(b => b.UsuarioId == UsuarioId);
+            IQueryable<Brief> briefsQuery;
+
+            if (usuario != null && usuario.RolId == 1)
+            {
+                // Admin: ver todos los proyectos
+                briefsQuery = _context.Briefs.AsQueryable();
+            }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: solo proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                briefsQuery = _context.Briefs.Where(b => briefIdsParticipante.Contains(b.Id));
+            }
+            else
+            {
+                // Solicitante: solo sus propios proyectos
+                briefsQuery = _context.Briefs.Where(b => b.UsuarioId == UsuarioId);
+            }
 
             var today = DateTime.Today;
             var startOfWeek = today.AddDays(-(int)today.DayOfWeek);
@@ -377,19 +395,33 @@ namespace DataAccessLayer.Repositories
         /// <returns>Objeto ConteoProyectos con los resultados.</returns>
         public ConteoProyectos ObtenerConteoMateriales(int UsuarioId)
         {
-            var isAdmin = _context.Usuarios
-                .Any(u => u.Id == UsuarioId && (u.RolId == 1 || u.RolId == 3));
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == UsuarioId);
 
             IQueryable<Material> materialesQuery;
 
-            if (isAdmin)
+            if (usuario != null && usuario.RolId == 1)
             {
+                // Admin: ver todos los materiales
                 materialesQuery = _context.Materiales
                     .Include(m => m.Brief)
                     .AsQueryable();
             }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: solo materiales de proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                materialesQuery = _context.Materiales
+                    .Include(m => m.Brief)
+                    .Where(m => briefIdsParticipante.Contains(m.BriefId))
+                    .AsQueryable();
+            }
             else
             {
+                // Solicitante: solo materiales de sus propios briefs
                 materialesQuery = _context.Materiales
                     .Include(m => m.Brief)
                     .Where(m => m.Brief.UsuarioId == UsuarioId)
@@ -419,12 +451,32 @@ namespace DataAccessLayer.Repositories
         /// <returns>Cantidad de proyectos que cumplen con la condición.</returns>
         public int ObtenerConteoProyectoFecha(int UsuarioId)
         {
-            var isAdmin = _context.Usuarios
-                .Any(u => u.Id == UsuarioId && (u.RolId == 1 || u.RolId == 3));
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.Id == UsuarioId);
 
-            return isAdmin
-                ? _context.Briefs.Count(b => b.FechaEntrega >= b.FechaPublicacion)
-                : 0;
+            if (usuario != null && usuario.RolId == 1)
+            {
+                // Admin: contar todos los proyectos
+                return _context.Briefs.Count(b => b.FechaEntrega >= b.FechaPublicacion);
+            }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: contar solo proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                return _context.Briefs
+                    .Where(b => briefIdsParticipante.Contains(b.Id) && b.FechaEntrega >= b.FechaPublicacion)
+                    .Count();
+            }
+            else
+            {
+                // Solicitante: contar solo sus propios proyectos
+                return _context.Briefs
+                    .Where(b => b.UsuarioId == UsuarioId && b.FechaEntrega >= b.FechaPublicacion)
+                    .Count();
+            }
         }
 
         /// <summary>

@@ -233,7 +233,7 @@
                                     <div class="col-md-6">
                                         <p><strong>Archivo del Brief:</strong>
                                             <span data-bind="if: rutaArchivo() && rutaArchivo() !== ''">
-                                                <a id="archivoCargado" data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo()" target="_blank"></a>
+                                                <a id="archivoCargado" data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo()"></a>
                                             </span>
                                             <span data-bind="if: !rutaArchivo() || rutaArchivo() === ''">
                                                 No hay archivo
