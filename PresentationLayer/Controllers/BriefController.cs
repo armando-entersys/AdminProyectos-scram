@@ -671,8 +671,8 @@ namespace PresentationLayer.Controllers
                 }
 
                 // Obtener solo los participantes del brief que tienen rol Producción
-                var participantes = _toolsService.ObtenerParticipantes(material.BriefId);
-                var participantesProduccion = participantes
+                var participantesBrief = _toolsService.ObtenerParticipantes(material.BriefId);
+                var participantesProduccion = participantesBrief
                     .Where(p => p.Usuario.RolId == 3) // Solo los de producción
                     .ToList();
 
