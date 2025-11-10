@@ -434,11 +434,30 @@ namespace DataAccessLayer.Repositories
         /// <returns>Lista de Materiales asociados.</returns>
         public List<Material> GetMaterialesByUser(int id)
         {
-            var usuarioAdmin = _context.Usuarios.Where(q => q.Id == id && (q.RolId == 1 || q.RolId == 3)).FirstOrDefault();
+            var usuario = _context.Usuarios.Where(q => q.Id == id).FirstOrDefault();
 
-            var query = usuarioAdmin != null
-                ? _context.Materiales // Si es admin, obtener todos
-                : _context.Materiales.Where(q => q.Brief.UsuarioId == id); // Si no, solo los del usuario
+            IQueryable<Material> query;
+
+            if (usuario != null && usuario.RolId == 1)
+            {
+                // Admin: ver todos los materiales
+                query = _context.Materiales;
+            }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: solo materiales de proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == id)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                query = _context.Materiales.Where(m => briefIdsParticipante.Contains(m.BriefId));
+            }
+            else
+            {
+                // Solicitante: solo materiales de sus propios briefs
+                query = _context.Materiales.Where(q => q.Brief.UsuarioId == id);
+            }
 
             var materiales = query
                 .Include(m => m.Prioridad)
@@ -479,14 +498,29 @@ namespace DataAccessLayer.Repositories
         /// <returns>Lista de Materiales filtrados.</returns>
         public List<Material> GetMaterialesFilter(Material material)
         {
-            var isAdmin = _context.Usuarios
-                .Any(u => u.Id == material.Id && (u.RolId == 1 || u.RolId == 3));
+            var usuario = _context.Usuarios.Where(u => u.Id == material.Id).FirstOrDefault();
 
-            var query = _context.Materiales.Where(m => m.Brief.UsuarioId == material.Id).AsQueryable();
+            IQueryable<Material> query;
 
-            if (isAdmin)
+            if (usuario != null && usuario.RolId == 1)
             {
+                // Admin: ver todos los materiales
                 query = _context.Materiales.AsQueryable();
+            }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: solo materiales de proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == material.Id)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                query = _context.Materiales.Where(m => briefIdsParticipante.Contains(m.BriefId)).AsQueryable();
+            }
+            else
+            {
+                // Solicitante: solo materiales de sus propios briefs
+                query = _context.Materiales.Where(m => m.Brief.UsuarioId == material.Id).AsQueryable();
             }
 
             return query

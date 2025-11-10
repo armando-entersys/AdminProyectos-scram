@@ -223,6 +223,16 @@ namespace PresentationLayer.Controllers
                     return Ok(res);
                 }
 
+                // Validar permisos: Solo Admin (RolId=1) y Producción (RolId=3) pueden cambiar a "En Diseño", "En Revisión", "En Producción"
+                var estatusRestringidos = new[] { 2, 3, 5 }; // En Diseño, En Revisión, En Producción
+                var nuevoEstatus = historialMaterialRequest.HistorialMaterial.EstatusMaterialId;
+                if (estatusRestringidos.Contains(nuevoEstatus) && rolId != 1 && rolId != 3)
+                {
+                    res.Mensaje = "Solo los usuarios de Administración y Producción pueden cambiar el estatus a En Diseño, En Revisión o En Producción.";
+                    res.Exito = false;
+                    return Ok(res);
+                }
+
                 historialMaterialRequest.HistorialMaterial.UsuarioId = UsuarioId;
                 var id = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 var usuarioLogueado =_usuarioService.TGetById(id);
