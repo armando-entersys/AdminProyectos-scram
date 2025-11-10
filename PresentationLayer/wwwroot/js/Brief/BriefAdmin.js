@@ -445,6 +445,7 @@ function AppViewModel() {
             var fechaSeleccionada = new Date(self.fechaEntrega());
             var hoy = new Date();
             hoy.setHours(0, 0, 0, 0);
+            fechaSeleccionada.setHours(0, 0, 0, 0);
 
             if (fechaSeleccionada < hoy) {
                 alert('La fecha de entrega no puede ser anterior al día de hoy');
