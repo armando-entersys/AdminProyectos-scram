@@ -301,7 +301,7 @@ namespace PresentationLayer.Controllers
                 var valoresDinamicos = new Dictionary<string, string>()
                 {
                     { "nombreProyecto", brief.Nombre },
-                    { "link", urlBase + "/Brief?filtroNombre=" + brief.Nombre  }
+                    { "link", urlBase + "/Brief/Index?filtroNombre=" + Uri.EscapeDataString(brief.Nombre)  }
 
                 };
                 var Destinatarios = new List<string>();

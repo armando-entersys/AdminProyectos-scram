@@ -240,7 +240,7 @@ namespace PresentationLayer.Controllers
                         Nombre = "Nuevo Comentario en Material",
                         Descripcion = $"{usuarioLogueado.Nombre} agregó un comentario en el material '{material.Nombre}'",
                         IdTipoAlerta = 3,
-                        Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                        Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                     };
                     _toolsService.CrearAlerta(alertaComentario);
 
@@ -257,7 +257,7 @@ namespace PresentationLayer.Controllers
                                 Nombre = "Nuevo Comentario en Material",
                                 Descripcion = $"{usuarioLogueado.Nombre} agregó un comentario en el material '{material.Nombre}'",
                                 IdTipoAlerta = 3,
-                                Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                                Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                             };
                             _toolsService.CrearAlerta(alertaParticipante);
                         }
@@ -279,7 +279,7 @@ namespace PresentationLayer.Controllers
                             Nombre = "Cambio de Estatus en Material",
                             Descripcion = $"El material '{material.Nombre}' cambió a estatus '{estatusNuevo.Descripcion}'",
                             IdTipoAlerta = 4,
-                            Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                            Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                         };
                         _toolsService.CrearAlerta(alertaEstatus);
 
@@ -295,7 +295,7 @@ namespace PresentationLayer.Controllers
                                     Nombre = "Cambio de Estatus en Material",
                                     Descripcion = $"El material '{material.Nombre}' cambió a estatus '{estatusNuevo.Descripcion}'",
                                     IdTipoAlerta = 4,
-                                    Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                                    Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                                 };
                                 _toolsService.CrearAlerta(alertaEstatusParticipante);
                             }
@@ -315,7 +315,7 @@ namespace PresentationLayer.Controllers
                             Nombre = "Material Entregado",
                             Descripcion = $"El material '{material.Nombre}' ha sido entregado",
                             IdTipoAlerta = 5,
-                            Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                            Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                         };
                         _toolsService.CrearAlerta(alertaUsuario);
 
@@ -331,7 +331,7 @@ namespace PresentationLayer.Controllers
                                     Nombre = "Material Entregado",
                                     Descripcion = $"El material '{material.Nombre}' ha sido entregado",
                                     IdTipoAlerta = 5,
-                                    Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                                    Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                                 };
                                 _toolsService.CrearAlerta(alertaEntregadoParticipante);
                             }
@@ -360,7 +360,7 @@ namespace PresentationLayer.Controllers
                     { "usuario",usuarioLogueado.Nombre },
                     { "estatus", EstatusMaterial.Descripcion},
                     { "comentario", historialMaterialRequest.HistorialMaterial.Comentarios },
-                    { "link", urlBase + "/Materiales?filtroNombre=" + material.Nombre }
+                    { "link", urlBase + "/Materiales/Index?filtroNombre=" + Uri.EscapeDataString(material.Nombre) }
                 };
                     _emailSender.SendEmail(Destinatarios, "ComentarioMaterial", valoresDinamicos);
                 }
@@ -428,7 +428,7 @@ namespace PresentationLayer.Controllers
                     Nombre = "Agregado como Participante",
                     Descripcion = $"{usuarioActual.Nombre} te agregó como participante en el material '{material.Nombre}'",
                     IdTipoAlerta = 3,
-                    Accion = $"{urlBase}/Materiales?filtroNombre={material.Nombre}"
+                    Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
                 };
                 _toolsService.CrearAlerta(alerta);
 
