@@ -563,13 +563,13 @@ function AppViewModel() {
     self.EliminarParticipante = function (participante) {
         if (confirm("Desea eliminar el Participante seleccionado?")) {
             $.ajax({
-                url: "Brief/EliminarParticipante/" + participante.id, // URL del método GetAll en tu API
+                url: "/Brief/EliminarParticipante/" + participante.id,
                 type: "GET",
                 contentType: "application/json",
                 success: function (d) {
-                  
+
                     $.ajax({
-                        url: "Usuarios/ObtenerParticipantes/" + self.id(), // URL del método GetAll en tu API
+                        url: "/Usuarios/ObtenerParticipantes/" + self.id(),
                         type: "GET",
                         contentType: "application/json",
                         success: function (d) {
