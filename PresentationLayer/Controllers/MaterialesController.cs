@@ -262,6 +262,25 @@ namespace PresentationLayer.Controllers
                             _toolsService.CrearAlerta(alertaParticipante);
                         }
                     }
+
+                    // Notificar a todos los administradores (excepto quien comentó)
+                    var usuariosAdmin = _toolsService.GetUsuarioByRol(1);
+                    foreach (var admin in usuariosAdmin)
+                    {
+                        // No notificar al usuario que hizo el comentario
+                        if (admin.Id != UsuarioId)
+                        {
+                            var alertaAdmin = new Alerta
+                            {
+                                IdUsuario = admin.Id,
+                                Nombre = "Nuevo Comentario en Material",
+                                Descripcion = $"{usuarioLogueado.Nombre} agregó un comentario en el material '{material.Nombre}'",
+                                IdTipoAlerta = 3,
+                                Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(material.Nombre)}"
+                            };
+                            _toolsService.CrearAlerta(alertaAdmin);
+                        }
+                    }
                 }
 
                 // Si cambió el estatus, notificar también
