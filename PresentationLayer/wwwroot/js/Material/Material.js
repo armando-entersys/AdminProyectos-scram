@@ -38,6 +38,16 @@ function AppViewModel() {
     self.estatusBrief = ko.observable("");
     self.fechaEntregaBrief = ko.observable("");
 
+    // Observables para información del material
+    self.mensajeMaterial = ko.observable("");
+    self.pcnMaterial = ko.observable("");
+    self.formatoMaterial = ko.observable("");
+    self.estatusMaterial = ko.observable("");
+    self.audienciaMaterial = ko.observable("");
+    self.responsableMaterial = ko.observable("");
+    self.areaMaterial = ko.observable("");
+    self.fechaEntregaMaterial = ko.observable("");
+
     // Computed para normalizar URLs agregando http:// si no tiene protocolo
     self.linksReferenciasNormalizadas = ko.computed(function() {
         var links = self.linksReferencias();
@@ -220,6 +230,16 @@ function AppViewModel() {
         self.tipoBrief(material.brief.tipoBrief?.descripcion || "N/A");
         self.estatusBrief(material.brief.estatusBrief?.descripcion || "N/A");
         self.fechaEntregaBrief(material.brief.fechaEntrega ? new Date(material.brief.fechaEntrega).toLocaleDateString('es-MX') : "");
+
+        // Poblar información del material
+        self.mensajeMaterial(material.mensaje || "");
+        self.pcnMaterial(self.getPCNsString(material));
+        self.formatoMaterial(material.formato?.descripcion || "N/A");
+        self.estatusMaterial(material.estatusMaterial?.descripcion || "N/A");
+        self.audienciaMaterial(material.audiencia?.descripcion || "N/A");
+        self.responsableMaterial(material.responsable || "");
+        self.areaMaterial(material.area || "");
+        self.fechaEntregaMaterial(material.fechaEntrega ? new Date(material.fechaEntrega).toLocaleDateString('es-MX') : "");
         var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
             return r.id === material.estatusMaterialId;
         });
