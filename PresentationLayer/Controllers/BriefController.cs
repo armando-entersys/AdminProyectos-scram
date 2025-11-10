@@ -126,10 +126,9 @@ namespace PresentationLayer.Controllers
                 return NotFound("Ruta no encontrado.");
             }
 
-            // Obtener la ruta del archivo en el servidor
-            // Leer la ruta desde appsettings.json
-            var uploadPath = _configuration["FileStorage:UploadPath"];
-            var filePath = Path.Combine(_hostingEnvironment.WebRootPath, uploadPath, brief.Id.ToString(), brief.RutaArchivo);
+            // Construir la ruta del archivo usando la misma estructura que al guardar
+            var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads", "Brief", brief.Id.ToString());
+            var filePath = Path.Combine(uploadsFolder, brief.RutaArchivo);
 
             if (!System.IO.File.Exists(filePath))
             {
