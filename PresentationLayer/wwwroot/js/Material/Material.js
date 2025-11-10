@@ -188,7 +188,17 @@ function AppViewModel() {
                 return $.get("/Materiales/ObtenerEstatusMateriales");
             })
             .then(function (d) {
-                self.catEstatusMateriales(d.datos);
+                var estatusMateriales = d.datos;
+
+                // Si el usuario es Producción (RolId=3), solo mostrar: En Diseño (2), En Revisión (3), En Producción (5)
+                if (typeof RolId !== 'undefined' && RolId === 3) {
+                    var estatusPermitidos = [2, 3, 5]; // IDs: En Diseño, En Revisión, En Producción
+                    estatusMateriales = d.datos.filter(function(estatus) {
+                        return estatusPermitidos.indexOf(estatus.id) !== -1;
+                    });
+                }
+
+                self.catEstatusMateriales(estatusMateriales);
                 self.catEstatusMaterialesFiltro(d.datos);
             })
 
