@@ -599,6 +599,17 @@ namespace PresentationLayer.Controllers
             respuestaServicio res = new respuestaServicio();
             var urlBase = $"{Request.Scheme}://{Request.Host}";
 
+            // Validar que exista al menos un participante con perfil de producción
+            var participantes = _toolsService.ObtenerParticipantes(request.BriefId);
+            var tieneProduccion = participantes.Any(p => p.Usuario.RolId == 3);
+
+            if (!tieneProduccion)
+            {
+                res.Mensaje = "DEBE AGREGAR AL MENOS UN PERFIL PRODUCCIÓN A SU PROYECTO";
+                res.Exito = false;
+                return Ok(res);
+            }
+
             // Crear el material desde el request
             var material = new Material
             {
