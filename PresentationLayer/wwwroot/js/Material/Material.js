@@ -405,7 +405,7 @@ function AppViewModel() {
                 "Audiencia": registro.audiencia?.descripcion || "",
                 "Responsable": registro.responsable || "",
                 "Área": registro.area || "",
-                "Fecha de Entrega": registro.fechaEntrega || ""
+                "Fecha de Entrega": registro.fechaEntrega ? new Date(registro.fechaEntrega).toLocaleDateString('es-MX') : ""
             };
         });
 

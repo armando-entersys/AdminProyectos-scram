@@ -344,7 +344,7 @@ namespace PresentationLayer.Controllers
                     var EstatusMaterial = _briefService.GetAllEstatusMateriales().Where(q => q.Id == historialMaterialRequest.HistorialMaterial.EstatusMaterialId).FirstOrDefault();
                     var Destinatarios = new List<string>();
 
-                    // Solo extraer los correos de los usuarios, sin hacer consultas adicionales
+                    // Solo extraer los correos de los usuarios seleccionados
                     foreach(var item in historialMaterialRequest.Usuarios)
                     {
                         if (!string.IsNullOrEmpty(item.Correo))
@@ -352,7 +352,6 @@ namespace PresentationLayer.Controllers
                             Destinatarios.Add(item.Correo);
                         }
                     }
-                    Destinatarios.AddRange(_toolsService.GetUsuarioByRol(3).Select(q => q.Correo).ToList());
 
                     // Diccionario con los valores dinámicos a reemplazar
                     var valoresDinamicos = new Dictionary<string, string>()
