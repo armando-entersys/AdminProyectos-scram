@@ -328,7 +328,7 @@ namespace PresentationLayer.Controllers
                 Nombre = $"Cambio Estatus Proyecto {brief.Nombre}",
                 Descripcion = $"Cambio de estatus a {brief.EstatusBrief.Descripcion}",
                 IdTipoAlerta = 3,
-                Accion = $"{urlBase}/Brief?filtroNombre={brief.Nombre}"
+                Accion = $"{urlBase}/Brief/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}"
             });
         }
 
@@ -340,7 +340,7 @@ namespace PresentationLayer.Controllers
                 Nombre = $"Cambio Estatus Proyecto {brief.Nombre}",
                 Descripcion = $"Cambio de estatus a {brief.EstatusBrief.Descripcion}",
                 IdTipoAlerta = 3,
-                Accion = $"{urlBase}/Brief?filtroNombre={brief.Nombre}"
+                Accion = $"{urlBase}/Brief/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}"
             });
         }
 
@@ -350,7 +350,7 @@ namespace PresentationLayer.Controllers
     {
         { "estatus", brief.EstatusBrief.Descripcion },
         { "nombreProyecto", brief.Nombre },
-        { "link", $"{urlBase}/Brief?filtroNombre={brief.Nombre}" }
+        { "link", $"{urlBase}/Brief/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}" }
     };
 
             _emailSender.SendEmail(recipients, "ActualizaEstatusProyecto", dynamicValues);
@@ -418,12 +418,12 @@ namespace PresentationLayer.Controllers
             {
                 { "nombre", User.FindFirst(ClaimTypes.Name)?.Value },
                 { "nombreProyecto", brief.Nombre },
-                { "link", urlBase + "/Brief/IndexAdmin?filtroNombre=" + brief.Nombre }
+                { "link", urlBase + "/Brief/Index?filtroNombre=" + Uri.EscapeDataString(brief.Nombre) }
             };
             var Destinatarios = _toolsService.GetUsuarioByRol(1).Select(q => q.Correo).ToList();
 
             _emailSender.SendEmail(Destinatarios, "NuevoProyecto", valoresDinamicos);
-            
+
             var usuariosAdmin = _toolsService.GetUsuarioByRol(1).Select(q => q.Id).ToList();
             foreach(var item in usuariosAdmin)
             {
@@ -433,7 +433,7 @@ namespace PresentationLayer.Controllers
                     Nombre = "Nuevo Proyecto",
                     Descripcion = "Se agrego un nuevo proyecto " + brief.Nombre,
                     IdTipoAlerta = 1,
-                    Accion = urlBase + "/Brief/IndexAdmin?filtroNombre=" + brief.Nombre
+                    Accion = urlBase + "/Brief/Index?filtroNombre=" + Uri.EscapeDataString(brief.Nombre)
 
                 };
 
@@ -522,7 +522,7 @@ namespace PresentationLayer.Controllers
                 {
                     { "nombre", User.FindFirst(ClaimTypes.Name)?.Value },
                     { "nombreProyecto", brief.Nombre },
-                    { "link", urlBase + "/BriefAdmin?filtroNombre=" + brief.Nombre  }
+                    { "link", urlBase + "/Brief/Index?filtroNombre=" + Uri.EscapeDataString(brief.Nombre) }
 
                 };
                 var Destinatarios = _toolsService.GetUsuarioByRol(1).Select(q => q.Correo).ToList();
@@ -551,7 +551,7 @@ namespace PresentationLayer.Controllers
                         FechaCreacion = DateTime.Now,
                         lectura = false,
                         IdTipoAlerta = 3,
-                        Accion = $"{urlBase}/Brief?filtroNombre={brief.Nombre}"
+                        Accion = $"{urlBase}/Brief/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}"
                     };
                     _toolsService.CrearAlerta(alertaParticipante);
                 }
@@ -658,7 +658,7 @@ namespace PresentationLayer.Controllers
                     Nombre = "Nuevo Material",
                     Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
                     IdTipoAlerta = 4,
-                    Accion = urlBase + "/Materiales?filtroNombre="+material.Nombre
+                    Accion = urlBase + "/Materiales/Index?filtroNombre=" + Uri.EscapeDataString(material.Nombre)
 
                 };
 
@@ -676,7 +676,7 @@ namespace PresentationLayer.Controllers
                         Nombre = "Nuevo Material",
                         Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
                         IdTipoAlerta = 4,
-                        Accion = urlBase + "/Materiales?filtroNombre=" + material.Nombre
+                        Accion = urlBase + "/Materiales/Index?filtroNombre=" + Uri.EscapeDataString(material.Nombre)
                     };
                     _toolsService.CrearAlerta(alertaAdmin);
                 }
@@ -696,7 +696,7 @@ namespace PresentationLayer.Controllers
                         Nombre = "Nuevo Material",
                         Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
                         IdTipoAlerta = 4,
-                        Accion = urlBase + "/Materiales?filtroNombre=" + material.Nombre
+                        Accion = urlBase + "/Materiales/Index?filtroNombre=" + Uri.EscapeDataString(material.Nombre)
                     };
                     _toolsService.CrearAlerta(alertaProduccion);
                 }
