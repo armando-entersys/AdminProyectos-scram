@@ -44,6 +44,7 @@
         border-top: 4px solid transparent;
         position: relative;
         overflow: hidden;
+        cursor: pointer;
     }
 
     .stat-box::before {
@@ -165,25 +166,25 @@
             <div class="card-body">
                 <div class="row text-center g-3">
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Brief/IndexAdmin?filtroFecha=hoy'">
                             <h2 data-bind="text: Hoy"></h2>
                             <h6>Hoy</h6>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Brief/IndexAdmin?filtroFecha=semana'">
                             <h2 data-bind="text: EstaSemana"></h2>
                             <h6>Esta Semana</h6>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Brief/IndexAdmin?filtroFecha=proximaSemana'">
                             <h2 data-bind="text: ProximaSemana"></h2>
                             <h6>Próxima Semana</h6>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Brief/IndexAdmin'">
                             <h2 data-bind="text: TotalProyectos"></h2>
                             <h6>Total</h6>
                         </div>
@@ -204,25 +205,25 @@
             <div class="card-body">
                 <div class="row text-center g-3">
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Materiales?filtroFecha=hoy'">
                             <h2 data-bind="text: Hoy_Material"></h2>
                             <h6>Hoy</h6>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Materiales?filtroFecha=semana'">
                             <h2 data-bind="text: EstaSemana_Material"></h2>
                             <h6>Esta Semana</h6>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Materiales?filtroFecha=proximaSemana'">
                             <h2 data-bind="text: ProximaSemana_Material"></h2>
                             <h6>Próxima Semana</h6>
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Materiales'">
                             <h2 data-bind="text: TotalMaterial"></h2>
                             <h6>Total</h6>
                         </div>
@@ -243,14 +244,14 @@
             <div class="card-body">
                 <div class="row text-center g-3 justify-content-center">
                     <div class="col-6">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Brief/IndexAdmin?filtroEstatus=finalizado&filtroTiempo=tiempo'">
                             <i class="lni lni-timer stat-icon"></i>
                             <h2 data-bind="text: ProyectoTiempo"></h2>
                             <h6>En Tiempo</h6>
                         </div>
                     </div>
                     <div class="col-6">
-                        <div class="stat-box">
+                        <div class="stat-box" onclick="window.location.href='/Brief/IndexAdmin?filtroEstatus=finalizado&filtroTiempo=extra'">
                             <i class="lni lni-alarm-clock stat-icon"></i>
                             <h2 data-bind="text: ProyectoExtra"></h2>
                             <h6>Extratemporal</h6>
