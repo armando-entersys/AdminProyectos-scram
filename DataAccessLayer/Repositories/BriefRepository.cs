@@ -466,6 +466,9 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
+                    .ThenInclude(b => b.EstatusBrief)
+                .Include(m => m.Brief)
+                    .ThenInclude(b => b.TipoBrief)
                 .Include(m => m.EstatusMaterial)
                 .ToList();
 
@@ -533,6 +536,9 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
+                    .ThenInclude(b => b.EstatusBrief)
+                .Include(m => m.Brief)
+                    .ThenInclude(b => b.TipoBrief)
                 .Include(m => m.EstatusMaterial)
                 .OrderByDescending(m => m.FechaEntrega)
                 .ToList();
