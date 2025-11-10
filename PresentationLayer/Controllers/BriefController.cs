@@ -275,12 +275,20 @@ namespace PresentationLayer.Controllers
             }
             else if (brief.EstatusBriefId == 2)
             {
-                recipients = _toolsService.GetUsuarioByRol(3).Select(q => q.Correo).ToList();
+                // Obtener solo los participantes del brief que tienen rol Producción
+                var participantes = _toolsService.ObtenerParticipantes(brief.Id);
+                var participantesProduccion = participantes
+                    .Where(p => p.Usuario.RolId == 3)
+                    .ToList();
+
+                // Agregar correos de participantes de producción
+                recipients.AddRange(participantesProduccion.Select(p => p.Usuario.Correo));
                 recipients.Add(_usuarioService.TGetById(brief.UsuarioId).Correo);
 
-                foreach (var userId in _toolsService.GetUsuarioByRol(3).Select(q => q.Id))
+                // Crear alertas solo para participantes de producción
+                foreach (var participante in participantesProduccion)
                 {
-                    CreateProductionAlert(userId, brief, urlBase);
+                    CreateProductionAlert(participante.UsuarioId, brief, urlBase);
                 }
             }
             else if (brief.EstatusBriefId >= 3 && brief.EstatusBriefId <= 6)
@@ -289,7 +297,14 @@ namespace PresentationLayer.Controllers
             }
             else if (brief.EstatusBriefId == 7 || brief.EstatusBriefId == 8)
             {
-                recipients = _toolsService.GetUsuarioByRol(3).Select(q => q.Correo).ToList();
+                // Obtener solo los participantes del brief que tienen rol Producción
+                var participantes = _toolsService.ObtenerParticipantes(brief.Id);
+                var participantesProduccion = participantes
+                    .Where(p => p.Usuario.RolId == 3)
+                    .Select(p => p.Usuario.Correo)
+                    .ToList();
+
+                recipients.AddRange(participantesProduccion);
                 recipients.Add(_usuarioService.TGetById(brief.UsuarioId).Correo);
             }
 
@@ -608,7 +623,7 @@ namespace PresentationLayer.Controllers
                 var brief = _briefService.GetById(material.BriefId);
                 Alerta alertaUsuario = new Alerta
                 {
-                    IdUsuario = brief.Id,
+                    IdUsuario = brief.UsuarioId,
                     Nombre = "Nuevo Material",
                     Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
                     IdTipoAlerta = 4,
