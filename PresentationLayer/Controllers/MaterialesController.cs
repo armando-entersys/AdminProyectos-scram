@@ -75,7 +75,22 @@ namespace PresentationLayer.Controllers
                         m.Brief.Id,
                         m.Brief.Nombre,
                         m.Brief.LinksReferencias,
-                        m.Brief.RutaArchivo
+                        m.Brief.RutaArchivo,
+                        m.Brief.Descripcion,
+                        m.Brief.Objetivo,
+                        m.Brief.DirigidoA,
+                        m.Brief.Comentario,
+                        m.Brief.FechaEntrega,
+                        TipoBrief = m.Brief.TipoBrief != null ? new
+                        {
+                            m.Brief.TipoBrief.Id,
+                            m.Brief.TipoBrief.Descripcion
+                        } : null,
+                        EstatusBrief = m.Brief.EstatusBrief != null ? new
+                        {
+                            m.Brief.EstatusBrief.Id,
+                            m.Brief.EstatusBrief.Descripcion
+                        } : null
                     },
                     Formato = new
                     {

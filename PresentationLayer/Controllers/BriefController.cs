@@ -498,8 +498,34 @@ namespace PresentationLayer.Controllers
             };
             var Destinatarios = _toolsService.GetUsuarioByRol(1).Select(q => q.Correo).ToList();
 
+            // Obtener todos los participantes del brief y agregar sus correos
+            var participantes = _toolsService.ObtenerParticipantes(brief.Id);
+            foreach (var participante in participantes)
+            {
+                if (!Destinatarios.Contains(participante.Usuario.Correo))
+                {
+                    Destinatarios.Add(participante.Usuario.Correo);
+                }
+            }
+
             _emailSender.SendEmail(Destinatarios, "EdicionBreaf", valoresDinamicos);
 
+            // Crear alertas para todos los participantes
+            var usuarioLogueado = _usuarioService.TGetById(Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+            foreach (var participante in participantes)
+            {
+                var alertaParticipante = new Alerta
+                {
+                    IdUsuario = participante.UsuarioId,
+                    Nombre = "Proyecto Modificado",
+                    Descripcion = $"{usuarioLogueado.Nombre} modificó el proyecto '{brief.Nombre}'",
+                    FechaCreacion = DateTime.Now,
+                    lectura = false,
+                    IdTipoAlerta = 3,
+                    Accion = $"{urlBase}/Brief?filtroNombre={brief.Nombre}"
+                };
+                _toolsService.CrearAlerta(alertaParticipante);
+            }
 
             res.Datos = brief;
             res.Mensaje = "Se ha recibido correctamente tu solicitud.";
@@ -591,32 +617,42 @@ namespace PresentationLayer.Controllers
                 };
 
                 _toolsService.CrearAlerta(alertaUsuario);
-                var usuarios = _toolsService.GetUsuarioByRol(1).Select(q=> q.Id).ToList();
 
-                var usuariosProduccion = _toolsService.GetUsuarioByRol(3).Select(q => q.Id).ToList();
+                // Obtener todos los administradores
+                var usuariosAdmin = _toolsService.GetUsuarioByRol(1).Select(q=> q.Id).ToList();
 
-                if(usuariosProduccion != null)
+                // Notificar a todos los administradores
+                foreach(var adminId in usuariosAdmin)
                 {
-                    usuarios.AddRange(usuariosProduccion);
-
-                }
-                if(usuarios != null)
-                {
-                    foreach(var item in usuarios)
+                    Alerta alertaAdmin = new Alerta
                     {
-                        Alerta alertaAdmin = new Alerta
-                        {
-                            IdUsuario = item,
-                            Nombre = "Nuevo Material",
-                            Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
-                            IdTipoAlerta = 4,
-                            Accion = urlBase + "/Materiales?filtroNombre=" + material.Nombre
+                        IdUsuario = adminId,
+                        Nombre = "Nuevo Material",
+                        Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
+                        IdTipoAlerta = 4,
+                        Accion = urlBase + "/Materiales?filtroNombre=" + material.Nombre
+                    };
+                    _toolsService.CrearAlerta(alertaAdmin);
+                }
 
-                        };
+                // Obtener solo los participantes del brief que tienen rol Producción
+                var participantes = _toolsService.ObtenerParticipantes(material.BriefId);
+                var participantesProduccion = participantes
+                    .Where(p => p.Usuario.RolId == 3) // Solo los de producción
+                    .ToList();
 
-                        _toolsService.CrearAlerta(alertaAdmin);
-                    }
-                    
+                // Notificar solo a los usuarios de producción que son participantes del brief
+                foreach(var participante in participantesProduccion)
+                {
+                    Alerta alertaProduccion = new Alerta
+                    {
+                        IdUsuario = participante.UsuarioId,
+                        Nombre = "Nuevo Material",
+                        Descripcion = "Se agrego un material al proyecto " + brief.Nombre,
+                        IdTipoAlerta = 4,
+                        Accion = urlBase + "/Materiales?filtroNombre=" + material.Nombre
+                    };
+                    _toolsService.CrearAlerta(alertaProduccion);
                 }
                
 

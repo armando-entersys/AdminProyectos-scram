@@ -30,6 +30,13 @@ function AppViewModel() {
     self.idBrief = ko.observable(0);
     self.rutaArchivo = ko.observable("");
     self.nombreBrief = ko.observable("");
+    self.descripcionBrief = ko.observable("");
+    self.objetivoBrief = ko.observable("");
+    self.dirigidoABrief = ko.observable("");
+    self.comentarioBrief = ko.observable("");
+    self.tipoBrief = ko.observable("");
+    self.estatusBrief = ko.observable("");
+    self.fechaEntregaBrief = ko.observable("");
 
     // Computed para normalizar URLs agregando http:// si no tiene protocolo
     self.linksReferenciasNormalizadas = ko.computed(function() {
@@ -204,6 +211,15 @@ function AppViewModel() {
         else {
             self.rutaArchivo(material.brief.rutaArchivo);
         }
+
+        // Poblar información adicional del brief
+        self.descripcionBrief(material.brief.descripcion || "");
+        self.objetivoBrief(material.brief.objetivo || "");
+        self.dirigidoABrief(material.brief.dirigidoA || "");
+        self.comentarioBrief(material.brief.comentario || "");
+        self.tipoBrief(material.brief.tipoBrief?.descripcion || "N/A");
+        self.estatusBrief(material.brief.estatusBrief?.descripcion || "N/A");
+        self.fechaEntregaBrief(material.brief.fechaEntrega ? new Date(material.brief.fechaEntrega).toLocaleDateString('es-MX') : "");
         var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
             return r.id === material.estatusMaterialId;
         });

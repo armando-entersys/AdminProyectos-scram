@@ -655,6 +655,7 @@ namespace DataAccessLayer.Repositories
             return _context.HistorialMateriales
                 .Where(h => h.MaterialId == MaterialId)
                 .Include(h => h.Usuario)
+                    .ThenInclude(u => u.UserRol)
                 .OrderByDescending(h => h.Id)
                 .ToList();
         }
