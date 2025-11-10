@@ -483,6 +483,8 @@ namespace PresentationLayer.Controllers
                 catch (Exception ex)
                 {
                     res.Mensaje = "Error al guardar el archivo: " + ex.Message;
+                    res.Exito = false;
+                    return Ok(res);
                 }
             }
             else
@@ -509,51 +511,60 @@ namespace PresentationLayer.Controllers
                 // Puedes asignar más propiedades de `Addbrief` si es necesario
             };
 
-            _briefService.Update(brief);
-            //Envio Correo
-            var urlBase = $"{Request.Scheme}://{Request.Host}";
-            // Diccionario con los valores dinámicos a reemplazar
-            var valoresDinamicos = new Dictionary<string, string>()
+            try
             {
-                { "nombre", User.FindFirst(ClaimTypes.Name)?.Value },
-                { "nombreProyecto", brief.Nombre },
-                { "link", urlBase + "/BriefAdmin?filtroNombre=" + brief.Nombre  }
+                _briefService.Update(brief);
 
-            };
-            var Destinatarios = _toolsService.GetUsuarioByRol(1).Select(q => q.Correo).ToList();
-
-            // Obtener todos los participantes del brief y agregar sus correos
-            var participantes = _toolsService.ObtenerParticipantes(brief.Id);
-            foreach (var participante in participantes)
-            {
-                if (!Destinatarios.Contains(participante.Usuario.Correo))
+                //Envio Correo
+                var urlBase = $"{Request.Scheme}://{Request.Host}";
+                // Diccionario con los valores dinámicos a reemplazar
+                var valoresDinamicos = new Dictionary<string, string>()
                 {
-                    Destinatarios.Add(participante.Usuario.Correo);
-                }
-            }
+                    { "nombre", User.FindFirst(ClaimTypes.Name)?.Value },
+                    { "nombreProyecto", brief.Nombre },
+                    { "link", urlBase + "/BriefAdmin?filtroNombre=" + brief.Nombre  }
 
-            _emailSender.SendEmail(Destinatarios, "EdicionBreaf", valoresDinamicos);
-
-            // Crear alertas para todos los participantes
-            var usuarioLogueado = _usuarioService.TGetById(Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
-            foreach (var participante in participantes)
-            {
-                var alertaParticipante = new Alerta
-                {
-                    IdUsuario = participante.UsuarioId,
-                    Nombre = "Proyecto Modificado",
-                    Descripcion = $"{usuarioLogueado.Nombre} modificó el proyecto '{brief.Nombre}'",
-                    FechaCreacion = DateTime.Now,
-                    lectura = false,
-                    IdTipoAlerta = 3,
-                    Accion = $"{urlBase}/Brief?filtroNombre={brief.Nombre}"
                 };
-                _toolsService.CrearAlerta(alertaParticipante);
-            }
+                var Destinatarios = _toolsService.GetUsuarioByRol(1).Select(q => q.Correo).ToList();
 
-            res.Datos = brief;
-            res.Mensaje = "Se ha recibido correctamente tu solicitud.";
-            res.Exito = true;
+                // Obtener todos los participantes del brief y agregar sus correos
+                var participantes = _toolsService.ObtenerParticipantes(brief.Id);
+                foreach (var participante in participantes)
+                {
+                    if (!Destinatarios.Contains(participante.Usuario.Correo))
+                    {
+                        Destinatarios.Add(participante.Usuario.Correo);
+                    }
+                }
+
+                _emailSender.SendEmail(Destinatarios, "EdicionBreaf", valoresDinamicos);
+
+                // Crear alertas para todos los participantes
+                var usuarioLogueado = _usuarioService.TGetById(Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
+                foreach (var participante in participantes)
+                {
+                    var alertaParticipante = new Alerta
+                    {
+                        IdUsuario = participante.UsuarioId,
+                        Nombre = "Proyecto Modificado",
+                        Descripcion = $"{usuarioLogueado.Nombre} modificó el proyecto '{brief.Nombre}'",
+                        FechaCreacion = DateTime.Now,
+                        lectura = false,
+                        IdTipoAlerta = 3,
+                        Accion = $"{urlBase}/Brief?filtroNombre={brief.Nombre}"
+                    };
+                    _toolsService.CrearAlerta(alertaParticipante);
+                }
+
+                res.Datos = brief;
+                res.Mensaje = "Se ha recibido correctamente tu solicitud.";
+                res.Exito = true;
+            }
+            catch (Exception ex)
+            {
+                res.Mensaje = "Error al actualizar el brief: " + ex.Message;
+                res.Exito = false;
+            }
 
             return Ok(res);
         }
