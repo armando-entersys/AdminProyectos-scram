@@ -14,6 +14,9 @@ namespace EntityLayer.Concrete
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
+
+        [Required(ErrorMessage = "El correo electrónico es obligatorio.")]
+        [EmailAddress(ErrorMessage = "El formato del correo electrónico no es válido.")]
         public string Correo { get; set; }
 
         [Required(ErrorMessage = "La contraseña es obligatoria.")]
