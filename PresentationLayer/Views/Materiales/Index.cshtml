@@ -278,7 +278,7 @@
 
                             <div class="mb-3" data-bind="validationElement: EstatusMateriales">
                                 <label class="col-form-label">Clasificación:</label>
-                                <select class="form-control" data-bind="options: catEstatusMateriales, value: EstatusMateriales, optionsText: 'descripcion', optionsCaption: 'Seleccione'"></select>
+                                <select class="form-control" data-bind="options: catEstatusMateriales, value: EstatusMateriales, optionsText: 'descripcion', optionsCaption: 'Seleccione', disable: RolId === 2"></select>
                             </div>
                            <!-- <div class="mb-3" data-bind="validationElement: Comentario">
                                 <label for="comentario-editor" class="col-form-label">Comentario:</label>
