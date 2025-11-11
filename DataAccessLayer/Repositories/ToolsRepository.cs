@@ -2,7 +2,6 @@
 using DataAccessLayer.Concrete;
 using DataAccessLayer.Context;
 using DataAccessLayer.EntityFramework;
-using DataAccessLayer.Migrations;
 using EntityLayer.Concrete;
 using Microsoft.EntityFrameworkCore;
 using System;

@@ -2,40 +2,41 @@ version: '3.8'
 
 services:
   # ═══════════════════════════════════════════════════════════
-  # SQL SERVER - Base de datos
+  # POSTGRESQL - Base de datos
   # ═══════════════════════════════════════════════════════════
-  adminproyectos-sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: local-adminproyectos-sqlserver
+  adminproyectos-postgres:
+    image: postgres:16-alpine
+    container_name: local-adminproyectos-postgres
     restart: unless-stopped
 
     deploy:
       resources:
         limits:
-          cpus: '1.5'
-          memory: 1536M
-        reservations:
           cpus: '0.5'
           memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Operaciones.2025
-      - MSSQL_PID=Express  # Express Edition (gratis, hasta 10GB)
+      - POSTGRES_USER=adminuser
+      - POSTGRES_PASSWORD=Operaciones.2025
+      - POSTGRES_DB=AdminProyectosNaturaDB
+      - PGDATA=/var/lib/postgresql/data/pgdata
 
     ports:
-      - "1433:1433"  # Exponer puerto SQL Server para conexiones externas si necesitas
+      - "5432:5432"  # Exponer puerto PostgreSQL para conexiones externas
 
     volumes:
-      - sqlserver-data:/var/opt/mssql
+      - postgres-data:/var/lib/postgresql/data
       - ./backups:/backups
 
     healthcheck:
-      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -No -U sa -P "Operaciones.2025" -Q "SELECT 1" || exit 1
+      test: ["CMD-SHELL", "pg_isready -U adminuser -d AdminProyectosNaturaDB"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 90s
+      start_period: 30s
 
   # ═══════════════════════════════════════════════════════════
   # APLICACIÓN WEB - AdminProyectos
@@ -57,7 +58,7 @@ services:
           memory: 256M
 
     depends_on:
-      adminproyectos-sqlserver:
+      adminproyectos-postgres:
         condition: service_healthy
 
     environment:
@@ -66,8 +67,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_HTTPS_PORT=443
 
-      # Base de datos
-      - ConnectionStrings__DefaultConnection=Server=adminproyectos-sqlserver;Database=AdminProyectosNaturaDB;User Id=sa;Password=Operaciones.2025;TrustServerCertificate=True;
+      # Base de datos - PostgreSQL
+      - ConnectionStrings__DefaultConnection=Host=adminproyectos-postgres;Port=5432;Database=AdminProyectosNaturaDB;Username=adminuser;Password=Operaciones.2025;
 
       # Logs
       - Logging__LogLevel__Default=Information
@@ -126,7 +127,7 @@ services:
 # VOLUMES - Persistencia de datos
 # ═══════════════════════════════════════════════════════════
 volumes:
-  sqlserver-data:
+  postgres-data:
     driver: local
   uploads-data:
     driver: local

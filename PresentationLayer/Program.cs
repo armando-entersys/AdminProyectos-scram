@@ -50,10 +50,11 @@ builder.Services.AddCors(options =>
 });
 
 // Configurar DbContext con connection string desde appsettings.json o variables de entorno
+// Migrado a PostgreSQL
 builder.Services.AddDbContext<DataAccesContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlServer(connectionString);
+    options.UseNpgsql(connectionString);
 });
 
 builder.Services.AddScoped<IUsuarioDal, EfUsuario>();

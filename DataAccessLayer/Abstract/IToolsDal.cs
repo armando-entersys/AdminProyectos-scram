@@ -1,5 +1,4 @@
 ﻿using DataAccessLayer.Concrete;
-using DataAccessLayer.Migrations;
 using EntityLayer.Concrete;
 using System;
 using System.Collections.Generic;
