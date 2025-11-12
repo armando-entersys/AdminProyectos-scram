@@ -251,6 +251,47 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
+        /// Inserta un Material con sus relaciones de PCN y Audiencia.
+        /// </summary>
+        /// <param name="entity">Entidad Material a insertar.</param>
+        /// <param name="pcnIds">Lista de IDs de PCN.</param>
+        /// <param name="audienciaIds">Lista de IDs de Audiencia.</param>
+        public void InsertMaterialConPCNsYAudiencias(Material entity, List<int> pcnIds, List<int> audienciaIds)
+        {
+            // Agregar el material primero
+            _context.Materiales.Add(entity);
+            _context.SaveChanges();
+
+            // Luego agregar las relaciones MaterialPCN
+            if (pcnIds != null && pcnIds.Any())
+            {
+                foreach (var pcnId in pcnIds)
+                {
+                    _context.MaterialPCN.Add(new MaterialPCN
+                    {
+                        MaterialId = entity.Id,
+                        PCNId = pcnId
+                    });
+                }
+            }
+
+            // Agregar las relaciones MaterialAudiencia
+            if (audienciaIds != null && audienciaIds.Any())
+            {
+                foreach (var audienciaId in audienciaIds)
+                {
+                    _context.MaterialAudiencia.Add(new MaterialAudiencia
+                    {
+                        MaterialId = entity.Id,
+                        AudienciaId = audienciaId
+                    });
+                }
+            }
+
+            _context.SaveChanges();
+        }
+
+        /// <summary>
         /// Obtiene un Proyecto asociado al Brief especificado por su ID.
         /// </summary>
         /// <param name="id">ID del Brief.</param>
@@ -273,7 +314,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                 .Include(m => m.EstatusMaterial)
@@ -525,7 +567,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                     .ThenInclude(b => b.EstatusBrief)
@@ -549,7 +592,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                 .Include(m => m.EstatusMaterial)
@@ -600,7 +644,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                     .ThenInclude(b => b.EstatusBrief)

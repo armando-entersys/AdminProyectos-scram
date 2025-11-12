@@ -78,7 +78,7 @@ function AppViewModel() {
     self.pcnsSeleccionados = ko.observableArray(); // Array para múltiples PCN
     self.formato = ValidationModule.validations.requiredField();
     self.catFormato = ko.observableArray();
-    self.audiencia = ValidationModule.validations.requiredField();
+    self.audienciasSeleccionados = ko.observableArray(); // Array para múltiples Audiencias
     self.catAudiencia = ko.observableArray();
 
     self.fechaEntrega = ValidationModule.validations.requiredField();
@@ -436,7 +436,7 @@ function AppViewModel() {
         self.prioridad("");
         self.pcnsSeleccionados.removeAll(); // Limpiar PCNs seleccionados
         self.formato("");
-        self.audiencia("");
+        self.audienciasSeleccionados.removeAll(); // Limpiar Audiencias seleccionadas
     }
     self.GuardarMaterial = function () {
 
@@ -465,7 +465,7 @@ function AppViewModel() {
                 PrioridadId: self.prioridad().id,
                 Ciclo: self.ciclo(),
                 PCNIds: self.pcnsSeleccionados().map(function(pcn) { return pcn.id; }), // Array de IDs
-                AudienciaId: self.audiencia().id,
+                AudienciaIds: self.audienciasSeleccionados().map(function(aud) { return aud.id; }), // Array de IDs
                 FormatoId: self.formato().id,
                 FechaEntrega: self.fechaEntrega(),
                 Responsable: self.responsable(),

@@ -72,6 +72,11 @@ namespace BusinessLayer.Concrete
             _briefDal.InsertMaterialConPCNs(entity, pcnIds);
         }
 
+        public void InsertMaterialConPCNsYAudiencias(Material entity, List<int> pcnIds, List<int> audienciaIds)
+        {
+            _briefDal.InsertMaterialConPCNsYAudiencias(entity, pcnIds, audienciaIds);
+        }
+
         public Proyecto GetProyectoByBriefId(int id)
         {
             return _briefDal.GetProyectoByBriefId(id);

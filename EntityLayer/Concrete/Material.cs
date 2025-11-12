@@ -19,8 +19,8 @@ namespace EntityLayer.Concrete
         // Relación muchos a muchos con PCN a través de MaterialPCN
         public ICollection<MaterialPCN> MaterialPCNs { get; set; } = new List<MaterialPCN>();
 
-        public int AudienciaId { get; set; }
-        public Audiencia Audiencia { get; set; } // Propiedad de navegación
+        // Relación muchos a muchos con Audiencia a través de MaterialAudiencia
+        public ICollection<MaterialAudiencia> MaterialAudiencias { get; set; } = new List<MaterialAudiencia>();
 
         public int FormatoId { get; set; }
         public Formato Formato { get; set; } // Propiedad de navegación

@@ -97,11 +97,16 @@ namespace PresentationLayer.Controllers
                         m.Formato.Id,
                         m.Formato.Descripcion
                     },
-                    Audiencia = new
+                    MaterialAudiencias = m.MaterialAudiencias.Select(ma => new
                     {
-                        m.Audiencia.Id,
-                        m.Audiencia.Descripcion
-                    },
+                        ma.MaterialId,
+                        ma.AudienciaId,
+                        Audiencia = new
+                        {
+                            ma.Audiencia.Id,
+                            ma.Audiencia.Descripcion
+                        }
+                    }).ToList(),
                     EstatusMaterial = new
                     {
                         m.EstatusMaterial.Id,

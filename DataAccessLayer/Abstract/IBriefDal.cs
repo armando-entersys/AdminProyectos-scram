@@ -22,6 +22,7 @@ namespace DataAccessLayer.Abstract
         void InsertProyecto(Proyecto entity);
         void InsertMaterial(Material entity);
         void InsertMaterialConPCNs(Material entity, List<int> pcnIds);
+        void InsertMaterialConPCNsYAudiencias(Material entity, List<int> pcnIds, List<int> audienciaIds);
         Proyecto GetProyectoByBriefId(int id);
         List<Material> GetMaterialesByBriefId(int id);
         void EliminarMaterial(int id);
