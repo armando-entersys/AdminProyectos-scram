@@ -26,6 +26,8 @@ namespace EntityLayer.Concrete
         public Formato Formato { get; set; } // Propiedad de navegación
 
         public DateTime FechaEntrega { get; set; }
+        public DateTime? FechaPublicacion { get; set; }
+        public bool FechaPublicacionLiberada { get; set; } = false;
         public string Responsable { get; set; }
         public string Area { get; set; }
 

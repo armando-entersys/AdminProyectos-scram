@@ -47,6 +47,9 @@ function AppViewModel() {
     self.responsableMaterial = ko.observable("");
     self.areaMaterial = ko.observable("");
     self.fechaEntregaMaterial = ko.observable("");
+    self.fechaPublicacion = ko.observable("");
+    self.fechaPublicacionLiberada = ko.observable(false);
+    self.fechaPublicacionMaterial = ko.observable("");
 
     // Computed para normalizar URLs agregando http:// si no tiene protocolo
     self.linksReferenciasNormalizadas = ko.computed(function() {
@@ -250,6 +253,11 @@ function AppViewModel() {
         self.responsableMaterial(material.responsable || "");
         self.areaMaterial(material.area || "");
         self.fechaEntregaMaterial(material.fechaEntrega ? new Date(material.fechaEntrega).toLocaleDateString('es-MX') : "");
+
+        // Poblar información de fecha de publicación
+        self.fechaPublicacion(material.fechaPublicacion ? new Date(material.fechaPublicacion).toISOString().split('T')[0] : "");
+        self.fechaPublicacionLiberada(material.fechaPublicacionLiberada || false);
+        self.fechaPublicacionMaterial(material.fechaPublicacion ? new Date(material.fechaPublicacion).toLocaleDateString('es-MX') : "");
         var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
             return r.id === material.estatusMaterialId;
         });
@@ -309,7 +317,9 @@ function AppViewModel() {
             MaterialId: self.id(),
             Comentarios: self.Comentario(),
             FechaEntrega: self.fechaEntrega(),
-            EstatusMaterialId: self.EstatusMateriales().id
+            EstatusMaterialId: self.EstatusMateriales().id,
+            FechaPublicacion: self.fechaPublicacion() || null,
+            FechaPublicacionLiberada: self.fechaPublicacionLiberada() === "true" || self.fechaPublicacionLiberada() === true
         };
 
         // Construir la solicitud completa

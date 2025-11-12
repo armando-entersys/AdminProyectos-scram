@@ -9,7 +9,8 @@
       "Bash(gcloud compute ssh:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "WebFetch(domain:adminproyectos.entersys.mx)"
+      "WebFetch(domain:adminproyectos.entersys.mx)",
+      "Bash(dotnet ef migrations add:*)"
     ],
     "deny": [],
     "ask": []

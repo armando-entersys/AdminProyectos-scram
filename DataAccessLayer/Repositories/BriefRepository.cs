@@ -703,6 +703,16 @@ namespace DataAccessLayer.Repositories
                     historialMaterial.FechaEntrega = material.FechaEntrega;
                 }
 
+                // Actualizar Fecha de Publicación si se proporciona
+                if (historialMaterial.FechaPublicacion != null && historialMaterial.FechaPublicacion.HasValue)
+                {
+                    material.FechaPublicacion = historialMaterial.FechaPublicacion.Value;
+                    _context.Materiales.Update(material);
+                }
+
+                // Actualizar el estado de liberación de fecha de publicación
+                material.FechaPublicacionLiberada = historialMaterial.FechaPublicacionLiberada;
+
                 material.EstatusMaterialId = historialMaterial.EstatusMaterialId;
                 _context.HistorialMateriales.Add(historialMaterial);
 

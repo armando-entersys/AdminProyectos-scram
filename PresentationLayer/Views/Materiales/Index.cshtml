@@ -207,6 +207,10 @@
                                     <div class="col-md-6">
                                         <p><strong>Fecha de Entrega:</strong> <span data-bind="text: fechaEntregaMaterial"></span></p>
                                     </div>
+                                    <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin -->
+                                    <div class="col-md-6" data-bind="visible: fechaPublicacionLiberada() || RolId === 1">
+                                        <p><strong>Fecha de Publicación:</strong> <span data-bind="text: fechaPublicacionMaterial() || 'No definida'" style="color: #D9534F; font-weight: bold;"></span></p>
+                                    </div>
                                     <div class="col-md-6">
                                         <p><strong>Estatus del Proyecto:</strong> <span data-bind="text: estatusBrief"></span></p>
                                     </div>
@@ -304,6 +308,26 @@
                                     <label class="form-check-label" for="envioCorreo2">No</label>
                                 </div>
                             </div>
+
+                            <!-- Fecha de Publicación - Solo visible para Administrador -->
+                            <div class="mb-3" data-bind="visible: isRoleVisible([1])">
+                                <label for="fechaPublicacion" class="col-form-label">Fecha de Publicación:</label>
+                                <input type="date" class="form-control" id="fechaPublicacion" data-bind="value: fechaPublicacion">
+                            </div>
+
+                            <!-- Liberar Fecha de Publicación - Solo visible para Administrador -->
+                            <div class="mb-3" data-bind="visible: isRoleVisible([1])">
+                                <label for="liberarFechaPublicacion" class="col-form-label">Liberar Fecha de Publicación:</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="liberarFechaOptions" id="liberarFecha1" value="true" data-bind="checked: fechaPublicacionLiberada">
+                                    <label class="form-check-label" for="liberarFecha1">Sí</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="liberarFechaOptions" id="liberarFecha2" value="false" data-bind="checked: fechaPublicacionLiberada">
+                                    <label class="form-check-label" for="liberarFecha2">No</label>
+                                </div>
+                            </div>
+
                             <div>
                                 <h2 style="color:#FFAA16;">Usuarios</h2>
                                 <div>
