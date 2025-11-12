@@ -180,61 +180,19 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    <!-- Información del Brief (Columna Izquierda) -->
                                     <div class="col-md-6">
+                                        <h5 class="mb-3 text-primary">Información del Brief</h5>
                                         <p><strong>Nombre del Proyecto:</strong> <span data-bind="text: nombreBrief"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Mensaje:</strong> <span data-bind="text: mensajeMaterial() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>PCN:</strong> <span data-bind="text: pcnMaterial() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Formato:</strong> <span data-bind="text: formatoMaterial"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Estatus:</strong> <span data-bind="text: estatusMaterial"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Audiencia:</strong> <span data-bind="text: audienciaMaterial"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Responsable:</strong> <span data-bind="text: responsableMaterial() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Área:</strong> <span data-bind="text: areaMaterial() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Fecha de Entrega:</strong> <span data-bind="text: fechaEntregaMaterial"></span></p>
-                                    </div>
-                                    <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin -->
-                                    <div class="col-md-6" data-bind="visible: fechaPublicacionLiberada() || RolId === 1">
-                                        <p><strong>Fecha de Publicación:</strong> <span data-bind="text: fechaPublicacionMaterial() || 'No definida'" style="color: #D9534F; font-weight: bold;"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <p><strong>Estatus del Proyecto:</strong> <span data-bind="text: estatusBrief"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
+                                        <p><strong>Estatus del Brief:</strong> <span data-bind="text: estatusBrief"></span></p>
                                         <p><strong>Fecha de Entrega del Brief:</strong> <span data-bind="text: fechaEntregaBrief"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
                                         <p><strong>Descripción:</strong> <span data-bind="text: descripcionBrief() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
                                         <p><strong>Objetivo:</strong> <span data-bind="text: objetivoBrief() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
                                         <p><strong>Dirigido A:</strong> <span data-bind="text: dirigidoABrief() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
                                         <p><strong>Comentario:</strong> <span data-bind="text: comentarioBrief() || 'No disponible'"></span></p>
-                                    </div>
-                                    <div class="col-md-6">
                                         <p><strong>Link de Referencia:</strong>
                                             <a data-bind="attr: { href: linksReferenciasNormalizadas }, text: linksReferencias || 'No disponible'" target="_blank"></a>
                                         </p>
-                                    </div>
-                                    <div class="col-md-6">
                                         <p><strong>Archivo del Brief:</strong>
                                             <span data-bind="if: rutaArchivo() && rutaArchivo() !== ''">
                                                 <a id="archivoCargado" data-bind="attr: { href: '/Brief/DownloadFile?id=' + idBrief() }, text: rutaArchivo()"></a>
@@ -242,6 +200,23 @@
                                             <span data-bind="if: !rutaArchivo() || rutaArchivo() === ''">
                                                 No hay archivo
                                             </span>
+                                        </p>
+                                    </div>
+
+                                    <!-- Información del Material (Columna Derecha) -->
+                                    <div class="col-md-6">
+                                        <h5 class="mb-3 text-success">Información del Material</h5>
+                                        <p><strong>Mensaje:</strong> <span data-bind="text: mensajeMaterial() || 'No disponible'"></span></p>
+                                        <p><strong>PCN:</strong> <span data-bind="text: pcnMaterial() || 'No disponible'"></span></p>
+                                        <p><strong>Formato:</strong> <span data-bind="text: formatoMaterial"></span></p>
+                                        <p><strong>Estatus del Material:</strong> <span data-bind="text: estatusMaterial"></span></p>
+                                        <p><strong>Audiencia:</strong> <span data-bind="text: audienciaMaterial"></span></p>
+                                        <p><strong>Responsable:</strong> <span data-bind="text: responsableMaterial() || 'No disponible'"></span></p>
+                                        <p><strong>Área:</strong> <span data-bind="text: areaMaterial() || 'No disponible'"></span></p>
+                                        <p><strong>Fecha de Entrega:</strong> <span data-bind="text: fechaEntregaMaterial"></span></p>
+                                        <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin -->
+                                        <p data-bind="visible: fechaPublicacionLiberada() || RolId === 1">
+                                            <strong>Fecha de Publicación:</strong> <span data-bind="text: fechaPublicacionMaterial() || 'No definida'" style="color: #D9534F; font-weight: bold;"></span>
                                         </p>
                                     </div>
                                 </div>
