@@ -193,13 +193,14 @@ function AppViewModel() {
             .then(function (d) {
                 var estatusMateriales = d.datos;
 
-                // Si el usuario es Producción (RolId=3), solo mostrar: En Diseño (2), En Revisión (3), En Producción (5)
-                if (typeof RolId !== 'undefined' && RolId === 3) {
-                    var estatusPermitidos = [2, 3, 5]; // IDs: En Diseño, En Revisión, En Producción
+                // Filtrar el estado "Entregado" (ID=6) solo para rol de Producción (RolId=3)
+                // Para otros roles (Administrador, Usuario), excluir el estado "Entregado"
+                if (typeof RolId !== 'undefined' && RolId !== 3) {
                     estatusMateriales = d.datos.filter(function(estatus) {
-                        return estatusPermitidos.indexOf(estatus.id) !== -1;
+                        return estatus.id !== 6; // Excluir "Entregado" para no-Producción
                     });
                 }
+                // Si es Producción (RolId=3), mostrar todos los estados sin filtrar
 
                 self.catEstatusMateriales(estatusMateriales);
                 self.catEstatusMaterialesFiltro(d.datos);
