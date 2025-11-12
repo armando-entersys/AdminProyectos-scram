@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordatorio de Entrega</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #AE0025;
+        }
+        p {
+            font-size: 16px;
+            color: #666666;
+            margin-bottom: 20px;
+        }
+        .material-info {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .material-info p {
+            margin: 8px 0;
+            color: #333333;
+        }
+        .material-info strong {
+            color: #AE0025;
+        }
+        .btn-confirm {
+            display: inline-block;
+            padding: 12px 25px;
+            font-size: 16px;
+            color: #AE0025;
+            background-color: #ffffff;
+            text-decoration: none;
+            border: 2px solid #AE0025;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-confirm:hover {
+            background-color: #f5f5f5;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://adminproyectos.entersys.mx/img/logo.png" alt="Logo" class="logo">
+
+        <h1>¡Recordatorio de Entrega!</h1>
+        <p>Recuerda que tu Material <strong>{nombreMaterial}</strong> es el día de mañana!</p>
+
+        <div class="material-info">
+            <p><strong>Proyecto:</strong> {nombreProyecto}</p>
+            <p><strong>Material:</strong> {nombreMaterial}</p>
+            <p><strong>Fecha de Entrega:</strong> {fechaEntrega}</p>
+            <p><strong>Responsable:</strong> {responsable}</p>
+        </div>
+
+        <a href="{link}" class="btn-confirm">Ver Material</a>
+
+        <div class="footer">
+            <p>Este es un recordatorio automático. Por favor, asegúrate de tener todo listo para la entrega.</p>
+        </div>
+    </div>
+</body>
+</html>

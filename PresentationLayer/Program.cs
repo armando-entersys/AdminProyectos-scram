@@ -114,6 +114,10 @@ builder.Services.AddElmah(options =>
 // Agrega SignalR al contenedor de servicios
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
+// Registrar el servicio de recordatorios de materiales
+builder.Services.AddHostedService<MaterialReminderService>();
+
 var app = builder.Build();
 
 // ═══════════════════════════════════════════════════════════
