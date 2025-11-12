@@ -421,10 +421,15 @@ namespace DataAccessLayer.Repositories
             }
             else
             {
-                // Solicitante: solo materiales de sus propios briefs
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
                 materialesQuery = _context.Materiales
                     .Include(m => m.Brief)
-                    .Where(m => m.Brief.UsuarioId == UsuarioId)
+                    .Where(m => m.Brief.UsuarioId == UsuarioId || briefIdsParticipante.Contains(m.BriefId))
                     .AsQueryable();
             }
 
@@ -507,8 +512,13 @@ namespace DataAccessLayer.Repositories
             }
             else
             {
-                // Solicitante: solo materiales de sus propios briefs
-                query = _context.Materiales.Where(q => q.Brief.UsuarioId == id);
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == id)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                query = _context.Materiales.Where(q => q.Brief.UsuarioId == id || briefIdsParticipante.Contains(q.BriefId));
             }
 
             var materiales = query
@@ -574,8 +584,13 @@ namespace DataAccessLayer.Repositories
             }
             else
             {
-                // Solicitante: solo materiales de sus propios briefs
-                query = _context.Materiales.Where(m => m.Brief.UsuarioId == material.Id).AsQueryable();
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == material.Id)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                query = _context.Materiales.Where(m => m.Brief.UsuarioId == material.Id || briefIdsParticipante.Contains(m.BriefId)).AsQueryable();
             }
 
             return query
@@ -647,12 +662,38 @@ namespace DataAccessLayer.Repositories
         /// <returns>Objeto ConteoMateriales con los resultados.</returns>
         public ConteoMateriales ObtenerConteoEstatusMateriales(int UsuarioId)
         {
-            var usuarioAdmin = _context.Usuarios.Where(q => q.Id == UsuarioId && (q.RolId == 1 || q.RolId == 3)).FirstOrDefault();
-            var materiales = _context.Materiales.Where(q => q.Brief.UsuarioId == UsuarioId).ToList();
+            var usuario = _context.Usuarios.Where(q => q.Id == UsuarioId).FirstOrDefault();
+            List<Material> materiales;
             ConteoMateriales conteoMateriales = new ConteoMateriales();
-            if (usuarioAdmin != null)
+
+            if (usuario != null && usuario.RolId == 1)
             {
+                // Admin: ver todos los materiales
                 materiales = _context.Materiales.ToList();
+            }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: solo materiales de proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                materiales = _context.Materiales
+                    .Where(m => briefIdsParticipante.Contains(m.BriefId))
+                    .ToList();
+            }
+            else
+            {
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                materiales = _context.Materiales
+                    .Where(q => q.Brief.UsuarioId == UsuarioId || briefIdsParticipante.Contains(q.BriefId))
+                    .ToList();
             }
 
             conteoMateriales.Registros = materiales.Count();
@@ -662,7 +703,6 @@ namespace DataAccessLayer.Repositories
             conteoMateriales.Programado = materiales.Where(q => q.EstatusMaterialId == 4).Count();
             conteoMateriales.Entregado = materiales.Where(q => q.EstatusMaterialId == 5).Count();
             conteoMateriales.InicioCiclo = materiales.Where(q => q.EstatusMaterialId == 6).Count();
-
 
             return conteoMateriales;
         }
