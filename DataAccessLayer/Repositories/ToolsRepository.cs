@@ -120,6 +120,7 @@ namespace DataAccessLayer.Repositories
         public List<Alerta> ObtenerAlertas(int IdUsuario)
         {
             var Alertas = _context.Alertas.Where(q => q.IdUsuario == IdUsuario && q.lectura == false)
+                                          .OrderByDescending(p => p.FechaCreacion)
                                           .Select(p => new Alerta
                                           {
                                               Id = p.Id,

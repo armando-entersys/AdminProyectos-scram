@@ -139,7 +139,7 @@ namespace PresentationLayer.Controllers
 
                 _emailSender.SendEmail(Destinatarios, "CambioPassword", valoresDinamicos);
 
-                TempData["MensajeExito"] = "Se ha enviado un correo con las instrucciones para cambiar tu contraseña.";
+                TempData["MensajeExito"] = "¡Correo enviado exitosamente! Revisa tu bandeja de entrada y sigue las instrucciones para restablecer tu contraseña. Si no ves el correo en unos minutos, verifica tu carpeta de spam.";
             }
             else
             {

@@ -183,7 +183,7 @@ using (var scope = app.Services.CreateScope())
                 new Menu { Nombre = "Calendario", Ruta = "/Calendario/Index", Orden = 3, Icono = "lni lni-calendar", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Materiales", Ruta = "/Materiales/Index", Orden = 4, Icono = "lni lni-files", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Alertas", Ruta = "/Alertas/Index", Orden = 5, Icono = "lni lni-alarm", RolId = rolAdmin.Id },
-                new Menu { Nombre = "Usuarios", Ruta = "/Usuarios/Index", Orden = 6, Icono = "lni lni-users", RolId = rolAdmin.Id },
+                new Menu { Nombre = "Participantes", Ruta = "/Usuarios/Index", Orden = 6, Icono = "lni lni-users", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Invitaciones", Ruta = "/Invitaciones/Index", Orden = 7, Icono = "lni lni-envelope", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Catálogos", Ruta = "/Catalogos/Index", Orden = 8, Icono = "lni lni-list", RolId = rolAdmin.Id },
 

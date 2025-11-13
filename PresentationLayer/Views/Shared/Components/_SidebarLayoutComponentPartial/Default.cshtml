@@ -33,7 +33,7 @@
                    
 
                     <li class="sidebar-item">
-                        <a href="@Url.Action(accion, controlador)" class="sidebar-link">
+                        <a href="@Url.Action(accion, controlador)" class="sidebar-link @(menu.Nombre == "Participantes" ? "text-danger" : "")">
                             <i class="@menu.Icono"></i>
                             <span>@menu.Nombre</span>
                         </a>
