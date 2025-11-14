@@ -370,8 +370,14 @@
                                     </div>
                                     
                                 </div>
-                                <button class="btn btn-success mt-3 w-100" data-bind="click: GuardarMaterial">
-                                    <i class="lni lni-save"></i> Agregar Material
+                                <button class="btn btn-success mt-3 w-100" data-bind="click: GuardarMaterial, disable: guardandoMaterial">
+                                    <span data-bind="visible: !guardandoMaterial()">
+                                        <i class="lni lni-save"></i> Agregar Material
+                                    </span>
+                                    <span data-bind="visible: guardandoMaterial">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Guardando...
+                                    </span>
                                 </button>
                             </div>
 

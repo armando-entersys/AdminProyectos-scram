@@ -94,6 +94,9 @@ function AppViewModel() {
     self.registrosMateriales = ko.observableArray();
     self.registrosParticipantes = ko.observableArray();
 
+    // Observable para controlar el estado de guardado del material
+    self.guardandoMaterial = ko.observable(false);
+
     // Observables y variables para autocompletado
     self.buscarUsuario = ko.observable("");
     self.resultadosBusqueda = ko.observableArray([]);
@@ -439,6 +442,10 @@ function AppViewModel() {
         self.audienciasSeleccionados.removeAll(); // Limpiar Audiencias seleccionadas
     }
     self.GuardarMaterial = function () {
+        // Evitar múltiples envíos
+        if (self.guardandoMaterial()) {
+            return;
+        }
 
         validarYProcesarFormulario(self.errors, function () {
             // Validar que la fecha de entrega no sea anterior a hoy
@@ -464,6 +471,9 @@ function AppViewModel() {
                 return;
             }
 
+            // Activar estado de guardando
+            self.guardandoMaterial(true);
+
             var Material = {
                 BriefId: self.id(),
                 Nombre: self.nombreMaterial(),
@@ -484,21 +494,26 @@ function AppViewModel() {
                 contentType: "application/json", // Cambiado a JSON
                 data: JSON.stringify(Material),  // Serializamos los datos a JSON
                 success: function (d) {
-                    
+
                     self.ObtenerMateriales(self.id());
                     self.LimpiarMaterial();
-                    
+
                     alert(d.mensaje);
 
+                    // Desactivar estado de guardando
+                    self.guardandoMaterial(false);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error al obtener los datos: ", error);
                     $('#alertMessage').text("Error al obtener los datos: " + xhr.responseText);
                     $('#alertModalLabel').text("Error");
                     $("#alertModal").modal("show");
+
+                    // Desactivar estado de guardando
+                    self.guardandoMaterial(false);
                 }
             });
-        });  
+        });
     }
     self.ObtenerProyecto = function (id) {
         $.ajax({
