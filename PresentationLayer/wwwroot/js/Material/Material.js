@@ -262,7 +262,7 @@ function AppViewModel() {
         self.pcnMaterial(self.getPCNsString(material));
         self.formatoMaterial(material.formato?.descripcion || "N/A");
         self.estatusMaterial(material.estatusMaterial?.descripcion || "N/A");
-        self.audienciaMaterial(material.audiencia?.descripcion || "N/A");
+        self.audienciaMaterial(self.getAudienciasString(material));
         self.responsableMaterial(material.responsable || "");
         self.areaMaterial(material.area || "");
         self.fechaEntregaMaterial(material.fechaEntrega ? new Date(material.fechaEntrega).toLocaleDateString('es-MX') : "");
@@ -455,7 +455,7 @@ function AppViewModel() {
                 "Formato": registro.formato?.descripcion || "",
                 "Estatus": registro.estatusMaterial?.descripcion || "",
                 "Nombre del Proyecto": registro.brief?.nombre || "",
-                "Audiencia": registro.audiencia?.descripcion || "",
+                "Audiencia": self.getAudienciasString(registro),
                 "Responsable": registro.responsable || "",
                 "Área": registro.area || "",
                 "Fecha de Entrega": registro.fechaEntrega ? new Date(registro.fechaEntrega).toLocaleDateString('es-MX') : ""
