@@ -241,6 +241,15 @@ namespace PresentationLayer.Controllers
                 historialMaterialRequest.HistorialMaterial.UsuarioId = UsuarioId;
                 var id = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 var usuarioLogueado =_usuarioService.TGetById(id);
+
+                // Solo el administrador puede cambiar el estado de liberación de fecha y la fecha de publicación
+                // Los demás roles mantienen el valor actual del material
+                if (rolId != 1)
+                {
+                    historialMaterialRequest.HistorialMaterial.FechaPublicacionLiberada = material.FechaPublicacionLiberada;
+                    historialMaterialRequest.HistorialMaterial.FechaPublicacion = material.FechaPublicacion;
+                }
+
                _briefService.ActualizaHistorialMaterial(historialMaterialRequest.HistorialMaterial);
 
                 var urlBase = $"{Request.Scheme}://{Request.Host}";

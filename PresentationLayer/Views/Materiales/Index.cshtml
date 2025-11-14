@@ -214,8 +214,8 @@
                                         <p><strong>Responsable:</strong> <span data-bind="text: responsableMaterial() || 'No disponible'"></span></p>
                                         <p><strong>Área:</strong> <span data-bind="text: areaMaterial() || 'No disponible'"></span></p>
                                         <p><strong>Fecha de Entrega:</strong> <span data-bind="text: fechaEntregaMaterial"></span></p>
-                                        <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin -->
-                                        <p data-bind="visible: fechaPublicacionLiberada() || RolId === 1">
+                                        <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin o Producción -->
+                                        <p data-bind="visible: fechaPublicacionLiberada() || RolId === 1 || RolId === 3">
                                             <strong>Fecha de Publicación:</strong> <span data-bind="text: fechaPublicacionMaterial() || 'No definida'" style="color: #D9534F; font-weight: bold;"></span>
                                         </p>
                                     </div>
