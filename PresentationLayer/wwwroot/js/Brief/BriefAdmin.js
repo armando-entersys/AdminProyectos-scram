@@ -458,6 +458,12 @@ function AppViewModel() {
                 return;
             }
 
+            // Validar que se haya seleccionado al menos una Audiencia
+            if (self.audienciasSeleccionados().length === 0) {
+                alert('Debe seleccionar al menos una Audiencia');
+                return;
+            }
+
             var Material = {
                 BriefId: self.id(),
                 Nombre: self.nombreMaterial(),
