@@ -130,7 +130,7 @@
             color: #e9ecef !important;
     }
 
-    /* Estilos para el autocomplete de usuarios */
+    /* Estilos para el autocomplete de participantes */
     .autocomplete-results {
         position: relative;
         list-style: none;
@@ -415,8 +415,8 @@
                     <!-- Tab: Participantes -->
                     <div class="tab-pane fade show active" id="participantes" role="tabpanel" aria-labelledby="participantes-tab">
                         <div>
-                            <label for="buscarUsuario">Buscar Usuario</label>
-                            <input id="buscarUsuario" type="text" class="form-control mb-3" placeholder="Escribe el nombre del usuario..."
+                            <label for="buscarUsuario">Buscar Participante</label>
+                            <input id="buscarUsuario" type="text" class="form-control mb-3" placeholder="Escribe el nombre del participante..."
                                    data-bind="value: buscarUsuario, valueUpdate: 'input', event: { keyup: buscarUsuarios }">
                             <ul class="autocomplete-results" data-bind="foreach: resultadosBusqueda">
                                 <li class="list-group-item" data-bind="text: nombre + ' ' + apellidoPaterno, click: $root.seleccionarUsuario"></li>
