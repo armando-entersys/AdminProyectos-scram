@@ -206,17 +206,22 @@ function AppViewModel() {
                 var estatusMateriales = d.datos;
 
                 // Reporte 2: Filtrar estados por rol
-                // Producción (RolId=3): Ve TODOS los estados (1,2,3,4,5)
-                //   - En Revisión (1)
-                //   - En diseño (2)
-                //   - En revisión (3)
-                //   - Listo para publicación (4)
-                //   - En producción (5)
-                // Otros roles (Administrador, Solicitante): NO ven "En producción" (ID=5) ni "Listo para publicación" (ID=4)
-                if (typeof RolId !== 'undefined' && RolId !== 3) {
-                    estatusMateriales = d.datos.filter(function(estatus) {
-                        return estatus.id !== 4 && estatus.id !== 5; // Excluir "Listo para publicación" y "En producción"
-                    });
+                if (typeof RolId !== 'undefined') {
+                    if (RolId === 3) {
+                        // Producción: Solo ve estados específicos
+                        //   - En diseño (2)
+                        //   - En revisión (3)
+                        //   - Listo para publicación (4)
+                        //   - En producción (5)
+                        estatusMateriales = d.datos.filter(function(estatus) {
+                            return estatus.id === 2 || estatus.id === 3 || estatus.id === 4 || estatus.id === 5;
+                        });
+                    } else {
+                        // Otros roles (Administrador, Solicitante): NO ven "En producción" (ID=5) ni "Listo para publicación" (ID=4)
+                        estatusMateriales = d.datos.filter(function(estatus) {
+                            return estatus.id !== 4 && estatus.id !== 5;
+                        });
+                    }
                 }
 
                 self.catEstatusMateriales(estatusMateriales);
