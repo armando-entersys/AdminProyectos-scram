@@ -1,6 +1,8 @@
 ﻿@{
     string controlador = "";
     string accion = "Index";
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
 }
 <header>
     <aside id="sidebar">
@@ -29,11 +31,13 @@
                         controlador = rutaDividida.Length > 0 ? rutaDividida[0] : "Home";
                         accion = rutaDividida.Length > 1 ? rutaDividida[1] : "Index";
                     }
-                   
-                   
+
+                    // Verificar si es la página actual
+                    bool isActive = string.Equals(controlador, currentController, StringComparison.OrdinalIgnoreCase);
+
 
                     <li class="sidebar-item">
-                        <a href="@Url.Action(accion, controlador)" class="sidebar-link @(menu.Nombre == "Participantes" ? "text-danger" : "")">
+                        <a href="@Url.Action(accion, controlador)" class="sidebar-link @(isActive ? "active" : "")">
                             <i class="@menu.Icono"></i>
                             <span>@menu.Nombre</span>
                         </a>
