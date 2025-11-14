@@ -138,7 +138,7 @@
                         <td data-bind="text: formato.descripcion"></td>
                         <td data-bind="text: estatusMaterial.descripcion"></td>
                         <td data-bind="text: brief.nombre"></td>
-                        <td data-bind="text: audiencia.descripcion"></td>
+                        <td data-bind="text: $root.getAudienciasString($data)"></td>
                         <td data-bind="text: responsable"></td>
                         <td data-bind="text: area"></td>
                         <td data-bind="text: new Date(fechaEntrega).toLocaleDateString('es-MX')"></td>

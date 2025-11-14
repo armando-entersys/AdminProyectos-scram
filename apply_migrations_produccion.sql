@@ -5,13 +5,44 @@
 USE AdminProyectosNaturaDB;
 GO
 
--- Verificar si las columnas ya existen antes de crearlas
+-- ==========================================
+-- AGREGAR COLUMNAS A TABLA MATERIALES
+-- ==========================================
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Materiales]') AND name = 'FechaPublicacion')
+BEGIN
+    PRINT 'Agregando columna FechaPublicacion a Materiales...';
+    ALTER TABLE [dbo].[Materiales]
+    ADD [FechaPublicacion] datetime2(7) NULL;
+    PRINT 'Columna FechaPublicacion agregada exitosamente a Materiales.';
+END
+ELSE
+BEGIN
+    PRINT 'La columna FechaPublicacion ya existe en Materiales.';
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[Materiales]') AND name = 'FechaPublicacionLiberada')
+BEGIN
+    PRINT 'Agregando columna FechaPublicacionLiberada a Materiales...';
+    ALTER TABLE [dbo].[Materiales]
+    ADD [FechaPublicacionLiberada] bit NOT NULL DEFAULT 0;
+    PRINT 'Columna FechaPublicacionLiberada agregada exitosamente a Materiales.';
+END
+ELSE
+BEGIN
+    PRINT 'La columna FechaPublicacionLiberada ya existe en Materiales.';
+END
+GO
+
+-- ==========================================
+-- AGREGAR COLUMNAS A TABLA HISTORIALMATERIALES
+-- ==========================================
 IF NOT EXISTS (SELECT * FROM sys.columns WHERE object_id = OBJECT_ID(N'[dbo].[HistorialMateriales]') AND name = 'FechaPublicacion')
 BEGIN
     PRINT 'Agregando columna FechaPublicacion a HistorialMateriales...';
     ALTER TABLE [dbo].[HistorialMateriales]
     ADD [FechaPublicacion] datetime2(7) NULL;
-    PRINT 'Columna FechaPublicacion agregada exitosamente.';
+    PRINT 'Columna FechaPublicacion agregada exitosamente a HistorialMateriales.';
 END
 ELSE
 BEGIN
@@ -24,7 +55,7 @@ BEGIN
     PRINT 'Agregando columna FechaPublicacionLiberada a HistorialMateriales...';
     ALTER TABLE [dbo].[HistorialMateriales]
     ADD [FechaPublicacionLiberada] bit NOT NULL DEFAULT 0;
-    PRINT 'Columna FechaPublicacionLiberada agregada exitosamente.';
+    PRINT 'Columna FechaPublicacionLiberada agregada exitosamente a HistorialMateriales.';
 END
 ELSE
 BEGIN

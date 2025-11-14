@@ -122,6 +122,18 @@ function AppViewModel() {
         return 'N/A';
     };
 
+    // Función helper para obtener las Audiencias como string
+    self.getAudienciasString = function(material) {
+        if (material.materialAudiencias && material.materialAudiencias.length > 0) {
+            return material.materialAudiencias.map(function(ma) {
+                return ma.audiencia ? ma.audiencia.descripcion : '';
+            }).filter(function(desc) {
+                return desc !== '';
+            }).join(', ');
+        }
+        return 'N/A';
+    };
+
     // Computados
     self.registrosFiltrados = ko.computed(function () {
         var filtroNombreProyecto = self.filtroNombreProyecto().toLowerCase();
