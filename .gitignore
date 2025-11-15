@@ -365,3 +365,6 @@ FodyWeavers.xsd
 .env.staging
 .env.production
 .env.local
+
+# Claude Code configuration
+.claude/
