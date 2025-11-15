@@ -24,13 +24,13 @@ namespace DataAccessLayer.Context
                 // Primero intentar variable de entorno (Docker)
                 var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
-                // Si no existe variable de entorno, usar el connection string de desarrollo local
+                // Si no existe variable de entorno, usar el connection string de desarrollo local PostgreSQL
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    connectionString = "Server=solucionesmkt.com.mx;initial catalog=AdminProyectosNaturaDB;user id=mkt;password=123456789;";
+                    connectionString = "Host=localhost;Port=5432;Database=AdminProyectosNaturaDB;Username=adminuser;Password=Operaciones.2025;";
                 }
 
-                optionsBuilder.UseSqlServer(connectionString);
+                optionsBuilder.UseNpgsql(connectionString);
             }
         }
         public DbSet<Usuario> Usuarios { get; set; }
