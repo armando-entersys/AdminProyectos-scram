@@ -207,7 +207,10 @@ function AppViewModel() {
 
                 // Reporte 2: Filtrar estados por rol
                 if (typeof RolId !== 'undefined') {
-                    if (RolId === 3) {
+                    if (RolId === 1 || RolId === '1') {
+                        // Administrador: Ve TODOS los estados
+                        estatusMateriales = d.datos;
+                    } else if (RolId === 3 || RolId === '3') {
                         // Producción: Solo ve estados específicos
                         //   - En diseño (2)
                         //   - En revisión (3)
@@ -217,7 +220,7 @@ function AppViewModel() {
                             return estatus.id === 2 || estatus.id === 3 || estatus.id === 4 || estatus.id === 5;
                         });
                     } else {
-                        // Otros roles (Administrador, Solicitante): NO ven "En producción" (ID=5) ni "Listo para publicación" (ID=4)
+                        // Solicitante (RolId = 2): NO ve "En producción" (ID=5) ni "Listo para publicación" (ID=4)
                         estatusMateriales = d.datos.filter(function(estatus) {
                             return estatus.id !== 4 && estatus.id !== 5;
                         });

@@ -165,7 +165,37 @@ function AppViewModel() {
         else {
             self.GuardarEditar();
         }
-        
+
+    }
+
+    self.EliminarPermanente = function (usuario) {
+        if (!confirm('¿Está seguro de que desea eliminar permanentemente al usuario "' + usuario.nombre + '"? Esta acción no se puede deshacer.')) {
+            return;
+        }
+
+        $.ajax({
+            url: "/Usuarios/Delete/" + usuario.id,
+            type: "DELETE",
+            contentType: "application/json",
+            success: function (d) {
+                if (d.exito) {
+                    self.inicializar();
+                    $('#alertMessage').text(d.mensaje);
+                    $('#alertModalLabel').text("Eliminación exitosa");
+                    $("#alertModal").modal("show");
+                } else {
+                    $('#alertMessage').text(d.mensaje);
+                    $('#alertModalLabel').text("Error");
+                    $("#alertModal").modal("show");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error al eliminar usuario: ", error);
+                $('#alertMessage').text("Error al eliminar el usuario: " + xhr.responseText);
+                $('#alertModalLabel').text("Error");
+                $("#alertModal").modal("show");
+            }
+        });
     }
 }
 

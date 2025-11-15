@@ -8,6 +8,7 @@ using System.Net.Http;
 using BusinessLayer.Concrete;
 using Newtonsoft.Json.Linq;
 using DataAccessLayer.EntityFramework;
+using Microsoft.Extensions.Logging;
 namespace PresentationLayer.Controllers
 {
     public class UsuariosController : Controller
@@ -18,9 +19,11 @@ namespace PresentationLayer.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IToolsService _toolService;
         private readonly IBriefService _briefService;
+        private readonly ILogger<UsuariosController> _logger;
 
-        public UsuariosController(IAuthService authService, IUsuarioService usuarioService, IRolService rolService, 
-                                  IEmailSender emailSender, IToolsService toolService, IBriefService briefService)
+        public UsuariosController(IAuthService authService, IUsuarioService usuarioService, IRolService rolService,
+                                  IEmailSender emailSender, IToolsService toolService, IBriefService briefService,
+                                  ILogger<UsuariosController> logger)
         {
             _authService = authService;
             _usuarioService = usuarioService;
@@ -28,6 +31,7 @@ namespace PresentationLayer.Controllers
             _emailSender = emailSender;
             _toolService = toolService;
             _briefService = briefService;
+            _logger = logger;
         }
         // GET: UsuariosController
         public ActionResult Index()
@@ -143,8 +147,25 @@ namespace PresentationLayer.Controllers
         public ActionResult Delete(int id)
         {
             respuestaServicio res = new respuestaServicio();
-            _usuarioService.TDelete(id);
-            res.Exito = true;
+            try
+            {
+                var usuario = _usuarioService.TGetById(id);
+                if (usuario == null)
+                {
+                    res.Mensaje = "Usuario no encontrado";
+                    res.Exito = false;
+                    return Ok(res);
+                }
+
+                _usuarioService.TDelete(id);
+                res.Mensaje = $"Usuario '{usuario.Nombre}' eliminado permanentemente";
+                res.Exito = true;
+            }
+            catch (Exception ex)
+            {
+                res.Mensaje = $"Error al eliminar usuario: {ex.Message}";
+                res.Exito = false;
+            }
             return Ok(res);
         }
 
@@ -213,7 +234,7 @@ namespace PresentationLayer.Controllers
 
                 _emailSender.SendEmail(DestinatariosAdmin, "RegistroUsuarioAdmin", valoresDinamicosAdmin);
 
-                TempData["Mensaje"] = resp.Mensaje;
+                TempData["Mensaje"] = "Tu solicitud fue recibida, espera la confirmación del administrador para que tengas acceso a la plataforma";
                 return RedirectToAction("Index", "Login");
             }
            
@@ -293,7 +314,7 @@ namespace PresentationLayer.Controllers
             {
                 var participanteBD = _toolService.AgregarParticipante(participante);
                 participante.Usuario = _usuarioService.TGetById(participante.UsuarioId);
-               
+
                 var brief = _briefService.GetById(participante.BriefId);
 
                 var urlBase = $"{Request.Scheme}://{Request.Host}";
@@ -307,14 +328,27 @@ namespace PresentationLayer.Controllers
                 var Destinatarios = new List<string>();
                 Destinatarios.Add(participante.Usuario.Correo);
 
-                _emailSender.SendEmail(Destinatarios, "RegistroParticipante", valoresDinamicos);
+                // Intentar enviar el correo, pero no fallar si hay un error
+                try
+                {
+                    _logger.LogInformation($"Enviando notificación de participante agregado a: {participante.Usuario.Correo} para el proyecto: {brief.Nombre}");
+                    _emailSender.SendEmail(Destinatarios, "RegistroParticipante", valoresDinamicos);
+                    _logger.LogInformation($"Notificación enviada exitosamente a: {participante.Usuario.Correo}");
+                }
+                catch (Exception emailEx)
+                {
+                    _logger.LogError(emailEx, $"Error al enviar correo de notificación a {participante.Usuario.Correo}: {emailEx.Message}");
+                    // Continuar, el participante se agregó correctamente aunque falló el correo
+                }
+
                 res.Datos = participanteBD;
                 res.Mensaje = "Creado exitosamente";
                 res.Exito = true;
             }
             catch (Exception ex)
             {
-                res.Mensaje = "Error al Crear el Usuario";
+                _logger.LogError(ex, $"Error al agregar participante: {ex.Message}");
+                res.Mensaje = "Error al Crear el Participante: " + ex.Message;
                 res.Exito = false;
             }
 

@@ -96,6 +96,7 @@ namespace DataAccessLayer.Repositories
             {
                 usuarioBD.CambioContrasena = false;
                 usuarioBD.Contrasena = usuario.Contrasena;
+                usuarioBD.Estatus = true; // Activar usuario al cambiar contraseña
                 _context.Update(usuarioBD);
                 _context.SaveChanges();
                 resp.Datos = usuarioBD;

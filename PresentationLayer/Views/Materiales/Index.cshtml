@@ -214,8 +214,8 @@
                                         <p><strong>Responsable:</strong> <span data-bind="text: responsableMaterial() || 'No disponible'"></span></p>
                                         <p><strong>Área:</strong> <span data-bind="text: areaMaterial() || 'No disponible'"></span></p>
                                         <p><strong>Fecha de Entrega:</strong> <span data-bind="text: fechaEntregaMaterial"></span></p>
-                                        <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin o Producción -->
-                                        <p data-bind="visible: fechaPublicacionLiberada() || RolId === 1 || RolId === 3">
+                                        <!-- Fecha de Publicación - Solo visible si está liberada o si es Admin -->
+                                        <p data-bind="visible: fechaPublicacionLiberada() || RolId === 1">
                                             <strong>Fecha de Publicación:</strong> <span data-bind="text: fechaPublicacionMaterial() || 'No definida'" style="color: #D9534F; font-weight: bold;"></span>
                                         </p>
                                     </div>
@@ -284,12 +284,6 @@
                                 </div>
                             </div>
 
-                            <!-- Fecha de Publicación - Solo visible para Administrador -->
-                            <div class="mb-3" data-bind="visible: isRoleVisible([1])">
-                                <label for="fechaPublicacion" class="col-form-label">Fecha de Publicación:</label>
-                                <input type="date" class="form-control" id="fechaPublicacion" data-bind="value: fechaPublicacion">
-                            </div>
-
                             <!-- Liberar Fecha de Publicación - Solo visible para Administrador -->
                             <div class="mb-3" data-bind="visible: isRoleVisible([1])">
                                 <label for="liberarFechaPublicacion" class="col-form-label">Liberar Fecha de Publicación:</label>
@@ -301,6 +295,12 @@
                                     <input class="form-check-input" type="radio" name="liberarFechaOptions" id="liberarFecha2" value="false" data-bind="checked: fechaPublicacionLiberada">
                                     <label class="form-check-label" for="liberarFecha2">No</label>
                                 </div>
+                            </div>
+
+                            <!-- Fecha de Publicación - Solo visible para Administrador -->
+                            <div class="mb-3" data-bind="visible: isRoleVisible([1])">
+                                <label for="fechaPublicacion" class="col-form-label">Fecha de Publicación:</label>
+                                <input type="date" class="form-control" id="fechaPublicacion" data-bind="value: fechaPublicacion">
                             </div>
 
                             <div>
@@ -448,5 +448,5 @@
             });
         });
     </script>
-    <script src="~/js/Material/Material.js" asp-append-version="true"></script>
+    <script src="~/js/Material/Material.js?v=@DateTime.Now.Ticks" asp-append-version="true"></script>
 }
