@@ -120,7 +120,7 @@
     }
 
         .autocomplete-results li:hover {
-            background-color: #e9ecef;
+            background-color: #ffe5e5;
         }
 
     .btn-outline-primary {
@@ -130,7 +130,7 @@
             color: #e9ecef !important;
     }
 
-    /* Estilos para el autocomplete de usuarios */
+    /* Estilos para el autocomplete de participantes */
     .autocomplete-results {
         position: relative;
         list-style: none;
@@ -152,7 +152,7 @@
     }
 
     .autocomplete-results li:hover {
-        background-color: #f8f9fa;
+        background-color: #ffe5e5;
     }
 
     .autocomplete-results li:last-child {
@@ -342,8 +342,15 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
-                                        <label class="form-label">Audiencia</label>
-                                        <select class="form-control" data-bind="options: catAudiencia, value: audiencia, optionsText: 'descripcion', optionsCaption: 'Seleccione'"></select>
+                                        <label class="form-label">Audiencia (Seleccione una o más)</label>
+                                        <div style="max-height: 150px; overflow-y: auto; border: 1px solid #ced4da; border-radius: 0.25rem; padding: 0.5rem;">
+                                            <div data-bind="foreach: catAudiencia">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" data-bind="checkedValue: $data, checked: $root.audienciasSeleccionados, attr: { id: 'audiencia_' + id }">
+                                                    <label class="form-check-label" data-bind="text: descripcion, attr: { for: 'audiencia_' + id }"></label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Formato</label>
@@ -363,8 +370,14 @@
                                     </div>
                                     
                                 </div>
-                                <button class="btn btn-success mt-3 w-100" data-bind="click: GuardarMaterial">
-                                    <i class="lni lni-save"></i> Agregar Material
+                                <button class="btn btn-success mt-3 w-100" data-bind="click: GuardarMaterial, disable: guardandoMaterial">
+                                    <span data-bind="visible: !guardandoMaterial()">
+                                        <i class="lni lni-save"></i> Agregar Material
+                                    </span>
+                                    <span data-bind="visible: guardandoMaterial">
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        Guardando...
+                                    </span>
                                 </button>
                             </div>
 
@@ -408,8 +421,8 @@
                     <!-- Tab: Participantes -->
                     <div class="tab-pane fade show active" id="participantes" role="tabpanel" aria-labelledby="participantes-tab">
                         <div>
-                            <label for="buscarUsuario">Buscar Usuario</label>
-                            <input id="buscarUsuario" type="text" class="form-control mb-3" placeholder="Escribe el nombre del usuario..."
+                            <label for="buscarUsuario">Buscar Participante</label>
+                            <input id="buscarUsuario" type="text" class="form-control mb-3" placeholder="Escribe el nombre del participante..."
                                    data-bind="value: buscarUsuario, valueUpdate: 'input', event: { keyup: buscarUsuarios }">
                             <ul class="autocomplete-results" data-bind="foreach: resultadosBusqueda">
                                 <li class="list-group-item" data-bind="text: nombre + ' ' + apellidoPaterno, click: $root.seleccionarUsuario"></li>

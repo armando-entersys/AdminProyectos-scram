@@ -251,6 +251,47 @@ namespace DataAccessLayer.Repositories
         }
 
         /// <summary>
+        /// Inserta un Material con sus relaciones de PCN y Audiencia.
+        /// </summary>
+        /// <param name="entity">Entidad Material a insertar.</param>
+        /// <param name="pcnIds">Lista de IDs de PCN.</param>
+        /// <param name="audienciaIds">Lista de IDs de Audiencia.</param>
+        public void InsertMaterialConPCNsYAudiencias(Material entity, List<int> pcnIds, List<int> audienciaIds)
+        {
+            // Agregar el material primero
+            _context.Materiales.Add(entity);
+            _context.SaveChanges();
+
+            // Luego agregar las relaciones MaterialPCN
+            if (pcnIds != null && pcnIds.Any())
+            {
+                foreach (var pcnId in pcnIds)
+                {
+                    _context.MaterialPCN.Add(new MaterialPCN
+                    {
+                        MaterialId = entity.Id,
+                        PCNId = pcnId
+                    });
+                }
+            }
+
+            // Agregar las relaciones MaterialAudiencia
+            if (audienciaIds != null && audienciaIds.Any())
+            {
+                foreach (var audienciaId in audienciaIds)
+                {
+                    _context.MaterialAudiencia.Add(new MaterialAudiencia
+                    {
+                        MaterialId = entity.Id,
+                        AudienciaId = audienciaId
+                    });
+                }
+            }
+
+            _context.SaveChanges();
+        }
+
+        /// <summary>
         /// Obtiene un Proyecto asociado al Brief especificado por su ID.
         /// </summary>
         /// <param name="id">ID del Brief.</param>
@@ -273,7 +314,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                 .Include(m => m.EstatusMaterial)
@@ -421,10 +463,15 @@ namespace DataAccessLayer.Repositories
             }
             else
             {
-                // Solicitante: solo materiales de sus propios briefs
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
                 materialesQuery = _context.Materiales
                     .Include(m => m.Brief)
-                    .Where(m => m.Brief.UsuarioId == UsuarioId)
+                    .Where(m => m.Brief.UsuarioId == UsuarioId || briefIdsParticipante.Contains(m.BriefId))
                     .AsQueryable();
             }
 
@@ -507,15 +554,21 @@ namespace DataAccessLayer.Repositories
             }
             else
             {
-                // Solicitante: solo materiales de sus propios briefs
-                query = _context.Materiales.Where(q => q.Brief.UsuarioId == id);
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == id)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                query = _context.Materiales.Where(q => q.Brief.UsuarioId == id || briefIdsParticipante.Contains(q.BriefId));
             }
 
             var materiales = query
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                     .ThenInclude(b => b.EstatusBrief)
@@ -539,7 +592,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                 .Include(m => m.EstatusMaterial)
@@ -574,8 +628,13 @@ namespace DataAccessLayer.Repositories
             }
             else
             {
-                // Solicitante: solo materiales de sus propios briefs
-                query = _context.Materiales.Where(m => m.Brief.UsuarioId == material.Id).AsQueryable();
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == material.Id)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                query = _context.Materiales.Where(m => m.Brief.UsuarioId == material.Id || briefIdsParticipante.Contains(m.BriefId)).AsQueryable();
             }
 
             return query
@@ -585,7 +644,8 @@ namespace DataAccessLayer.Repositories
                 .Include(m => m.Prioridad)
                 .Include(m => m.MaterialPCNs)
                     .ThenInclude(mp => mp.PCN)
-                .Include(m => m.Audiencia)
+                .Include(m => m.MaterialAudiencias)
+                    .ThenInclude(ma => ma.Audiencia)
                 .Include(m => m.Formato)
                 .Include(m => m.Brief)
                     .ThenInclude(b => b.EstatusBrief)
@@ -647,12 +707,38 @@ namespace DataAccessLayer.Repositories
         /// <returns>Objeto ConteoMateriales con los resultados.</returns>
         public ConteoMateriales ObtenerConteoEstatusMateriales(int UsuarioId)
         {
-            var usuarioAdmin = _context.Usuarios.Where(q => q.Id == UsuarioId && (q.RolId == 1 || q.RolId == 3)).FirstOrDefault();
-            var materiales = _context.Materiales.Where(q => q.Brief.UsuarioId == UsuarioId).ToList();
+            var usuario = _context.Usuarios.Where(q => q.Id == UsuarioId).FirstOrDefault();
+            List<Material> materiales;
             ConteoMateriales conteoMateriales = new ConteoMateriales();
-            if (usuarioAdmin != null)
+
+            if (usuario != null && usuario.RolId == 1)
             {
+                // Admin: ver todos los materiales
                 materiales = _context.Materiales.ToList();
+            }
+            else if (usuario != null && usuario.RolId == 3)
+            {
+                // Producción: solo materiales de proyectos donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                materiales = _context.Materiales
+                    .Where(m => briefIdsParticipante.Contains(m.BriefId))
+                    .ToList();
+            }
+            else
+            {
+                // Solicitante: materiales de sus propios briefs + briefs donde es participante
+                var briefIdsParticipante = _context.Participantes
+                    .Where(p => p.UsuarioId == UsuarioId)
+                    .Select(p => p.BriefId)
+                    .ToList();
+
+                materiales = _context.Materiales
+                    .Where(q => q.Brief.UsuarioId == UsuarioId || briefIdsParticipante.Contains(q.BriefId))
+                    .ToList();
             }
 
             conteoMateriales.Registros = materiales.Count();
@@ -662,7 +748,6 @@ namespace DataAccessLayer.Repositories
             conteoMateriales.Programado = materiales.Where(q => q.EstatusMaterialId == 4).Count();
             conteoMateriales.Entregado = materiales.Where(q => q.EstatusMaterialId == 5).Count();
             conteoMateriales.InicioCiclo = materiales.Where(q => q.EstatusMaterialId == 6).Count();
-
 
             return conteoMateriales;
         }
@@ -702,6 +787,16 @@ namespace DataAccessLayer.Repositories
                     // Si no se proporciona fecha, usar la fecha actual del material
                     historialMaterial.FechaEntrega = material.FechaEntrega;
                 }
+
+                // Actualizar Fecha de Publicación si se proporciona
+                if (historialMaterial.FechaPublicacion != null && historialMaterial.FechaPublicacion.HasValue)
+                {
+                    material.FechaPublicacion = historialMaterial.FechaPublicacion.Value;
+                    _context.Materiales.Update(material);
+                }
+
+                // Actualizar el estado de liberación de fecha de publicación
+                material.FechaPublicacionLiberada = historialMaterial.FechaPublicacionLiberada;
 
                 material.EstatusMaterialId = historialMaterial.EstatusMaterialId;
                 _context.HistorialMateriales.Add(historialMaterial);

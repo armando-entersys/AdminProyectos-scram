@@ -643,7 +643,6 @@ namespace PresentationLayer.Controllers
                 Mensaje = request.Mensaje,
                 PrioridadId = request.PrioridadId,
                 Ciclo = request.Ciclo,
-                AudienciaId = request.AudienciaId,
                 FormatoId = request.FormatoId,
                 FechaEntrega = request.FechaEntrega,
                 Responsable = request.Responsable,
@@ -654,8 +653,8 @@ namespace PresentationLayer.Controllers
 
             try
             {
-                // Insertar material con sus PCNs
-                _briefService.InsertMaterialConPCNs(material, request.PCNIds);
+                // Insertar material con sus PCNs y Audiencias
+                _briefService.InsertMaterialConPCNsYAudiencias(material, request.PCNIds, request.AudienciaIds);
                 var brief = _briefService.GetById(material.BriefId);
                 Alerta alertaUsuario = new Alerta
                 {

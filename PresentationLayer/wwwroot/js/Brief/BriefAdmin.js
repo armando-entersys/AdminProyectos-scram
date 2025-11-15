@@ -78,7 +78,7 @@ function AppViewModel() {
     self.pcnsSeleccionados = ko.observableArray(); // Array para múltiples PCN
     self.formato = ValidationModule.validations.requiredField();
     self.catFormato = ko.observableArray();
-    self.audiencia = ValidationModule.validations.requiredField();
+    self.audienciasSeleccionados = ko.observableArray(); // Array para múltiples Audiencias
     self.catAudiencia = ko.observableArray();
 
     self.fechaEntrega = ValidationModule.validations.requiredField();
@@ -93,6 +93,9 @@ function AppViewModel() {
 
     self.registrosMateriales = ko.observableArray();
     self.registrosParticipantes = ko.observableArray();
+
+    // Observable para controlar el estado de guardado del material
+    self.guardandoMaterial = ko.observable(false);
 
     // Observables y variables para autocompletado
     self.buscarUsuario = ko.observable("");
@@ -436,9 +439,13 @@ function AppViewModel() {
         self.prioridad("");
         self.pcnsSeleccionados.removeAll(); // Limpiar PCNs seleccionados
         self.formato("");
-        self.audiencia("");
+        self.audienciasSeleccionados.removeAll(); // Limpiar Audiencias seleccionadas
     }
     self.GuardarMaterial = function () {
+        // Evitar múltiples envíos
+        if (self.guardandoMaterial()) {
+            return;
+        }
 
         validarYProcesarFormulario(self.errors, function () {
             // Validar que la fecha de entrega no sea anterior a hoy
@@ -458,6 +465,15 @@ function AppViewModel() {
                 return;
             }
 
+            // Validar que se haya seleccionado al menos una Audiencia
+            if (self.audienciasSeleccionados().length === 0) {
+                alert('Debe seleccionar al menos una Audiencia');
+                return;
+            }
+
+            // Activar estado de guardando
+            self.guardandoMaterial(true);
+
             var Material = {
                 BriefId: self.id(),
                 Nombre: self.nombreMaterial(),
@@ -465,7 +481,7 @@ function AppViewModel() {
                 PrioridadId: self.prioridad().id,
                 Ciclo: self.ciclo(),
                 PCNIds: self.pcnsSeleccionados().map(function(pcn) { return pcn.id; }), // Array de IDs
-                AudienciaId: self.audiencia().id,
+                AudienciaIds: self.audienciasSeleccionados().map(function(aud) { return aud.id; }), // Array de IDs
                 FormatoId: self.formato().id,
                 FechaEntrega: self.fechaEntrega(),
                 Responsable: self.responsable(),
@@ -478,21 +494,26 @@ function AppViewModel() {
                 contentType: "application/json", // Cambiado a JSON
                 data: JSON.stringify(Material),  // Serializamos los datos a JSON
                 success: function (d) {
-                    
+
                     self.ObtenerMateriales(self.id());
                     self.LimpiarMaterial();
-                    
+
                     alert(d.mensaje);
 
+                    // Desactivar estado de guardando
+                    self.guardandoMaterial(false);
                 },
                 error: function (xhr, status, error) {
                     console.error("Error al obtener los datos: ", error);
                     $('#alertMessage').text("Error al obtener los datos: " + xhr.responseText);
                     $('#alertModalLabel').text("Error");
                     $("#alertModal").modal("show");
+
+                    // Desactivar estado de guardando
+                    self.guardandoMaterial(false);
                 }
             });
-        });  
+        });
     }
     self.ObtenerProyecto = function (id) {
         $.ajax({

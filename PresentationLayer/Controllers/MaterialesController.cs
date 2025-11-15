@@ -97,11 +97,16 @@ namespace PresentationLayer.Controllers
                         m.Formato.Id,
                         m.Formato.Descripcion
                     },
-                    Audiencia = new
+                    MaterialAudiencias = m.MaterialAudiencias.Select(ma => new
                     {
-                        m.Audiencia.Id,
-                        m.Audiencia.Descripcion
-                    },
+                        ma.MaterialId,
+                        ma.AudienciaId,
+                        Audiencia = new
+                        {
+                            ma.Audiencia.Id,
+                            ma.Audiencia.Descripcion
+                        }
+                    }).ToList(),
                     EstatusMaterial = new
                     {
                         m.EstatusMaterial.Id,
@@ -236,6 +241,15 @@ namespace PresentationLayer.Controllers
                 historialMaterialRequest.HistorialMaterial.UsuarioId = UsuarioId;
                 var id = Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
                 var usuarioLogueado =_usuarioService.TGetById(id);
+
+                // Solo el administrador puede cambiar el estado de liberación de fecha y la fecha de publicación
+                // Los demás roles mantienen el valor actual del material
+                if (rolId != 1)
+                {
+                    historialMaterialRequest.HistorialMaterial.FechaPublicacionLiberada = material.FechaPublicacionLiberada;
+                    historialMaterialRequest.HistorialMaterial.FechaPublicacion = material.FechaPublicacion;
+                }
+
                _briefService.ActualizaHistorialMaterial(historialMaterialRequest.HistorialMaterial);
 
                 var urlBase = $"{Request.Scheme}://{Request.Host}";

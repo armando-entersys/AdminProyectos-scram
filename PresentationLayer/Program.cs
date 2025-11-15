@@ -34,6 +34,7 @@ builder.Host.UseSerilog();
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
@@ -102,6 +103,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
@@ -115,6 +117,10 @@ builder.Services.AddElmah(options =>
 // Agrega SignalR al contenedor de servicios
 builder.Services.AddSignalR();
 builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+
+// Registrar el servicio de recordatorios de materiales
+builder.Services.AddHostedService<MaterialReminderService>();
+
 var app = builder.Build();
 
 // ═══════════════════════════════════════════════════════════
@@ -180,7 +186,7 @@ using (var scope = app.Services.CreateScope())
                 new Menu { Nombre = "Calendario", Ruta = "/Calendario/Index", Orden = 3, Icono = "lni lni-calendar", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Materiales", Ruta = "/Materiales/Index", Orden = 4, Icono = "lni lni-files", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Alertas", Ruta = "/Alertas/Index", Orden = 5, Icono = "lni lni-alarm", RolId = rolAdmin.Id },
-                new Menu { Nombre = "Usuarios", Ruta = "/Usuarios/Index", Orden = 6, Icono = "lni lni-users", RolId = rolAdmin.Id },
+                new Menu { Nombre = "Participantes", Ruta = "/Usuarios/Index", Orden = 6, Icono = "lni lni-users", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Invitaciones", Ruta = "/Invitaciones/Index", Orden = 7, Icono = "lni lni-envelope", RolId = rolAdmin.Id },
                 new Menu { Nombre = "Catálogos", Ruta = "/Catalogos/Index", Orden = 8, Icono = "lni lni-list", RolId = rolAdmin.Id },
 

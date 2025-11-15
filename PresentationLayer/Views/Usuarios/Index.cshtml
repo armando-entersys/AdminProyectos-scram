@@ -1,10 +1,10 @@
 ﻿
 @{
-    ViewData["Title"] = "Usuarios";
+    ViewData["Title"] = "Participantes";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Usuarios</h1>
+<h1>Participantes</h1>
 <row>
     <div class="col">
 
@@ -14,7 +14,7 @@
     <div class="col">
         <button type="button" class="btn btn-outline-primary" data-bind="click:Agregar">
             <i class="lni lni-download"></i>
-            <span>Agregar Usuario</span>
+            <span>Agregar Participante</span>
         </button>
     </div>
 </row>
@@ -40,7 +40,11 @@
                     <td class="small">
                         <button type="button" class="btn btn-outline-primary" data-bind="click:$root.Editar">
                             <i class="lni lni-pencil"></i>
-                            <span>Editar Usuario</span>
+                            <span>Editar</span>
+                        </button>
+                        <button type="button" class="btn btn-outline-danger ms-2" data-bind="click:$root.EliminarPermanente">
+                            <i class="lni lni-trash"></i>
+                            <span>Eliminar</span>
                         </button>
                     </td>
                 </tr>

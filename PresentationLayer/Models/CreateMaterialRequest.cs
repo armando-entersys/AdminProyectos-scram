@@ -11,7 +11,7 @@ namespace PresentationLayer.Models
         public int PrioridadId { get; set; }
         public string Ciclo { get; set; }
         public List<int> PCNIds { get; set; } // Lista de PCN IDs
-        public int AudienciaId { get; set; }
+        public List<int> AudienciaIds { get; set; } // Lista de Audiencia IDs
         public int FormatoId { get; set; }
         public DateTime FechaEntrega { get; set; }
         public string Responsable { get; set; }

@@ -5,7 +5,7 @@
     <div class="user-info">
         <h6>
             @{
-                string rolNombre = "Usuario";
+                string rolNombre = "Solicitante";
                 if (ViewBag.RolId != null)
                 {
                     switch ((int)ViewBag.RolId)
@@ -14,13 +14,13 @@
                             rolNombre = "Administrador";
                             break;
                         case 2:
-                            rolNombre = "Usuario";
+                            rolNombre = "Solicitante";
                             break;
                         case 3:
                             rolNombre = "Producción";
                             break;
                         default:
-                            rolNombre = "Usuario";
+                            rolNombre = "Solicitante";
                             break;
                     }
                 }

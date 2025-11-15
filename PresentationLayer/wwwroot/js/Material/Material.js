@@ -47,6 +47,9 @@ function AppViewModel() {
     self.responsableMaterial = ko.observable("");
     self.areaMaterial = ko.observable("");
     self.fechaEntregaMaterial = ko.observable("");
+    self.fechaPublicacion = ko.observable("");
+    self.fechaPublicacionLiberada = ko.observable(false);
+    self.fechaPublicacionMaterial = ko.observable("");
 
     // Computed para normalizar URLs agregando http:// si no tiene protocolo
     self.linksReferenciasNormalizadas = ko.computed(function() {
@@ -112,6 +115,18 @@ function AppViewModel() {
         if (material.materialPCNs && material.materialPCNs.length > 0) {
             return material.materialPCNs.map(function(mp) {
                 return mp.pcn ? mp.pcn.descripcion : '';
+            }).filter(function(desc) {
+                return desc !== '';
+            }).join(', ');
+        }
+        return 'N/A';
+    };
+
+    // Función helper para obtener las Audiencias como string
+    self.getAudienciasString = function(material) {
+        if (material.materialAudiencias && material.materialAudiencias.length > 0) {
+            return material.materialAudiencias.map(function(ma) {
+                return ma.audiencia ? ma.audiencia.descripcion : '';
             }).filter(function(desc) {
                 return desc !== '';
             }).join(', ');
@@ -190,12 +205,26 @@ function AppViewModel() {
             .then(function (d) {
                 var estatusMateriales = d.datos;
 
-                // Si el usuario es Producción (RolId=3), solo mostrar: En Diseño (2), En Revisión (3), En Producción (5)
-                if (typeof RolId !== 'undefined' && RolId === 3) {
-                    var estatusPermitidos = [2, 3, 5]; // IDs: En Diseño, En Revisión, En Producción
-                    estatusMateriales = d.datos.filter(function(estatus) {
-                        return estatusPermitidos.indexOf(estatus.id) !== -1;
-                    });
+                // Reporte 2: Filtrar estados por rol
+                if (typeof RolId !== 'undefined') {
+                    if (RolId === 1 || RolId === '1') {
+                        // Administrador: Ve TODOS los estados
+                        estatusMateriales = d.datos;
+                    } else if (RolId === 3 || RolId === '3') {
+                        // Producción: Solo ve estados específicos
+                        //   - En diseño (2)
+                        //   - En revisión (3)
+                        //   - Listo para publicación (4)
+                        //   - En producción (5)
+                        estatusMateriales = d.datos.filter(function(estatus) {
+                            return estatus.id === 2 || estatus.id === 3 || estatus.id === 4 || estatus.id === 5;
+                        });
+                    } else {
+                        // Solicitante (RolId = 2): NO ve "En producción" (ID=5) ni "Listo para publicación" (ID=4)
+                        estatusMateriales = d.datos.filter(function(estatus) {
+                            return estatus.id !== 4 && estatus.id !== 5;
+                        });
+                    }
                 }
 
                 self.catEstatusMateriales(estatusMateriales);
@@ -246,10 +275,15 @@ function AppViewModel() {
         self.pcnMaterial(self.getPCNsString(material));
         self.formatoMaterial(material.formato?.descripcion || "N/A");
         self.estatusMaterial(material.estatusMaterial?.descripcion || "N/A");
-        self.audienciaMaterial(material.audiencia?.descripcion || "N/A");
+        self.audienciaMaterial(self.getAudienciasString(material));
         self.responsableMaterial(material.responsable || "");
         self.areaMaterial(material.area || "");
         self.fechaEntregaMaterial(material.fechaEntrega ? new Date(material.fechaEntrega).toLocaleDateString('es-MX') : "");
+
+        // Poblar información de fecha de publicación
+        self.fechaPublicacion(material.fechaPublicacion ? new Date(material.fechaPublicacion).toISOString().split('T')[0] : "");
+        self.fechaPublicacionLiberada(material.fechaPublicacionLiberada || false);
+        self.fechaPublicacionMaterial(material.fechaPublicacion ? new Date(material.fechaPublicacion).toLocaleDateString('es-MX') : "");
         var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
             return r.id === material.estatusMaterialId;
         });
@@ -309,7 +343,9 @@ function AppViewModel() {
             MaterialId: self.id(),
             Comentarios: self.Comentario(),
             FechaEntrega: self.fechaEntrega(),
-            EstatusMaterialId: self.EstatusMateriales().id
+            EstatusMaterialId: self.EstatusMateriales().id,
+            FechaPublicacion: self.fechaPublicacion() || null,
+            FechaPublicacionLiberada: self.fechaPublicacionLiberada() === "true" || self.fechaPublicacionLiberada() === true
         };
 
         // Construir la solicitud completa
@@ -432,7 +468,7 @@ function AppViewModel() {
                 "Formato": registro.formato?.descripcion || "",
                 "Estatus": registro.estatusMaterial?.descripcion || "",
                 "Nombre del Proyecto": registro.brief?.nombre || "",
-                "Audiencia": registro.audiencia?.descripcion || "",
+                "Audiencia": self.getAudienciasString(registro),
                 "Responsable": registro.responsable || "",
                 "Área": registro.area || "",
                 "Fecha de Entrega": registro.fechaEntrega ? new Date(registro.fechaEntrega).toLocaleDateString('es-MX') : ""

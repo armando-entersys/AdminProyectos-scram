@@ -12,6 +12,8 @@ namespace EntityLayer.Concrete
         public string Comentarios { get; set; }
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public DateTime? FechaEntrega { get; set; }
+        public DateTime? FechaPublicacion { get; set; }
+        public bool FechaPublicacionLiberada { get; set; } = false;
 
         public int EstatusMaterialId { get; set; }
 
