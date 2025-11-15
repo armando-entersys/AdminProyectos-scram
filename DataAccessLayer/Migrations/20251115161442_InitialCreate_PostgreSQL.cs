@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataAccessLayer.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialCreate_PostgreSQL : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -268,9 +268,10 @@ namespace DataAccessLayer.Migrations
                     Mensaje = table.Column<string>(type: "text", nullable: false),
                     PrioridadId = table.Column<int>(type: "integer", nullable: false),
                     Ciclo = table.Column<string>(type: "text", nullable: false),
-                    AudienciaId = table.Column<int>(type: "integer", nullable: false),
                     FormatoId = table.Column<int>(type: "integer", nullable: false),
                     FechaEntrega = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    FechaPublicacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    FechaPublicacionLiberada = table.Column<bool>(type: "boolean", nullable: false),
                     Responsable = table.Column<string>(type: "text", nullable: false),
                     Area = table.Column<string>(type: "text", nullable: false),
                     FechaRegistro = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -281,12 +282,6 @@ namespace DataAccessLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Materiales", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Materiales_Audiencia_AudienciaId",
-                        column: x => x.AudienciaId,
-                        principalTable: "Audiencia",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Materiales_Briefs_BriefId",
                         column: x => x.BriefId,
@@ -372,6 +367,8 @@ namespace DataAccessLayer.Migrations
                     Comentarios = table.Column<string>(type: "text", nullable: false),
                     FechaRegistro = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     FechaEntrega = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    FechaPublicacion = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    FechaPublicacionLiberada = table.Column<bool>(type: "boolean", nullable: false),
                     EstatusMaterialId = table.Column<int>(type: "integer", nullable: false),
                     UsuarioId = table.Column<int>(type: "integer", nullable: false),
                     MaterialId = table.Column<int>(type: "integer", nullable: false)
@@ -391,6 +388,30 @@ namespace DataAccessLayer.Migrations
                         principalTable: "Usuarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MaterialAudiencia",
+                columns: table => new
+                {
+                    MaterialId = table.Column<int>(type: "integer", nullable: false),
+                    AudienciaId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MaterialAudiencia", x => new { x.MaterialId, x.AudienciaId });
+                    table.ForeignKey(
+                        name: "FK_MaterialAudiencia_Audiencia_AudienciaId",
+                        column: x => x.AudienciaId,
+                        principalTable: "Audiencia",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MaterialAudiencia_Materiales_MaterialId",
+                        column: x => x.MaterialId,
+                        principalTable: "Materiales",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -575,8 +596,8 @@ namespace DataAccessLayer.Migrations
                 column: "UsuarioId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Materiales_AudienciaId",
-                table: "Materiales",
+                name: "IX_MaterialAudiencia_AudienciaId",
+                table: "MaterialAudiencia",
                 column: "AudienciaId");
 
             migrationBuilder.CreateIndex(
@@ -651,6 +672,9 @@ namespace DataAccessLayer.Migrations
                 name: "HistorialMateriales");
 
             migrationBuilder.DropTable(
+                name: "MaterialAudiencia");
+
+            migrationBuilder.DropTable(
                 name: "MaterialPCN");
 
             migrationBuilder.DropTable(
@@ -669,13 +693,13 @@ namespace DataAccessLayer.Migrations
                 name: "TipoAlerta");
 
             migrationBuilder.DropTable(
+                name: "Audiencia");
+
+            migrationBuilder.DropTable(
                 name: "PCN");
 
             migrationBuilder.DropTable(
                 name: "Materiales");
-
-            migrationBuilder.DropTable(
-                name: "Audiencia");
 
             migrationBuilder.DropTable(
                 name: "Briefs");
