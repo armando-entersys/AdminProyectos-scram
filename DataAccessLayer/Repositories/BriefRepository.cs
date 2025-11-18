@@ -788,17 +788,29 @@ namespace DataAccessLayer.Repositories
                     historialMaterial.FechaEntrega = material.FechaEntrega;
                 }
 
-                // Actualizar Fecha de Publicación si se proporciona
+                // Actualizar Fecha de Publicación si se proporciona y cambió
                 if (historialMaterial.FechaPublicacion != null && historialMaterial.FechaPublicacion.HasValue)
                 {
-                    material.FechaPublicacion = historialMaterial.FechaPublicacion.Value;
+                    if (material.FechaPublicacion != historialMaterial.FechaPublicacion.Value)
+                    {
+                        material.FechaPublicacion = historialMaterial.FechaPublicacion.Value;
+                        _context.Materiales.Update(material);
+                    }
+                }
+
+                // Actualizar el estado de liberación de fecha de publicación solo si cambió
+                if (material.FechaPublicacionLiberada != historialMaterial.FechaPublicacionLiberada)
+                {
+                    material.FechaPublicacionLiberada = historialMaterial.FechaPublicacionLiberada;
                     _context.Materiales.Update(material);
                 }
 
-                // Actualizar el estado de liberación de fecha de publicación
-                material.FechaPublicacionLiberada = historialMaterial.FechaPublicacionLiberada;
-
-                material.EstatusMaterialId = historialMaterial.EstatusMaterialId;
+                // Actualizar estatus solo si cambió
+                if (material.EstatusMaterialId != historialMaterial.EstatusMaterialId)
+                {
+                    material.EstatusMaterialId = historialMaterial.EstatusMaterialId;
+                    _context.Materiales.Update(material);
+                }
                 _context.HistorialMateriales.Add(historialMaterial);
 
                 if (historialMaterial.EstatusMaterialId == 4 || historialMaterial.EstatusMaterialId == 5)
