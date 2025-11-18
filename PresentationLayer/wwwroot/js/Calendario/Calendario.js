@@ -23,30 +23,20 @@
             eventDisplay: 'block',
             displayEventTime: false,
             eventClick: function (info) {
-                if (info.event.extendedProps.tipo === 'entrega') {
-                    self.fechaEntrega(info.event.extendedProps.fechaEntrega);
-                } else {
-                    self.fechaEntrega(info.event.extendedProps.fechaPublicacion);
-                }
+                // Usar la fecha que se está mostrando en el evento
+                self.fechaEntrega(info.event.extendedProps.fechaMostrada);
                 self.nombre(info.event.title);
                 self.responsable(info.event.extendedProps.responsable);
                 self.area(info.event.extendedProps.area);
                 $("#divEdicion").modal("show");
             },
             eventContent: function (arg) {
-                var fecha = arg.event.extendedProps.tipo === 'entrega'
-                    ? arg.event.extendedProps.fechaEntrega
-                    : arg.event.extendedProps.fechaPublicacion;
-                var tipoTexto = arg.event.extendedProps.tipo === 'entrega'
-                    ? 'Entrega'
-                    : 'Publicación';
-
                 let customHtml = `
                 <div class="fc-event-title-container">
                     <div class="fc-event-title">${arg.event.title}</div>
                     <div class="fc-event-subtitle">
-                        Tipo: ${tipoTexto}<br>
-                        Fecha: ${fecha}<br>
+                        Tipo: ${arg.event.extendedProps.tipoTexto}<br>
+                        Fecha: ${arg.event.extendedProps.fechaMostrada}<br>
                         Responsable: ${arg.event.extendedProps.responsable}<br>
                         Área: ${arg.event.extendedProps.area}
                     </div>
@@ -69,47 +59,48 @@
                 var events = [];
 
                 d.datos.forEach(function (item) {
-                    // Agregar fecha de entrega (azul - color por defecto)
-                    var fechaFormateada = new Date(item.fechaEntrega).toISOString().split('T')[0];
-                    var fechaFin = new Date(item.fechaEntrega);
+                    // Determinar qué fecha y color usar según si la fecha de publicación está liberada
+                    var usarFechaPublicacion = item.fechaPublicacion && item.fechaPublicacionLiberada;
+
+                    var fecha, tipoEvento, colorFondo, colorBorde, fechaParaProps;
+
+                    if (usarFechaPublicacion) {
+                        // Si la fecha de publicación está liberada: ROJO claro y mostrar fecha de publicación
+                        fecha = new Date(item.fechaPublicacion);
+                        tipoEvento = 'Publicación';
+                        colorFondo = '#FF7979';  // Rojo claro
+                        colorBorde = '#FF7979';
+                        fechaParaProps = new Date(item.fechaPublicacion).toISOString().split('T')[0];
+                    } else {
+                        // Si NO está liberada o no existe: MORADO y mostrar fecha de entrega
+                        fecha = new Date(item.fechaEntrega);
+                        tipoEvento = 'Entrega';
+                        colorFondo = '#A564DC';  // Morado
+                        colorBorde = '#A564DC';
+                        fechaParaProps = new Date(item.fechaEntrega).toISOString().split('T')[0];
+                    }
+
+                    var fechaFormateada = fecha.toISOString().split('T')[0];
+                    var fechaFin = new Date(fecha);
                     fechaFin.setDate(fechaFin.getDate() + 1);
+
                     events.push({
-                        title: item.nombre + " (Entrega)",
+                        title: item.nombre,
                         start: fechaFormateada,
                         end: fechaFin,
                         allDay: true,
-                        backgroundColor: '#3788d8', // Azul para entregas
-                        borderColor: '#3788d8',
+                        backgroundColor: colorFondo,
+                        borderColor: colorBorde,
                         extendedProps: {
-                            fechaEntrega: fechaFormateada,
+                            fechaEntrega: item.fechaEntrega ? new Date(item.fechaEntrega).toISOString().split('T')[0] : '',
+                            fechaPublicacion: item.fechaPublicacion ? new Date(item.fechaPublicacion).toISOString().split('T')[0] : '',
+                            fechaMostrada: fechaParaProps,
                             responsable: item.responsable,
                             area: item.area,
-                            tipo: 'entrega'
+                            tipo: usarFechaPublicacion ? 'publicacion' : 'entrega',
+                            tipoTexto: tipoEvento
                         }
                     });
-
-                    // Agregar fecha de publicación si existe y está liberada (o si es Admin)
-                    // RolId está disponible globalmente si se pasa desde la vista
-                    var esAdmin = typeof RolId !== 'undefined' && RolId === 1;
-                    if (item.fechaPublicacion && (item.fechaPublicacionLiberada || esAdmin)) {
-                        var fechaPublicacion = new Date(item.fechaPublicacion).toISOString().split('T')[0];
-                        var fechaFinPublicacion = new Date(item.fechaPublicacion);
-                        fechaFinPublicacion.setDate(fechaFinPublicacion.getDate() + 1);
-                        events.push({
-                            title: item.nombre + " (Publicación)",
-                            start: fechaPublicacion,
-                            end: fechaFinPublicacion,
-                            allDay: true,
-                            backgroundColor: '#D9534F', // Rojo para publicaciones
-                            borderColor: '#D9534F',
-                            extendedProps: {
-                                fechaPublicacion: fechaPublicacion,
-                                responsable: item.responsable,
-                                area: item.area,
-                                tipo: 'publicacion'
-                            }
-                        });
-                    }
                 });
 
                 self.registros(events); // Actualiza los datos
