@@ -7,6 +7,8 @@
     self.nombre = ko.observable("");
     self.responsable = ko.observable("");
     self.area = ko.observable("");
+    self.tipoFecha = ko.observable(""); // "Entrega" o "Publicación"
+    self.fechaMostrada = ko.observable(""); // La fecha a mostrar según el tipo
 
     // Initialize the calendar
     self.inicializarCalendario = function () {
@@ -23,11 +25,12 @@
             eventDisplay: 'block',
             displayEventTime: false,
             eventClick: function (info) {
-                // Usar la fecha que se está mostrando en el evento
-                self.fechaEntrega(info.event.extendedProps.fechaMostrada);
+                // Establecer los valores según el tipo de evento
                 self.nombre(info.event.title);
                 self.responsable(info.event.extendedProps.responsable);
                 self.area(info.event.extendedProps.area);
+                self.tipoFecha(info.event.extendedProps.tipoTexto); // "Entrega" o "Publicación"
+                self.fechaMostrada(info.event.extendedProps.fechaMostrada);
                 $("#divEdicion").modal("show");
             },
             eventContent: function (arg) {
