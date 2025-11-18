@@ -27,7 +27,7 @@ namespace DataAccessLayer.Context
                 // Si no existe variable de entorno, usar el connection string de desarrollo local
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    connectionString = "Server=solucionesmkt.com.mx;initial catalog=AdminProyectosNaturaDB;user id=mkt;password=123456789;";
+                    connectionString = "Server=DESKTOP-32QQ1ES\\SQLEXPRESS01;Database=AdminProyectosNaturaDB;Integrated Security=True;TrustServerCertificate=True;";
                 }
 
                 optionsBuilder.UseSqlServer(connectionString);

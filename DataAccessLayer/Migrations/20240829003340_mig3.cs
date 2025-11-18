@@ -8,18 +8,7 @@ namespace DataAccessLayer.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-               name: "Roles",
-               columns: table => new
-               {
-                   Id = table.Column<int>(type: "int", nullable: false)
-                       .Annotation("SqlServer:Identity", "1, 1"),
-                   Descripcion = table.Column<string>(type: "nvarchar(20)", nullable: false)
-               },
-               constraints: table =>
-               {
-                   table.PrimaryKey("PK_Roles", x => x.Id);
-               });
+            // Tabla Roles ya fue creada en mig1, se omite para evitar conflicto
             migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new

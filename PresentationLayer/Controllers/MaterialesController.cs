@@ -70,6 +70,8 @@ namespace PresentationLayer.Controllers
                     m.Area,
                     m.Responsable,
                     m.FechaEntrega,
+                    m.FechaPublicacion,
+                    m.FechaPublicacionLiberada,
                     Brief = new
                     {
                         m.Brief.Id,
