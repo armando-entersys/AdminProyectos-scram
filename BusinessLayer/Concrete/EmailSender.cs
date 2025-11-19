@@ -66,9 +66,9 @@ namespace BusinessLayer.Concrete
             {
                 emailMessage.To.Add(new MailboxAddress(destinatario, destinatario));
             }
-            // Asignar el campo From
-            emailMessage.From.Add(new MailboxAddress("Natura", "ajcortest@gmail.com"));
-            emailMessage.Sender = new MailboxAddress("Natura", "ajcortest@gmail.com");
+            // Asignar el campo From usando la configuración
+            emailMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Username));
+            emailMessage.Sender = new MailboxAddress(_emailSettings.SenderName, _emailSettings.Username);
            
 
             using var client = new MailKit.Net.Smtp.SmtpClient();
