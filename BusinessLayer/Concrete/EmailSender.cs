@@ -76,7 +76,11 @@ namespace BusinessLayer.Concrete
 
             try
             {
-                 client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                 // Usar SslOnConnect para puerto 465, StartTls para puerto 587
+                 var secureOption = _emailSettings.SmtpPort == 465
+                     ? SecureSocketOptions.SslOnConnect
+                     : SecureSocketOptions.StartTls;
+                 client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort, secureOption);
                  client.Authenticate(_emailSettings.Username, _emailSettings.Password);
 
 
