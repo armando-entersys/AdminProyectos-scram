@@ -130,7 +130,7 @@ namespace PresentationLayer.Controllers
                             mp.PCN.Descripcion
                         }
                     }).ToList()
-                }).OrderBy(m => m.FechaEntrega).ToList();
+                }).OrderByDescending(m => m.FechaEntrega).ToList();
 
                 res.Datos = materialesDto;
                 res.Exito = true;
