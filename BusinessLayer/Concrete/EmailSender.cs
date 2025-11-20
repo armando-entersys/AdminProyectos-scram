@@ -66,9 +66,9 @@ namespace BusinessLayer.Concrete
             {
                 emailMessage.To.Add(new MailboxAddress(destinatario, destinatario));
             }
-            // Asignar el campo From
-            emailMessage.From.Add(new MailboxAddress("Natura", "ajcortest@gmail.com"));
-            emailMessage.Sender = new MailboxAddress("Natura", "ajcortest@gmail.com");
+            // Asignar el campo From usando la configuración
+            emailMessage.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.Username));
+            emailMessage.Sender = new MailboxAddress(_emailSettings.SenderName, _emailSettings.Username);
            
 
             using var client = new MailKit.Net.Smtp.SmtpClient();
@@ -76,7 +76,11 @@ namespace BusinessLayer.Concrete
 
             try
             {
-                 client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort, SecureSocketOptions.StartTls);
+                 // Usar SslOnConnect para puerto 465, StartTls para puerto 587
+                 var secureOption = _emailSettings.SmtpPort == 465
+                     ? SecureSocketOptions.SslOnConnect
+                     : SecureSocketOptions.StartTls;
+                 client.Connect(_emailSettings.SmtpServer, _emailSettings.SmtpPort, secureOption);
                  client.Authenticate(_emailSettings.Username, _emailSettings.Password);
 
 

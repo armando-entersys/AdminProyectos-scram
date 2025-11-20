@@ -78,44 +78,70 @@ namespace PresentationLayer.Controllers
             return Ok(res);
         }
 
-        [HttpGet]
+        [HttpPost]
         public ActionResult Aceptar(int id)
         {
             respuestaServicio res = new respuestaServicio();
-            res = _toolService.CambioSolicitud(id,true);
-            Usuario usuario = _usuarioService.TGetById(id);
-            usuario.CambioContrasena = false;
-            usuario.Estatus = true;
-            _usuarioService.TUpdate(usuario);
 
-            var urlBase = $"{Request.Scheme}://{Request.Host}";
-            var valoresDinamicos = new Dictionary<string, string>
+            try
             {
-                { "link", urlBase + "/Login" } 
-            };
-            var Destinatarios = new List<string>();
-            Destinatarios.Add(usuario.Correo);
+                res = _toolService.CambioSolicitud(id, true);
+                Usuario usuario = _usuarioService.TGetById(id);
+                usuario.CambioContrasena = false;
+                usuario.Estatus = true;
+                _usuarioService.TUpdate(usuario);
 
-            _emailSender.SendEmail(Destinatarios, "UsuarioAceptado", valoresDinamicos);
+                var urlBase = $"{Request.Scheme}://{Request.Host}";
+                var valoresDinamicos = new Dictionary<string, string>
+                {
+                    { "link", urlBase + "/Login" }
+                };
+                var Destinatarios = new List<string>();
+                Destinatarios.Add(usuario.Correo);
+
+                _emailSender.SendEmail(Destinatarios, "UsuarioAceptado", valoresDinamicos);
+
+                res.Mensaje = "Usuario aceptado exitosamente";
+                res.Exito = true;
+            }
+            catch (Exception ex)
+            {
+                res.Mensaje = "Error al aceptar usuario: " + ex.Message;
+                res.Exito = false;
+            }
+
             return Ok(res);
         }
-        [HttpGet]
+        [HttpPost]
         public ActionResult Rechazar(int id)
         {
             respuestaServicio res = new respuestaServicio();
-            res = _toolService.CambioSolicitud(id, false);
-            Usuario usuario = _usuarioService.TGetById(id);
-            usuario.CambioContrasena = false;
-            _usuarioService.TDelete(usuario.Id);
 
-            var valoresDinamicos = new Dictionary<string, string>
+            try
             {
-                { "link","#" }
-            };
-            var Destinatarios = new List<string>();
-            Destinatarios.Add(usuario.Correo);
+                res = _toolService.CambioSolicitud(id, false);
+                Usuario usuario = _usuarioService.TGetById(id);
+                usuario.CambioContrasena = false;
+                _usuarioService.TDelete(usuario.Id);
 
-            _emailSender.SendEmail(Destinatarios, "UsuarioRechazo", valoresDinamicos);
+                var valoresDinamicos = new Dictionary<string, string>
+                {
+                    { "link", "#" }
+                };
+                var Destinatarios = new List<string>();
+                Destinatarios.Add(usuario.Correo);
+
+                _emailSender.SendEmail(Destinatarios, "UsuarioRechazo", valoresDinamicos);
+
+                res.Mensaje = "Usuario rechazado y eliminado exitosamente";
+                res.Exito = true;
+            }
+            catch (Exception ex)
+            {
+                res.Mensaje = "Error al rechazar usuario: " + ex.Message;
+                res.Exito = false;
+            }
+
             return Ok(res);
         }
 

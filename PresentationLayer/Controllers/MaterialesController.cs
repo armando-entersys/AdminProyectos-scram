@@ -70,6 +70,8 @@ namespace PresentationLayer.Controllers
                     m.Area,
                     m.Responsable,
                     m.FechaEntrega,
+                    m.FechaPublicacion,
+                    m.FechaPublicacionLiberada,
                     Brief = new
                     {
                         m.Brief.Id,
@@ -128,7 +130,7 @@ namespace PresentationLayer.Controllers
                             mp.PCN.Descripcion
                         }
                     }).ToList()
-                }).ToList();
+                }).OrderByDescending(m => m.FechaEntrega).ToList();
 
                 res.Datos = materialesDto;
                 res.Exito = true;

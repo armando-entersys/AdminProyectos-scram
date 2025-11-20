@@ -754,25 +754,26 @@ namespace PresentationLayer.Controllers
             return Ok(res);
 
         }
-        [HttpGet]
+        [HttpDelete]
         public ActionResult EliminarMaterial(int id)
         {
             respuestaServicio res = new respuestaServicio();
-            
+
             try
             {
                 _briefService.EliminarMaterial(id);
+                res.Mensaje = "Material eliminado exitosamente";
                 res.Exito = true;
             }
             catch (Exception ex)
             {
-                res.Mensaje = "Error al remover el Material";
+                res.Mensaje = "Error al remover el Material: " + ex.Message;
                 res.Exito = false;
             }
             return Ok(res);
 
         }
-        [HttpGet]
+        [HttpDelete]
         public ActionResult EliminarParticipante(int id)
         {
             respuestaServicio res = new respuestaServicio();
@@ -780,11 +781,12 @@ namespace PresentationLayer.Controllers
             try
             {
                 _briefService.EliminarParticipante(id);
+                res.Mensaje = "Participante eliminado exitosamente";
                 res.Exito = true;
             }
             catch (Exception ex)
             {
-                res.Mensaje = "Error al remover el Participante";
+                res.Mensaje = "Error al remover el Participante: " + ex.Message;
                 res.Exito = false;
             }
             return Ok(res);
@@ -914,7 +916,7 @@ namespace PresentationLayer.Controllers
 
             return Ok(res);
         }
-        [HttpGet]
+        [HttpDelete]
         public ActionResult EliminarBrief(int id)
         {
             respuestaServicio res = new respuestaServicio();
@@ -925,7 +927,6 @@ namespace PresentationLayer.Controllers
                 _briefService.Delete(id);
                 var urlBase = $"{Request.Scheme}://{Request.Host}";
 
-                res.Exito = true;
                 var usuarioLogin = _usuarioService.TGetById(Int32.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value));
 
                 // Diccionario con los valores dinámicos a reemplazar
@@ -933,20 +934,21 @@ namespace PresentationLayer.Controllers
                 {
                     { "nombreProyecto", brief.Nombre },
                     { "usuario", usuarioLogin.Nombre + " " + usuarioLogin.ApellidoPaterno },
-
                 };
+
+                // Enviar correo al dueño del brief y a los administradores
                 var Destinatarios = new List<string>();
                 Destinatarios.Add(_usuarioService.TGetById(brief.UsuarioId).Correo);
-                Destinatarios.AddRange(_usuarioService.TGetAll().Where(q=> q.RolId == 1).Select(p => p.Correo).ToList());
-
-                Destinatarios.Add(_usuarioService.TGetById(brief.UsuarioId).Correo);
-
+                Destinatarios.AddRange(_usuarioService.TGetAll().Where(q => q.RolId == 1).Select(p => p.Correo).ToList());
 
                 _emailSender.SendEmail(Destinatarios, "EliminarProyecto", valoresDinamicos);
+
+                res.Mensaje = "Brief eliminado exitosamente";
+                res.Exito = true;
             }
             catch (Exception ex)
             {
-                res.Mensaje = "Error al remover el Material";
+                res.Mensaje = "Error al remover el Brief: " + ex.Message;
                 res.Exito = false;
             }
             return Ok(res);

@@ -318,6 +318,18 @@ namespace PresentationLayer.Controllers
                 var brief = _briefService.GetById(participante.BriefId);
 
                 var urlBase = $"{Request.Scheme}://{Request.Host}";
+
+                // Crear alerta para el participante agregado
+                var alertaParticipante = new Alerta
+                {
+                    IdUsuario = participante.UsuarioId,
+                    Nombre = "Agregado como Participante",
+                    Descripcion = $"Has sido agregado como participante en el proyecto '{brief.Nombre}'",
+                    IdTipoAlerta = 3, // Tipo: Actualización
+                    Accion = $"{urlBase}/Brief/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}"
+                };
+                _toolService.CrearAlerta(alertaParticipante);
+
                 // Diccionario con los valores dinámicos a reemplazar
                 var valoresDinamicos = new Dictionary<string, string>()
                 {

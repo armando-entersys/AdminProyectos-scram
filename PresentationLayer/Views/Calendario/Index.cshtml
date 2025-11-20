@@ -4,10 +4,7 @@
 }
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
 <style>
-    .fc-h-event {
-        background-color: var(--fc-event-bg-color, #A564DC) !important;
-        border: 1px solid var(--fc-event-border-color, #A564DC) !important;
-    }
+    /* Los colores de eventos ahora se asignan dinámicamente desde JavaScript */
 
     .fc-event-title-container {
         white-space: nowrap;
@@ -51,8 +48,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <label>Fecha de Entrega</label>
-                <p data-bind="text:fechaEntrega" class="text-break"></p>
+                <label>Fecha de <span data-bind="text:tipoFecha"></span></label>
+                <p data-bind="text:fechaMostrada" class="text-break"></p>
                 <label>Nombre Material</label>
                 <p data-bind="text:nombre" class="text-break"></p>
                 <label>Responsable</label>
