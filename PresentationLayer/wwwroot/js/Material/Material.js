@@ -287,6 +287,18 @@ function AppViewModel() {
         var EstatusMateriales = self.catEstatusMateriales().find(function (r) {
             return r.id === material.estatusMaterialId;
         });
+
+        // Si el estatus actual del material no está en la lista del usuario (ej: RolId=2 con estatus 4 o 5),
+        // agregar temporalmente ese estatus para que pueda agregar comentarios
+        if (!EstatusMateriales && material.estatusMaterial) {
+            var estatusActual = {
+                id: material.estatusMaterialId,
+                descripcion: material.estatusMaterial.descripcion
+            };
+            self.catEstatusMateriales.push(estatusActual);
+            EstatusMateriales = estatusActual;
+        }
+
         self.EstatusMateriales(EstatusMateriales);
 
         // Usar Promise.resolve para asegurar que siempre devuelve una promesa
