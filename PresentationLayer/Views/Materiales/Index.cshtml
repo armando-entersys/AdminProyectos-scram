@@ -377,11 +377,16 @@
                 toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
                 height: 300,
                 menubar: false,
+                promotion: false,
+                branding: false,
                 // Configuración del plugin link para habilitar todos los campos
                 link_default_target: '_blank',
                 link_default_protocol: 'https',
                 link_assume_external_targets: true,
                 link_title: true,
+                link_quicklink: false,
+                convert_urls: false,
+                relative_urls: false,
                 target_list: [
                     { title: 'Nueva ventana', value: '_blank' },
                     { title: 'Misma ventana', value: '_self' }
@@ -444,6 +449,13 @@
         }
 
         $(document).ready(function () {
+            // Prevenir que Bootstrap modal capture el foco de los diálogos de TinyMCE
+            $(document).on('focusin', function(e) {
+                if ($(e.target).closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                    e.stopImmediatePropagation();
+                }
+            });
+
             // Inicializar TinyMCE cuando se abre el modal
             $('#divEdicion').on('shown.bs.modal', function () {
                 initTinyMCE();
