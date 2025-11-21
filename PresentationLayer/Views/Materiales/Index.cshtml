@@ -403,9 +403,32 @@
                 tinymce.get('myComentario').remove();
             }
 
+            // Agregar traducciones al español para TinyMCE
+            tinymce.addI18n('es', {
+                'Insert/edit link': 'Insertar/editar enlace',
+                'Text to display': 'Texto a mostrar',
+                'Url': 'URL',
+                'Title': 'Título',
+                'Target': 'Destino',
+                'None': 'Ninguno',
+                'New window': 'Nueva ventana',
+                'Remove link': 'Eliminar enlace',
+                'Anchors': 'Anclas',
+                'Link...': 'Enlace...',
+                'Paste or type a link': 'Pegar o escribir un enlace',
+                'The URL you entered seems to be an external link. Do you want to add the required https:// prefix?': 'La URL que ingresó parece ser un enlace externo. ¿Desea agregar el prefijo https:// requerido?',
+                'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?': 'La URL que ingresó parece ser un correo electrónico. ¿Desea agregar el prefijo mailto: requerido?',
+                'Cancel': 'Cancelar',
+                'Save': 'Guardar',
+                'Ok': 'Aceptar',
+                'Yes': 'Sí',
+                'No': 'No'
+            });
+
             tinymce.init({
                 selector: '#myComentario',
                 license_key: 'gpl',
+                language: 'es',
                 plugins: 'lists link image table code',
                 toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
                 height: 300,

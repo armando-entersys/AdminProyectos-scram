@@ -297,22 +297,22 @@ function AppViewModel() {
 
     }
     self.EliminarBrief = function (brief) {
-        if (confirm("Desea eliminar el Brief seleccionado?")) {
+        if (confirm("¿Desea eliminar el Proyecto seleccionado?")) {
             $.ajax({
-                url: "Brief/EliminarBrief/" + self.id(), // URL del método GetAll en tu API
-                type: "GET",
+                url: "Brief/EliminarBrief/" + self.id(),
+                type: "DELETE",
                 contentType: "application/json",
                 success: function (d) {
+                    $("#divEdicion").modal("hide");
                     self.inicializar();
+                    alert(d.mensaje || "Proyecto eliminado exitosamente");
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error al obtener los datos: ", error);
-                    alert("Error al obtener los datos: " + xhr.responseText);
+                    console.error("Error al eliminar el proyecto: ", error);
+                    alert("Error al eliminar el proyecto: " + (xhr.responseJSON?.mensaje || xhr.responseText || error));
                 }
             });
         }
-        
-
     }
     
     // Método para comprobar si el rol actual coincide con el pasado
