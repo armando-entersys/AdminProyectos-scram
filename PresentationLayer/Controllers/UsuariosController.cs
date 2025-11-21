@@ -326,7 +326,7 @@ namespace PresentationLayer.Controllers
                     Nombre = "Agregado como Participante",
                     Descripcion = $"Has sido agregado como participante en el proyecto '{brief.Nombre}'",
                     IdTipoAlerta = 3, // Tipo: Actualización
-                    Accion = $"{urlBase}/Brief/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}"
+                    Accion = $"{urlBase}/Materiales/Index?filtroNombre={Uri.EscapeDataString(brief.Nombre)}"
                 };
                 _toolService.CrearAlerta(alertaParticipante);
 
@@ -334,7 +334,7 @@ namespace PresentationLayer.Controllers
                 var valoresDinamicos = new Dictionary<string, string>()
                 {
                     { "nombreProyecto", brief.Nombre },
-                    { "link", urlBase + "/Brief/Index?filtroNombre=" + Uri.EscapeDataString(brief.Nombre)  }
+                    { "link", urlBase + "/Materiales/Index?filtroNombre=" + Uri.EscapeDataString(brief.Nombre)  }
 
                 };
                 var Destinatarios = new List<string>();
