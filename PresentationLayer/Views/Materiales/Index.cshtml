@@ -14,6 +14,39 @@
         color: #AE0025 !important;
     }
 
+    /* Forzar que los campos de TinyMCE dialog sean editables */
+    .tox-tinymce-aux {
+        z-index: 10000 !important;
+    }
+
+    .tox-dialog {
+        z-index: 10001 !important;
+    }
+
+    .tox-dialog-wrap {
+        z-index: 10000 !important;
+    }
+
+    .tox-textfield, .tox-listbox, .tox-textarea {
+        pointer-events: auto !important;
+        user-select: text !important;
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+    }
+
+    .tox-textfield:focus, .tox-textarea:focus {
+        outline: 2px solid #006ce7 !important;
+        border-color: #006ce7 !important;
+    }
+
+    .tox-dialog__body-content input[type="url"],
+    .tox-dialog__body-content input[type="text"],
+    .tox-dialog__body-content textarea {
+        pointer-events: auto !important;
+        cursor: text !important;
+    }
+
 </style>
 <h3>Gestión de Material</h3>
 
@@ -451,10 +484,37 @@
         $(document).ready(function () {
             // Prevenir que Bootstrap modal capture el foco de los diálogos de TinyMCE
             $(document).on('focusin', function(e) {
-                if ($(e.target).closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                if ($(e.target).closest(".tox-tinymce-aux, .tox-dialog, .tox-dialog-wrap, .moxman-window, .tam-assetmanager-root").length) {
                     e.stopImmediatePropagation();
                 }
             });
+
+            // También prevenir en mousedown para asegurar que el clic funcione
+            $(document).on('mousedown', function(e) {
+                if ($(e.target).closest(".tox-tinymce-aux, .tox-dialog, .tox-dialog-wrap").length) {
+                    e.stopPropagation();
+                }
+            });
+
+            // Deshabilitar el enfoque forzado del modal de Bootstrap cuando hay diálogos de TinyMCE
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        var tinyDialog = document.querySelector('.tox-dialog-wrap');
+                        var bsModal = bootstrap.Modal.getInstance(document.getElementById('divEdicion'));
+                        if (tinyDialog && bsModal) {
+                            // Forzar que los inputs sean clickeables
+                            var inputs = tinyDialog.querySelectorAll('input, textarea');
+                            inputs.forEach(function(input) {
+                                input.removeAttribute('tabindex');
+                                input.style.pointerEvents = 'auto';
+                            });
+                        }
+                    }
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
 
             // Inicializar TinyMCE cuando se abre el modal
             $('#divEdicion').on('shown.bs.modal', function () {
