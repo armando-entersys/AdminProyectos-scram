@@ -7,7 +7,8 @@
 <h1 class="py-3" >Proyectos</h1>
 <div class="row py-3">
     <div class="col">
-        <button type="button" class="btn btn-outline-primary" data-bind="click:Agregar">
+        <!-- Solo Admin (RolId=1) y Usuario (RolId=2) pueden crear briefs -->
+        <button type="button" class="btn btn-outline-primary" data-bind="click:Agregar, visible: RolId === 1 || RolId === 2">
             <i class="lni lni-circle-plus"></i>
             <span>Agregar Brief</span>
         </button>
@@ -113,10 +114,10 @@
                         </div>
 
                         <!-- Archivo Cargado -->
-                        <div class="col-md-12" data-bind="visible: rutaArchivo">
+                        <div class="col-md-12" data-bind="visible: rutaArchivo() && rutaArchivo() !== ''">
                             <label for="archivoCargado" class="form-label">Archivo Cargado</label>
                             <a id="archivoCargado" class="form-control text-truncate"
-                               data-bind="attr: { href: '/Brief/DownloadFile?id=' + id }, text: rutaArchivo" target="_blank">Descargar archivo</a>
+                               data-bind="attr: { href: '/Brief/DownloadFile?id=' + id() }, text: rutaArchivo" target="_blank">Descargar archivo</a>
                         </div>
                     </div>
                 </form>

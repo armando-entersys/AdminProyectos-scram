@@ -367,7 +367,16 @@ namespace PresentationLayer.Controllers
         {
             respuestaServicio res = new respuestaServicio();
 
-           
+            // Solo Admin (RolId=1) y Usuario (RolId=2) pueden crear briefs
+            int rolId = Int32.Parse(User.FindFirst(ClaimTypes.Role)?.Value);
+            if (rolId != 1 && rolId != 2)
+            {
+                res.Mensaje = "No tiene permisos para crear proyectos. Solo los roles Administrador y Usuario pueden crear briefs.";
+                res.Exito = false;
+                return Ok(res);
+            }
+
+
             Addbrief.Comentario = "";
             Brief brief = new Brief
             {

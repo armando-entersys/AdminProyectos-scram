@@ -377,6 +377,15 @@
                 toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
                 height: 300,
                 menubar: false,
+                // Configuración del plugin link para habilitar todos los campos
+                link_default_target: '_blank',
+                link_default_protocol: 'https',
+                link_assume_external_targets: true,
+                link_title: true,
+                target_list: [
+                    { title: 'Nueva ventana', value: '_blank' },
+                    { title: 'Misma ventana', value: '_self' }
+                ],
                 images_upload_url: '/Materiales/upload',
                 automatic_uploads: true,
                 images_upload_handler: function (blobInfo, progress) {
