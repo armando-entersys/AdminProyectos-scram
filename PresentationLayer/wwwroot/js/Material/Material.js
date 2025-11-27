@@ -32,6 +32,7 @@ function AppViewModel() {
     self.nombreBrief = ko.observable("");
     self.descripcionBrief = ko.observable("");
     self.objetivoBrief = ko.observable("");
+    self.objetivoNegocioBrief = ko.observable("");
     self.dirigidoABrief = ko.observable("");
     self.comentarioBrief = ko.observable("");
     self.tipoBrief = ko.observable("");
@@ -264,6 +265,7 @@ function AppViewModel() {
         // Poblar información adicional del brief
         self.descripcionBrief(material.brief.descripcion || "");
         self.objetivoBrief(material.brief.objetivo || "");
+        self.objetivoNegocioBrief(material.brief.objetivoNegocio || "");
         self.dirigidoABrief(material.brief.dirigidoA || "");
         self.comentarioBrief(material.brief.comentario || "");
         self.tipoBrief(material.brief.tipoBrief?.descripcion || "N/A");

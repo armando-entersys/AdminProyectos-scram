@@ -41,6 +41,7 @@ function AppViewModel() {
     self.nombre = ko.observable();
     self.descripcion = ko.observable();
     self.objetivo = ko.observable();
+    self.objetivoNegocio = ko.observable();
     self.dirigidoA = ko.observable();
     self.comentario = ko.observable();
     self.rutaArchivo = ko.observable();
@@ -257,6 +258,7 @@ function AppViewModel() {
                 self.nombre(d.datos.nombre);
                 self.descripcion(d.datos.descripcion);
                 self.objetivo(d.datos.objetivo);
+                self.objetivoNegocio(d.datos.objetivoNegocio);
                 self.dirigidoA(d.datos.dirigidoA);
                 self.comentario(d.datos.comentario);
                 self.rutaArchivo(d.datos.rutaArchivo);
@@ -387,6 +389,7 @@ function AppViewModel() {
         self.nombre("");
         self.descripcion("");
         self.objetivo("");
+        self.objetivoNegocio("");
         self.dirigidoA("");
         self.comentario("");
         self.rutaArchivo("");

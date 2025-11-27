@@ -16,6 +16,7 @@ namespace EntityLayer.Concrete
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public string? Objetivo { get; set; }
+        public string? ObjetivoNegocio { get; set; }
         public string DirigidoA { get; set; }
         public string Comentario { get; set; }
         public string? RutaArchivo { get; set; }
