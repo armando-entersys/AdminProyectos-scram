@@ -231,9 +231,11 @@ namespace PresentationLayer.Controllers
                 }
 
                 // Validar permisos: Solo Admin (RolId=1) y Producción (RolId=3) pueden cambiar a "En Diseño", "En Revisión", "En Producción"
+                // Solo aplicar esta validación si el estatus realmente está cambiando
                 var estatusRestringidos = new[] { 2, 3, 5 }; // En Diseño, En Revisión, En Producción
                 var nuevoEstatus = historialMaterialRequest.HistorialMaterial.EstatusMaterialId;
-                if (estatusRestringidos.Contains(nuevoEstatus) && rolId != 1 && rolId != 3)
+                var estatusCambiando = material.EstatusMaterialId != nuevoEstatus;
+                if (estatusCambiando && estatusRestringidos.Contains(nuevoEstatus) && rolId != 1 && rolId != 3)
                 {
                     res.Mensaje = "Solo los usuarios de Administración y Producción pueden cambiar el estatus a En Diseño, En Revisión o En Producción.";
                     res.Exito = false;
