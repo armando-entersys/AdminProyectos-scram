@@ -14,6 +14,39 @@
         color: #AE0025 !important;
     }
 
+    /* Forzar que los campos de TinyMCE dialog sean editables */
+    .tox-tinymce-aux {
+        z-index: 10000 !important;
+    }
+
+    .tox-dialog {
+        z-index: 10001 !important;
+    }
+
+    .tox-dialog-wrap {
+        z-index: 10000 !important;
+    }
+
+    .tox-textfield, .tox-listbox, .tox-textarea {
+        pointer-events: auto !important;
+        user-select: text !important;
+        -webkit-user-select: text !important;
+        -moz-user-select: text !important;
+        -ms-user-select: text !important;
+    }
+
+    .tox-textfield:focus, .tox-textarea:focus {
+        outline: 2px solid #006ce7 !important;
+        border-color: #006ce7 !important;
+    }
+
+    .tox-dialog__body-content input[type="url"],
+    .tox-dialog__body-content input[type="text"],
+    .tox-dialog__body-content textarea {
+        pointer-events: auto !important;
+        cursor: text !important;
+    }
+
 </style>
 <h3>Gestión de Material</h3>
 
@@ -163,7 +196,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="divEdicion" tabindex="-1" aria-labelledby="Modal" aria-hidden="true">
+<div class="modal fade" id="divEdicion" tabindex="-1" aria-labelledby="Modal" aria-hidden="true" data-bs-focus="false">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
@@ -188,6 +221,7 @@
                                         <p><strong>Fecha de Entrega del Brief:</strong> <span data-bind="text: fechaEntregaBrief"></span></p>
                                         <p><strong>Descripción:</strong> <span data-bind="text: descripcionBrief() || 'No disponible'"></span></p>
                                         <p><strong>Objetivo:</strong> <span data-bind="text: objetivoBrief() || 'No disponible'"></span></p>
+                                        <p><strong>Objetivo de Negocio:</strong> <span data-bind="text: objetivoNegocioBrief() || 'No disponible'"></span></p>
                                         <p><strong>Dirigido A:</strong> <span data-bind="text: dirigidoABrief() || 'No disponible'"></span></p>
                                         <p><strong>Comentario:</strong> <span data-bind="text: comentarioBrief() || 'No disponible'"></span></p>
                                         <p><strong>Link de Referencia:</strong>
@@ -370,13 +404,50 @@
                 tinymce.get('myComentario').remove();
             }
 
+            // Agregar traducciones al español para TinyMCE
+            tinymce.addI18n('es', {
+                'Insert/edit link': 'Insertar/editar enlace',
+                'Text to display': 'Texto a mostrar',
+                'Url': 'URL',
+                'Title': 'Título',
+                'Target': 'Destino',
+                'None': 'Ninguno',
+                'New window': 'Nueva ventana',
+                'Remove link': 'Eliminar enlace',
+                'Anchors': 'Anclas',
+                'Link...': 'Enlace...',
+                'Paste or type a link': 'Pegar o escribir un enlace',
+                'The URL you entered seems to be an external link. Do you want to add the required https:// prefix?': 'La URL que ingresó parece ser un enlace externo. ¿Desea agregar el prefijo https:// requerido?',
+                'The URL you entered seems to be an email address. Do you want to add the required mailto: prefix?': 'La URL que ingresó parece ser un correo electrónico. ¿Desea agregar el prefijo mailto: requerido?',
+                'Cancel': 'Cancelar',
+                'Save': 'Guardar',
+                'Ok': 'Aceptar',
+                'Yes': 'Sí',
+                'No': 'No'
+            });
+
             tinymce.init({
                 selector: '#myComentario',
                 license_key: 'gpl',
+                language: 'es',
                 plugins: 'lists link image table code',
                 toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
                 height: 300,
                 menubar: false,
+                promotion: false,
+                branding: false,
+                // Configuración del plugin link para habilitar todos los campos
+                link_default_target: '_blank',
+                link_default_protocol: 'https',
+                link_assume_external_targets: true,
+                link_title: true,
+                link_quicklink: false,
+                convert_urls: false,
+                relative_urls: false,
+                target_list: [
+                    { title: 'Nueva ventana', value: '_blank' },
+                    { title: 'Misma ventana', value: '_self' }
+                ],
                 images_upload_url: '/Materiales/upload',
                 automatic_uploads: true,
                 images_upload_handler: function (blobInfo, progress) {
@@ -435,6 +506,40 @@
         }
 
         $(document).ready(function () {
+            // Prevenir que Bootstrap modal capture el foco de los diálogos de TinyMCE
+            $(document).on('focusin', function(e) {
+                if ($(e.target).closest(".tox-tinymce-aux, .tox-dialog, .tox-dialog-wrap, .moxman-window, .tam-assetmanager-root").length) {
+                    e.stopImmediatePropagation();
+                }
+            });
+
+            // También prevenir en mousedown para asegurar que el clic funcione
+            $(document).on('mousedown', function(e) {
+                if ($(e.target).closest(".tox-tinymce-aux, .tox-dialog, .tox-dialog-wrap").length) {
+                    e.stopPropagation();
+                }
+            });
+
+            // Deshabilitar el enfoque forzado del modal de Bootstrap cuando hay diálogos de TinyMCE
+            var observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        var tinyDialog = document.querySelector('.tox-dialog-wrap');
+                        var bsModal = bootstrap.Modal.getInstance(document.getElementById('divEdicion'));
+                        if (tinyDialog && bsModal) {
+                            // Forzar que los inputs sean clickeables
+                            var inputs = tinyDialog.querySelectorAll('input, textarea');
+                            inputs.forEach(function(input) {
+                                input.removeAttribute('tabindex');
+                                input.style.pointerEvents = 'auto';
+                            });
+                        }
+                    }
+                });
+            });
+
+            observer.observe(document.body, { childList: true, subtree: true });
+
             // Inicializar TinyMCE cuando se abre el modal
             $('#divEdicion').on('shown.bs.modal', function () {
                 initTinyMCE();

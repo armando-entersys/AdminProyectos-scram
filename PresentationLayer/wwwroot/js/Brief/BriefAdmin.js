@@ -41,6 +41,7 @@ function AppViewModel() {
     self.nombre = ko.observable();
     self.descripcion = ko.observable();
     self.objetivo = ko.observable();
+    self.objetivoNegocio = ko.observable();
     self.dirigidoA = ko.observable();
     self.comentario = ko.observable();
     self.rutaArchivo = ko.observable();
@@ -257,6 +258,7 @@ function AppViewModel() {
                 self.nombre(d.datos.nombre);
                 self.descripcion(d.datos.descripcion);
                 self.objetivo(d.datos.objetivo);
+                self.objetivoNegocio(d.datos.objetivoNegocio);
                 self.dirigidoA(d.datos.dirigidoA);
                 self.comentario(d.datos.comentario);
                 self.rutaArchivo(d.datos.rutaArchivo);
@@ -297,22 +299,22 @@ function AppViewModel() {
 
     }
     self.EliminarBrief = function (brief) {
-        if (confirm("Desea eliminar el Brief seleccionado?")) {
+        if (confirm("¿Desea eliminar el Proyecto seleccionado?")) {
             $.ajax({
-                url: "Brief/EliminarBrief/" + self.id(), // URL del método GetAll en tu API
-                type: "GET",
+                url: "Brief/EliminarBrief/" + self.id(),
+                type: "DELETE",
                 contentType: "application/json",
                 success: function (d) {
+                    $("#divEdicion").modal("hide");
                     self.inicializar();
+                    alert(d.mensaje || "Proyecto eliminado exitosamente");
                 },
                 error: function (xhr, status, error) {
-                    console.error("Error al obtener los datos: ", error);
-                    alert("Error al obtener los datos: " + xhr.responseText);
+                    console.error("Error al eliminar el proyecto: ", error);
+                    alert("Error al eliminar el proyecto: " + (xhr.responseJSON?.mensaje || xhr.responseText || error));
                 }
             });
         }
-        
-
     }
     
     // Método para comprobar si el rol actual coincide con el pasado
@@ -387,6 +389,7 @@ function AppViewModel() {
         self.nombre("");
         self.descripcion("");
         self.objetivo("");
+        self.objetivoNegocio("");
         self.dirigidoA("");
         self.comentario("");
         self.rutaArchivo("");

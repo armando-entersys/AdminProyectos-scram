@@ -8,6 +8,7 @@
     self.nombre = ValidationModule.validations.requiredField();
     self.descripcion = ValidationModule.validations.requiredField();
     self.objetivo = ValidationModule.validations.requiredField();
+    self.objetivoNegocio = ko.observable("");
     self.dirigidoA = ValidationModule.validations.requiredField();
     self.comentario = ko.observable(""); // Campo opcional, no existe en el formulario
     self.rutaArchivo = ko.observable(""); // Campo opcional, no obligatorio
@@ -170,6 +171,7 @@
         self.nombre("");
         self.descripcion("");
         self.objetivo("");
+        self.objetivoNegocio("");
         self.dirigidoA("");
         self.rutaArchivo("");
         self.fechaEntrega("");
@@ -190,6 +192,7 @@
                 self.nombre(d.datos.nombre);
                 self.descripcion(d.datos.descripcion);
                 self.objetivo(d.datos.objetivo);
+                self.objetivoNegocio(d.datos.objetivoNegocio || "");
                 self.dirigidoA(d.datos.dirigidoA);
                 self.rutaArchivo(d.datos.rutaArchivo);
                 self.fechaEntrega(new Date(d.datos.fechaEntrega).toISOString().split('T')[0]);
@@ -220,13 +223,14 @@
         formData.append("Nombre", self.nombre());
         formData.append("Descripcion", self.descripcion());
         formData.append("Objetivo", self.objetivo());
+        formData.append("ObjetivoNegocio", self.objetivoNegocio());
         formData.append("DirigidoA", self.dirigidoA());
         formData.append("FechaEntrega", self.fechaEntrega());
         formData.append("EstatusBriefId", self.EstatusBrief().id);
         formData.append("TipoBriefId", self.TipoBrief().id);
         formData.append("LinksReferencias", self.linksReferencias());
 
-        
+
         // Solo agregar el archivo si se ha seleccionado uno
         if (self.cargaArchivo()) {
             formData.append("Archivo", self.cargaArchivo());
@@ -265,6 +269,7 @@
         formData.append("Nombre", self.nombre());
         formData.append("Descripcion", self.descripcion());
         formData.append("Objetivo", self.objetivo());
+        formData.append("ObjetivoNegocio", self.objetivoNegocio());
         formData.append("DirigidoA", self.dirigidoA());
         formData.append("FechaEntrega", self.fechaEntrega());
         formData.append("EstatusBriefId", self.EstatusBrief().id);
@@ -275,7 +280,7 @@
         if (self.cargaArchivo()) {
             formData.append("Archivo", self.cargaArchivo());
         }
-       
+
         $.ajax({
             url: "/Brief/AddBrief", // URL del método GetAll en tu API
             type: "POST",
