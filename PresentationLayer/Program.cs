@@ -18,7 +18,11 @@ using PresentationLayer.Services;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.EntityFrameworkCore;
 
-// Configuraci�n inicial de Serilog
+// Habilitar comportamiento legacy de timestamps en Npgsql para compatibilidad con DateTime.Now
+// Esto permite usar DateTime con Kind=Local o Unspecified con PostgreSQL timestamp with time zone
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+// Configuración inicial de Serilog
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Debug() // Nivel m�nimo de log (Debug para el desarrollo)
     .WriteTo.Console() // Registrar logs en la consola
