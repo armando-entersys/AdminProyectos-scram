@@ -174,37 +174,37 @@ SELECT setval('"PCN_Id_seq"', 20);
 -- MENUS
 -- =====================================================
 -- Menú Administrador (RolId = 1)
-INSERT INTO "Menus" ("Id", "Nombre", "Icono", "Ruta", "RolId") VALUES
-(1, 'Home', 'lni lni-home', '/Home/Index', 1),
-(2, 'Briefs', 'lni lni-files', '/Brief/Index', 1),
-(3, 'Calendario', 'lni lni-calendar', '/Calendario/Index', 1),
-(4, 'Materiales', 'lni lni-gallery', '/Materiales/Index', 1),
-(5, 'Alertas', 'lni lni-alarm', '/Alertas/Index', 1),
-(6, 'Participantes', 'lni lni-users', '/Usuarios/Index', 1),
-(7, 'Invitaciones', 'lni lni-envelope', '/Invitaciones/Index', 1),
-(8, 'Catálogos', 'lni lni-list', '/Catalogos/Index', 1);
+INSERT INTO "Menus" ("Id", "Nombre", "Icono", "Ruta", "Orden", "RolId") VALUES
+(1, 'Home', 'lni lni-home', '/Home/Index', 1, 1),
+(2, 'Briefs', 'lni lni-files', '/Brief/Index', 2, 1),
+(3, 'Calendario', 'lni lni-calendar', '/Calendario/Index', 3, 1),
+(4, 'Materiales', 'lni lni-gallery', '/Materiales/Index', 4, 1),
+(5, 'Alertas', 'lni lni-alarm', '/Alertas/Index', 5, 1),
+(6, 'Participantes', 'lni lni-users', '/Usuarios/Index', 6, 1),
+(7, 'Invitaciones', 'lni lni-envelope', '/Invitaciones/Index', 7, 1),
+(8, 'Catálogos', 'lni lni-list', '/Catalogos/Index', 8, 1);
 
 -- Menú Usuario (RolId = 2)
-INSERT INTO "Menus" ("Id", "Nombre", "Icono", "Ruta", "RolId") VALUES
-(9, 'Home', 'lni lni-home', '/Home/Index', 2),
-(10, 'Briefs', 'lni lni-files', '/Brief/Index', 2),
-(11, 'Materiales', 'lni lni-gallery', '/Materiales/Index', 2),
-(12, 'Calendario', 'lni lni-calendar', '/Calendario/Index', 2),
-(13, 'Alertas', 'lni lni-alarm', '/Alertas/Index', 2);
+INSERT INTO "Menus" ("Id", "Nombre", "Icono", "Ruta", "Orden", "RolId") VALUES
+(9, 'Home', 'lni lni-home', '/Home/Index', 1, 2),
+(10, 'Briefs', 'lni lni-files', '/Brief/Index', 2, 2),
+(11, 'Materiales', 'lni lni-gallery', '/Materiales/Index', 3, 2),
+(12, 'Calendario', 'lni lni-calendar', '/Calendario/Index', 4, 2),
+(13, 'Alertas', 'lni lni-alarm', '/Alertas/Index', 5, 2);
 
 -- Menú Producción (RolId = 3)
-INSERT INTO "Menus" ("Id", "Nombre", "Icono", "Ruta", "RolId") VALUES
-(14, 'Home', 'lni lni-home', '/Home/Index', 3),
-(15, 'Materiales', 'lni lni-gallery', '/Materiales/Index', 3),
-(16, 'Calendario', 'lni lni-calendar', '/Calendario/Index', 3),
-(17, 'Alertas', 'lni lni-alarm', '/Alertas/Index', 3);
+INSERT INTO "Menus" ("Id", "Nombre", "Icono", "Ruta", "Orden", "RolId") VALUES
+(14, 'Home', 'lni lni-home', '/Home/Index', 1, 3),
+(15, 'Materiales', 'lni lni-gallery', '/Materiales/Index', 2, 3),
+(16, 'Calendario', 'lni lni-calendar', '/Calendario/Index', 3, 3),
+(17, 'Alertas', 'lni lni-alarm', '/Alertas/Index', 4, 3);
 SELECT setval('"Menus_Id_seq"', 17);
 
 -- =====================================================
 -- USUARIO ADMINISTRADOR
 -- =====================================================
-INSERT INTO "Usuarios" ("Id", "Nombre", "ApellidoPaterno", "ApellidoMaterno", "Correo", "Contrasena", "RolId", "Estatus", "CambioContrasena") VALUES
-(1, 'Admin', 'Sistema', 'Test', 'ajcortest@gmail.com', 'Operaciones.2025', 1, true, false);
+INSERT INTO "Usuarios" ("Id", "Nombre", "ApellidoPaterno", "ApellidoMaterno", "Correo", "Contrasena", "RolId", "Estatus", "FechaRegistro", "FechaModificacion", "CambioContrasena", "SolicitudRegistro") VALUES
+(1, 'Admin', 'Sistema', 'Test', 'ajcortest@gmail.com', 'Operaciones.2025', 1, true, NOW(), NOW(), false, false);
 SELECT setval('"Usuarios_Id_seq"', 1);
 
 -- Reset sequences for empty tables
