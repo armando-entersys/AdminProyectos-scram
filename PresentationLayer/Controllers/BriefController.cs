@@ -143,11 +143,11 @@ namespace PresentationLayer.Controllers
             // Devolver el archivo forzando la descarga
             var fileBytes = System.IO.File.ReadAllBytes(filePath);
 
-            // Configurar headers explícitamente para forzar descarga
-            Response.Headers.Add("Content-Disposition", $"attachment; filename=\"{fileName}\"");
+            // Usar el metodo File() de ASP.NET Core que maneja correctamente
+            // caracteres especiales en el nombre del archivo (RFC 5987)
             Response.Headers.Add("X-Content-Type-Options", "nosniff");
 
-            return File(fileBytes, mimeType);
+            return File(fileBytes, mimeType, fileName);
         }
 
         // Método auxiliar para determinar el tipo MIME basado en la extensión del archivo
